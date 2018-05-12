@@ -90,6 +90,17 @@ App.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
         }
         if (jumpTarget === null) {
             console.log("End event");
+            local.clear();
+            $scope.currentPage = {
+                actions: [jump("start")]
+            };
+            $scope.currentText = [
+                "事件结束。",
+                "本来这里应该跳转到下一个事件。",
+                "但是现在还没有跳转逻辑。",
+                "也没有下一个事件。",
+                "所以点继续会回到最开始，不妨尝试一下所有可能吧。"
+            ];
         } else {
             loadPage(jumpTarget);
         }

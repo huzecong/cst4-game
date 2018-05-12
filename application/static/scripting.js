@@ -11,6 +11,10 @@ class Storage {
         }
         return new Variable(this, key);
     }
+
+    clear() {
+        this.values = {};
+    }
 }
 
 Storage.defaultValues = {
