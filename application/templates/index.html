@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/main.css">
+    <link rel="stylesheet" href="/static/app.css">
+    <script src="/static/lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/angular-material/angular-material.css">
+    <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div ng-controller="AppCtrl" ng-cloak>
+    <md-toolbar class="md-hue-2" md-whiteframe="2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings">
+                <md-icon>menu</md-icon>
+            </md-button>
+
+            <h2 flex md-truncate>天下大计</h2>
+
+            <md-button class="md-icon-button" aria-label="More">
+                <md-icon>more_vert</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear class="progress-hint md-hue-1" md-mode="determinate" value="10"></md-progress-linear>
+
+    <md-content class="md-padding" flex>
+        <md-card class="storyboard" ng-if="currentEvent">
+            <md-card-header layout="row" layout-align="end center">
+                <!--<md-card-avatar>-->
+                <!--&lt;!&ndash;<img src="img/logo.svg"/>&ndash;&gt;-->
+                <!--</md-card-avatar>-->
+                <md-card-header-text>
+                    <span class="md-title">{{ currentEvent.name }}</span>
+                    <span class="md-subhead">{{ currentEvent.stage }}</span>
+                </md-card-header-text>
+            </md-card-header>
+            <md-divider ng-if="!currentPage.image"></md-divider>
+            <img ng-if="currentPage.image" ng-src="/static/image/{{ currentPage.image }}"
+                 class="md-card-image" alt="{{ currentPage.image }}">
+            <!--<md-card-title>-->
+            <!--<md-card-title-text>-->
+            <!--<span class="md-headline">新生舞会</span>-->
+            <!--</md-card-title-text>-->
+            <!--</md-card-title>-->
+            <md-card-content>
+                <p ng-repeat="paragraph in currentText">{{ paragraph }}</p>
+            </md-card-content>
+            <md-card-actions layout="column" layout-align="start" ng-if="currentPage.choices">
+                <md-button ng-repeat="choice in currentPage.choices"
+                           ng-click="choose($index)"
+                           ng-disabled="{{ choice.hasOwnProperty('condition') && choice.condition.value() === false }}">
+                    {{ $index + 1 | character }}. {{ choice.text }}
+                </md-button>
+            </md-card-actions>
+            <md-card-actions layout="column" layout-align="center end" ng-if="!currentPage.choices">
+                <md-button ng-click="choose(-1)">继续</md-button>
+            </md-card-actions>
+        </md-card>
+    </md-content>
+</div>
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="/static/lib/angular/angular.js"></script>
+<script src="/static/lib/angular-route/angular-route.js"></script>
+<script src="/static/lib/angular-animate/angular-animate.js"></script>
+<script src="/static/lib/angular-aria/angular-aria.js"></script>
+<script src="/static/lib/angular-messages/angular-messages.js"></script>
+<script src="/static/lib/angular-material/angular-material.js"></script>
+<script src="/static/scripting.js"></script>
+<script src="/static/app.js"></script>
+<!--<script src="/static/view1/view1.js"></script>-->
+<!--<script src="/static/view2/view2.js"></script>-->
+</body>
+</html>

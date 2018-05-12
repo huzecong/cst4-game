@@ -1,0 +1,17 @@
+{
+  "name": "cs-game",
+  "authors": [
+    "Hu Zecong <huzecong@gmail.com>"
+  ],
+  "description": "A text adventure game dedicated to THU CST",
+  "version": "0.0.0",
+  "homepage": "https://github.com/huzecong/cs-game",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular-material": "#1.1.9",
+    "angular": "#1.7.0",
+    "angular-route": "#1.7.0",
+    "html5-boilerplate": "^5.3.0"
+  }
+}

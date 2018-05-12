@@ -1,0 +1,23 @@
+/* app css stylesheet */
+
+md-card.storyboard md-card-content > p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    /*text-indent: 2em;*/
+}
+
+md-card.storyboard md-card-actions .md-button {
+    white-space: normal;
+    line-height: 1.3em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+md-progress-linear.progress-hint {
+    height: 1px;
+}
+
+body > div > md-content {
+    height: calc(100vh - 56px) !important;
+    overflow: scroll;
+}
