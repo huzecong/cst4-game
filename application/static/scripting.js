@@ -4,12 +4,7 @@ class Storage {
     }
 
     variable(key, typeIfCreate) {
-        if (!(key in this.values)) {
-            if (!(typeIfCreate in Storage.defaultValues))
-                throw new Error("Unsupported variable type: " + typeIfCreate);
-            this.values[key] = Storage.defaultValues[typeIfCreate];
-        }
-        return new Variable(this, key);
+        return new Variable(this, key, typeIfCreate);
     }
 
     clear() {
@@ -59,13 +54,23 @@ class Expression {
 }
 
 class Variable extends Expression {
-    constructor(sto, key) {
+    constructor(sto, key, typeIfCreate) {
         super();
         this.sto = sto;
         this.key = key;
+        this.typeIfCreate = typeIfCreate;
+    }
+
+    checkExists() {
+        if (!(this.key in this.sto.values)) {
+            if (!(this.typeIfCreate in Storage.defaultValues))
+                throw new Error("Unsupported variable type: " + this.typeIfCreate);
+            this.sto.values[this.key] = Storage.defaultValues[this.typeIfCreate];
+        }
     }
 
     value() {
+        this.checkExists();
         let varVal = this.sto.values[this.key];
         if (varVal === null)
             varVal = 0;
@@ -73,6 +78,7 @@ class Variable extends Expression {
     }
 
     set(value) {
+        this.checkExists();
         let varVal = this.sto.values[this.key];
         if (varVal !== null && typeof value !== typeof varVal)
             throw new Error("Type mismatch during assignment");
@@ -80,6 +86,7 @@ class Variable extends Expression {
     }
 
     delta(value) {
+        this.checkExists();
         let varVal = this.sto.values[this.key];
         if (varVal === null) varVal = 0;
         if (typeof varVal !== "number")

@@ -10,7 +10,7 @@ let App = angular.module('myApp', [
 ]).config(['$locationProvider', '$routeProvider', '$mdThemingProvider',
     function ($locationProvider, $routeProvider, $mdThemingProvider) {
         $locationProvider.hashPrefix('!');
-        $routeProvider.otherwise({redirectTo: '/view1'});
+        // $routeProvider.otherwise({redirectTo: '/view1'});
         $mdThemingProvider.theme('default').primaryPalette('purple');
         $mdThemingProvider.enableBrowserColor();
     }
@@ -27,6 +27,12 @@ App.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.currentText = null;
 
     let pageMap = {};
+
+    function initialize() {
+        global.clear();
+        local.clear();
+        global.variable("姓名", "string").set("唐主席");
+    }
 
     function replaceVariables(text) {
         return text.replace(/{([^{}]+)}/g, function (str, name) {
@@ -57,14 +63,20 @@ App.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
         console.log($scope.currentPage);
     }
 
-    $http.get('/static/scripts/新生舞会.js').then(function (response) {
-        let currentScript = response.data;
-        $scope.currentEvent = eval(currentScript);
+    function loadEvent(event) {
+        $scope.currentEvent = event;
         console.log($scope.currentEvent);
         pageMap = {};
         for (let page of $scope.currentEvent.pages)
             pageMap[page.id] = page;
+        initialize();
         loadPage('start');
+    }
+
+    $http.get('/static/scripts/新生舞会.js').then(function (response) {
+        let currentScript = response.data;
+        let event = eval(currentScript);
+        loadEvent(event);
     });
 
     $scope.choose = function (index) {
@@ -90,7 +102,7 @@ App.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
         }
         if (jumpTarget === null) {
             console.log("End event");
-            local.clear();
+            initialize();
             $scope.currentPage = {
                 actions: [jump("start")]
             };
