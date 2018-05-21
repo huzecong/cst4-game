@@ -1,5 +1,9 @@
 /* app css stylesheet */
 
+md-card.storyboard md-card-content {
+    
+}
+
 md-card.storyboard md-card-content > p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;

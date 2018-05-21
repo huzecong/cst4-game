@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/main.css">
     <link rel="stylesheet" href="/static/app.css">
     <script src="/static/lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-    <link rel="stylesheet" href="/static/lib/angular-material/angular-material.css">
+    <link rel="stylesheet" href="/static/lib/angular-material/angular-material.min.css">
     <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -42,38 +42,43 @@
             </md-button>
         </div>
     </md-toolbar>
-    <md-progress-linear class="progress-hint md-hue-1" md-mode="determinate" value="10"></md-progress-linear>
+    <md-progress-linear class="progress-hint md-hue-1" md-mode="determinate"
+                        value="{{ current.progress }}"></md-progress-linear>
 
     <md-content class="md-padding" flex>
-        <md-card class="storyboard" ng-if="currentEvent">
+        <md-card class="storyboard" ng-if="current.event">
             <md-card-header layout="row" layout-align="end center">
                 <!--<md-card-avatar>-->
                 <!--&lt;!&ndash;<img src="img/logo.svg"/>&ndash;&gt;-->
                 <!--</md-card-avatar>-->
                 <md-card-header-text>
-                    <span class="md-title">{{ currentEvent.name }}</span>
-                    <span class="md-subhead">{{ currentEvent.stage }}</span>
+                    <span class="md-title">{{ current.event.name }}</span>
+                    <span class="md-subhead">{{ current.event.stage }}</span>
                 </md-card-header-text>
             </md-card-header>
-            <md-divider ng-if="!currentPage.image"></md-divider>
-            <img ng-if="currentPage.image" ng-src="/static/image/{{ currentPage.image }}"
-                 class="md-card-image" alt="{{ currentPage.image }}">
+            <md-divider ng-if="!current.page.image"></md-divider>
+            <img ng-if="current.page.image" ng-src="/static/image/{{ current.page.image }}"
+                 class="md-card-image" alt="{{ current.page.image }}">
             <!--<md-card-title>-->
             <!--<md-card-title-text>-->
             <!--<span class="md-headline">新生舞会</span>-->
             <!--</md-card-title-text>-->
             <!--</md-card-title>-->
             <md-card-content>
-                <p ng-repeat="paragraph in currentText">{{ paragraph }}</p>
+                <p ng-repeat="paragraph in current.text">{{ paragraph }}</p>
+                <md-input-container class="md-block" ng-if="current.page.input">
+                    <label>姓名：</label>
+                    <input type="text" ng-model="current.input" minlength="1"/>
+                </md-input-container>
             </md-card-content>
-            <md-card-actions layout="column" layout-align="start" ng-if="currentPage.choices">
-                <md-button ng-repeat="choice in currentPage.choices"
+            <md-card-actions layout="column" layout-align="start" ng-if="current.choices.length > 0">
+                <md-button ng-repeat="choice in current.choices"
                            ng-click="choose($index)"
-                           ng-disabled="{{ choice.hasOwnProperty('condition') && choice.condition.value() === false }}">
+                           ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
                     {{ $index + 1 | character }}. {{ choice.text }}
                 </md-button>
             </md-card-actions>
-            <md-card-actions layout="column" layout-align="center end" ng-if="!currentPage.choices">
+            <md-card-actions layout="column" layout-align="center end" ng-if="current.choices.length === 0">
                 <md-button ng-click="choose(-1)">继续</md-button>
             </md-card-actions>
         </md-card>

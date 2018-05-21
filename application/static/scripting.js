@@ -229,6 +229,17 @@ class Assignment extends Expression {
     }
 }
 
+class Log extends Expression {
+    constructor(msg) {
+        super();
+        this.msg = msg;
+    }
+
+    value() {
+        console.log(this.msg);
+    }
+}
+
 function ge(a, b) {
     return new Conditional(RelOp.forward(RelOp.ge, a, b));
 }
@@ -286,7 +297,12 @@ function decrease(key, delta) {
     return increase(key, -delta);
 }
 
-function achieve() {
+function achieve(name) {
+    return new Log("解锁成就：" + name);
+}
+
+function ending(name) {
+    return new Log("达成结局：" + name);
 }
 
 function jump(label) {
