@@ -1,12 +1,9 @@
 'use strict';
 
-// Declare app level module which depends on views, and components
 let App = angular.module('myApp', [
-    'ngRoute',
-    'ngMaterial',
-    'ngMessages'
-]).config(['$locationProvider', '$routeProvider', '$mdThemingProvider',
-    function ($locationProvider, $routeProvider, $mdThemingProvider) {
+    'ngMaterial'
+]).config(['$locationProvider', '$mdThemingProvider',
+    function ($locationProvider, $mdThemingProvider) {
         $locationProvider.hashPrefix('!');
         $mdThemingProvider.theme('default').primaryPalette('purple');
         $mdThemingProvider.enableBrowserColor();
