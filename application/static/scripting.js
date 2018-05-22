@@ -49,7 +49,7 @@ function valueOf(expr) {
 
 class Expression {
     value() {
-        return null;
+        return this;
     }
 }
 
@@ -92,18 +92,6 @@ class Variable extends Expression {
         if (typeof varVal !== "number")
             throw new Error("`increase`/`decrease` on non-number types");
         this.sto.values[this.key] = varVal + value;
-    }
-}
-
-class Jump extends Expression {
-    constructor(label) {
-        super();
-        this.label = label;
-    }
-
-    value() {
-        // console.log("jump " + this.label);
-        return this;
     }
 }
 
@@ -229,14 +217,36 @@ class Assignment extends Expression {
     }
 }
 
+
+class Jump extends Expression {
+    constructor(label) {
+        super();
+        this.label = label;
+    }
+}
+
 class Log extends Expression {
     constructor(msg) {
         super();
         this.msg = msg;
     }
+}
+
+class Ending extends Expression {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+}
+
+class Exec extends Expression {
+    constructor(func) {
+        super();
+        this.func = func;
+    }
 
     value() {
-        console.log(this.msg);
+        this.func();
     }
 }
 
@@ -302,9 +312,13 @@ function achieve(name) {
 }
 
 function ending(name) {
-    return new Log("达成结局：" + name);
+    return new Ending(name);
 }
 
 function jump(label) {
     return new Jump(label);
+}
+
+function exec(func) {
+    return new Exec(func);
 }

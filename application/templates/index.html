@@ -48,39 +48,63 @@
     <md-content class="md-padding" flex>
         <md-card class="storyboard" ng-if="current.event">
             <md-card-header layout="row" layout-align="end center">
-                <!--<md-card-avatar>-->
-                <!--&lt;!&ndash;<img src="img/logo.svg"/>&ndash;&gt;-->
-                <!--</md-card-avatar>-->
                 <md-card-header-text>
                     <span class="md-title">{{ current.event.name }}</span>
                     <span class="md-subhead">{{ current.event.stage }}</span>
                 </md-card-header-text>
             </md-card-header>
-            <md-divider ng-if="!current.page.image"></md-divider>
+
+            <md-divider></md-divider>
+
             <img ng-if="current.page.image" ng-src="/static/image/{{ current.page.image }}"
                  class="md-card-image" alt="{{ current.page.image }}">
-            <!--<md-card-title>-->
-            <!--<md-card-title-text>-->
-            <!--<span class="md-headline">新生舞会</span>-->
-            <!--</md-card-title-text>-->
-            <!--</md-card-title>-->
-            <md-card-content>
-                <p ng-repeat="paragraph in current.text">{{ paragraph }}</p>
-                <md-input-container class="md-block" ng-if="current.page.input">
-                    <label>姓名：</label>
-                    <input type="text" ng-model="current.input" minlength="1"/>
-                </md-input-container>
-            </md-card-content>
-            <md-card-actions layout="column" layout-align="start" ng-if="current.choices.length > 0">
-                <md-button ng-repeat="choice in current.choices"
-                           ng-click="choose($index)"
-                           ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
-                    {{ $index + 1 | character }}. {{ choice.text }}
-                </md-button>
-            </md-card-actions>
-            <md-card-actions layout="column" layout-align="center end" ng-if="current.choices.length === 0">
-                <md-button ng-click="choose(-1)">继续</md-button>
-            </md-card-actions>
+
+            <div ng-if="current.page.deadline === undefined">
+                <md-card-content>
+                    <p ng-repeat="paragraph in current.text">{{ paragraph }}</p>
+                    <md-input-container class="md-block" ng-if="current.page.input">
+                        <label>{{ current.page.input + "：" | variableRemoveScope }}</label>
+                        <input type="text" ng-model="current.input" minlength="1"/>
+                    </md-input-container>
+                </md-card-content>
+
+                <md-card-actions layout="column" layout-align="start" ng-if="current.choices.length > 0">
+                    <md-button ng-repeat="choice in current.choices"
+                               ng-click="choose($index)"
+                               ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
+                        {{ $index + 1 | character }}. {{ choice.text }}
+                    </md-button>
+                </md-card-actions>
+                <md-card-actions layout="column" layout-align="center end"
+                                 ng-if="current.choices.length === 0 && !current.ending">
+                    <md-button ng-click="choose(-1)">继续</md-button>
+                </md-card-actions>
+            </div>
+            <div class="deadline-page" ng-if="current.page.deadline">
+                <md-card-content>
+                    <p>距离DDL还有：<b>{{ deadline.timeRemaining }}</b> 秒</p>
+                    <div style="width: 100%; position: relative; margin-bottom: 5px;">
+                        <div style="display: inline;"><b>{{ current.page.deadline.title }}</b> 进度：</div>
+                        <b ng-if="deadline.grade > 0" style="display: inline; position: absolute; right: 0;">
+                            {{ deadline.gradesList[deadline.grade] }}</b>
+                    </div>
+                    <div class="deadline-progress-container">
+                        <md-progress-linear ng-repeat="target in deadline.targetsPercentage"
+                                            class="deadline-progress-target md-hue-2" md-mode="determinate"
+                                            value="{{ target }}"></md-progress-linear>
+                        <md-progress-linear class="deadline-progress" md-mode="determinate"
+                                            value="{{ deadline.progress }}"></md-progress-linear>
+                    </div>
+                    <div class="deadline-board" md-whiteframe="1">
+                        <md-button id="work-button" ng-click="deadlineClick(1)" class="md-fab md-primary">肝!
+                        </md-button>
+                        <md-button ng-repeat="badChoice in deadline.badChoicesText"
+                                   id="rest-button-{{ $index + 1}}" ng-click="deadlineClick(-$index - 1)"
+                                   class="md-raised">{{ badChoice }}
+                        </md-button>
+                    </div>
+                </md-card-content>
+            </div>
         </md-card>
     </md-content>
 </div>

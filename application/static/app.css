@@ -1,7 +1,15 @@
 /* app css stylesheet */
 
+md-card.storyboard {
+    overflow: hidden;
+}
+
+md-card.storyboard img.md-card-image {
+    border-radius: 0;
+}
+
 md-card.storyboard md-card-content {
-    
+
 }
 
 md-card.storyboard md-card-content > p {
@@ -24,4 +32,53 @@ md-progress-linear.progress-hint {
 body > div > md-content {
     height: calc(100vh - 56px) !important;
     overflow: scroll;
+}
+
+/* Deadline related */
+
+.deadline-page .deadline-progress-container {
+    position: relative;
+}
+
+.deadline-page md-progress-linear > div {
+    border-radius: 3px;
+}
+
+.deadline-page .deadline-progress-target {
+    position: absolute;
+    top: 0;
+}
+
+.deadline-page .deadline-progress > .md-container {
+    background-color: transparent;
+}
+
+.deadline-page .deadline-progress-target > .md-container {
+    background-color: transparent;
+    opacity: 0.2;
+}
+
+.deadline-page .deadline-progress .md-bar2 {
+    -webkit-transition: transform 0.2s linear, -webkit-transform 0.2s linear, background-color 400ms;
+    -moz-transition: transform 0.2s linear, -webkit-transform 0.2s linear, background-color 400ms;
+    -ms-transition: transform 0.2s linear, -webkit-transform 0.2s linear, background-color 400ms;
+    -o-transition: transform 0.2s linear, -webkit-transform 0.2s linear, background-color 400ms;
+    transition: transform 0.2s linear, -webkit-transform 0.2s linear, background-color 400ms;
+}
+
+.deadline-page .deadline-board {
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 2px;
+    margin-top: 20px;
+    /*min-height: 116px;*/
+    padding: 30px 10px;
+}
+
+.deadline-board md-button {
+    position: relative;
+}
+
+.deadline-board #work-button {
+    z-index: 10;
 }

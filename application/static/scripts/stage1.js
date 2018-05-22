@@ -60,7 +60,7 @@
                 {
                     text: eq("$复读次数", 0).then("当然是北大").else("还是北大吧"),
                     actions: [
-                        jump("pku")
+                        ending("未名湖畔")
                     ]
                 },
                 {
@@ -68,7 +68,7 @@
                     actions: [
                         increase("$复读次数", 1),
                         increase("$高考次数", 1),
-                        ge("$复读次数", 5).then(jump("buddhism")).else(jump("choose"))
+                        ge("$复读次数", 5).then(ending("看破红尘")).else(jump("choose"))
                     ]
                 }
             ]
@@ -78,29 +78,6 @@
             image: "高考择校/清华学堂.jpg",
             text: [
                 "你成功考入了清华大学计算机科学与技术系。在这里，你将度过你人生中非常精彩的四年。"
-            ]
-        },
-        {
-            id: "pku",
-            image: "高考择校/未名湖博雅塔.jpg",
-            text: [
-                "你成功考入了北京大学信息科学技术学院。",
-                "想必你在那里也会度过精彩的四年。不过，这就是另外一个故事了。"
-            ],
-            actions: [
-                ending("未名湖畔")
-            ]
-        },
-        {
-            id: "buddhism",
-            image: "高考择校/龙泉寺.jpg",
-            text: [
-                "当初的高中同学都大学毕业了，而你还在参加高考。经过四年的复读，你参透了一些人生的真理。",
-                "其实人生在世，何必这么辛苦呢？并不是万事都要做到最完美，人无完人，孰能无过？",
-                "你的修为远远超过了一众凡人，成功拿到了龙泉寺的全奖offer。"
-            ],
-            actions: [
-                ending("看破红尘")
             ]
         }
     ]
@@ -236,6 +213,9 @@
         {
             id: "final",
             image: "新生舞会/月亮.jpg",
+            actionsBefore: [ // 在载入页面时即执行的动作
+                ge("$魅力", 3).then(achieve("裙摆飘飘")) // 满足条件则解锁成就
+            ],
             text: [
                 "舞会结束了，你们走出了会场。夜空中没有云，今晚的月亮正圆。",
                 "你送她回到了楼下，然后相互告别。",
@@ -252,32 +232,145 @@
                     ]))
                 ]) // 条件可以嵌套
             ],
+        }
+    ]
+}, {
+    type: "main",
+    name: "软工组会",
+    stage: "大三",
+    pages: [
+        {
+            id: "start",
+            // image: "软工组会/JIRA_issues.jpg",
+            text: [
+                "现在是星期三的晚上10点，这意味着明天是星期四。",
+                "这也就意味着，明天有软工组会，而你们组这周甚至没有过一次commit。",
+                "望着两位数的issue列表，你决定："
+            ],
+            choices: [
+                {
+                    text: "在微信群里向各位组员委婉地表达自己的担忧",
+                    actions: [
+                        ge("#社工", 2).then(jump("team")).else(jump("solo"))
+                    ]
+                },
+                {
+                    text: "抱起电脑冲向308爆肝",
+                    actions: [
+                        jump("qte-solo")
+                    ]
+                },
+                {
+                    text: "内心怀着恐惧安然睡去",
+                    actions: [
+                        jump("deadend")
+                    ]
+                }
+            ]
+        },
+        {
+            id: "team",
+            // image: "软工组会/308.jpg",
+            text: [
+                "由于你平时就很有号召力，组员们纷纷表示愿意一同奋战，于是大家一同抱着电脑来到308爆肝。"
+            ],
             actions: [
-                ge("$魅力", 3).then(achieve("裙摆飘飘")) // 满足条件则解锁成就
+                flag("$合作"),
+                increase("#社工", 1),
+                jump("qte-team")
             ]
-        }
-    ]
-}, {
-    type: "main",
-    name: "第三个事件",
-    stage: "大一",
-    pages: [
+        },
         {
-            id: "start",
+            id: "solo",
             text: [
-                "这是第三个事件。"
+                "可惜，组员们个个装死，没有办法，你只能："
+            ],
+            choices: [
+                {
+                    text: "抱起电脑冲向308爆肝",
+                    actions: [
+                        jump("qte-solo")
+                    ]
+                },
+                {
+                    text: "内心怀着恐惧安然睡去",
+                    actions: [
+                        jump("deadend")
+                    ]
+                }
             ]
-        }
-    ]
-}, {
-    type: "main",
-    name: "第四个事件",
-    stage: "大一",
-    pages: [
+        },
         {
-            id: "start",
+            id: "qte-team",
+            deadline: {
+                targets: [40, 50],
+                title: "肝软工组会",
+                time: 12,
+                moving: false,
+                badChoices: 0
+            },
+            actions: [
+                ge("$__QTE__", 2).then(jump("goodend")).else(
+                    ge("$__QTE__", 1).then(jump("normalend")).else(jump("badend")))
+            ]
+        },
+        {
+            id: "qte-solo",
+            deadline: {
+                targets: [60, 70],
+                title: "肝软工组会",
+                time: 12,
+                moving: true,
+                badChoices: 2
+            },
+            actions: [
+                ge("$__QTE__", 2).then(jump("goodend")).else(
+                    ge("$__QTE__", 1).then(jump("normalend")).else(jump("badend")))
+            ]
+        },
+        {
+            id: "deadend",
+            // image: "软工组会/微笑表情.jpg",
             text: [
-                "这是第四个事件。"
+                "第二天的组会上，你没有任何可以展示的东西。",
+                "助教摆出了上面这幅表情，你知道自己这门课不妙了。"
+            ],
+            actions: [
+                decrease("#成绩", 2)
+            ]
+        },
+        {
+            id: "badend",
+            text: [
+                "第二天的组会上，助教对你的进度非常不满意。",
+                flagged("$合作")
+                    .then("估计是看到了你们组所有人的黑眼圈，助教也没说什么，只是要求下周一定得有进展。")
+                    .else("助教看到了你的黑眼圈，然后看了看你精神抖擞的组员们，似乎明白了什么。"),
+                "也算是，度过了这次危机吧。"
+            ],
+            actions: [
+                decrease("#成绩", 1)
+            ]
+        },
+        {
+            id: "normalend",
+            text: [
+                "第二天的组会上，助教对你的进度比较满意，你顺利地化解了这次危机。"
+            ],
+            actions: [
+                increase("#成绩", 1)
+            ]
+        },
+        {
+            id: "goodend",
+            text: [
+                "第二天的组会上，你的展示非常成功。助教对你大加赞赏，其它组的同学纷纷向你投来佩服的目光。",
+                flagged("$合作")
+                    .then("你和你的组员脸上满是掩饰不住的自豪。")
+                    .else("你摸了摸自己的头发，心里闪过一丝焦虑。")
+            ],
+            actions: [
+                increase("#成绩", 2)
             ]
         }
     ]
