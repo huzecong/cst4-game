@@ -446,5 +446,12 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
                 break;
             }
         $scope.deadline.grade = grade;
+    };
+
+    if (window.innerWidth >= 960) {
+        $mdToast.show($mdToast.simple()
+            .textContent("推荐在手机上使用Chrome浏览器进行游戏。" +
+                "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
+            .position("top left").hideDelay(5000));
     }
 }]);
