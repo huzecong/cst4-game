@@ -267,6 +267,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
 
     function loadPage(label, animate = true) {
         let loadPageImpl = function () {
+            if (!(label in pageMap)) {
+                throw '跳转的页面标识"' + label + '"未定义';
+            }
             $scope.current.page = pageMap[label];
 
             if ($scope.current.page.actionsBefore)
@@ -306,8 +309,12 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
             $scope.current.event = $scope.events[idx];
             console.log($scope.current.event.name);
             pageMap = {};
-            for (let page of $scope.current.event.pages)
+            for (let page of $scope.current.event.pages) {
+                if (page.id in pageMap) {
+                    throw '重复的页面标识"' + page.id + '"';
+                }
                 pageMap[page.id] = page;
+            }
 
             loadPage('start', false);
         };
@@ -331,34 +338,50 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
     });
 
     function loadEnding(name, animate = true) {
+        let ending = null;
         if (name !== undefined) {
-            let ending = endingMap[name];
-            let loadEndingImpl = function () {
-                $scope.current.event = {
-                    name: ending.name,
-                    stage: "结局"
-                };
-                $scope.current.page = {
-                    image: ending.image,
-                };
-                $scope.current.choices = [];
-                $scope.current.text = [];
-                recursiveAddText($scope.current.text, ending.text);
-                $scope.current.ending = true;
+            ending = endingMap[name];
+        } else {
+            ending = {
+                name: "正常结局",
+                text: [
+                    "我们应该在这里汇总一下玩家的信息。",
+                    "比如可以有：",
+                    "玩家姓名：{#姓名}，魅力值：{#魅力}。",
+                    "注意，输出前要确保变量存在，所以最好找个地方做全局的初始化。",
+                    "目前结局之后只能刷新页面重来，之后大概会改。"
+                ]
             };
-
-            changeCardContent(loadEndingImpl, 0);
         }
+
+        let loadEndingImpl = function () {
+            $scope.current.event = {
+                name: ending.name,
+                stage: "结局"
+            };
+            $scope.current.page = {
+                image: ending.image,
+            };
+            $scope.current.choices = [];
+            $scope.current.text = [];
+            recursiveAddText($scope.current.text, ending.text);
+            $scope.current.ending = true;
+        };
+        changeCardContent(loadEndingImpl, 0);
     }
 
     function nextEvent() {
         local.clear();
-        let nextIdx = $scope.current.eventIndex + 1;
-        if (nextIdx >= $scope.events.length) {
-            loadEnding();
-        } else {
-            loadEvent(nextIdx);
+        let nextIndex = $scope.current.eventIndex + 1;
+        while (nextIndex < $scope.events.length) {
+            if ($scope.events[nextIndex].condition && valueOf($scope.events[nextIndex].condition) === false) {
+                ++nextIndex;
+            } else {
+                loadEvent(nextIndex);
+                return;
+            }
         }
+        loadEnding();
     }
 
     function runActions(actions, nextEventIfNoJump = true) {

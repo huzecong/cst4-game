@@ -81,7 +81,7 @@
                 <md-card-actions layout="column" layout-align="start" ng-if="current.choices.length > 0">
                     <md-button ng-repeat="choice in current.choices"
                                ng-click="choose($index)"
-                               ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
+                               ng-disabled="{{ choice.condition && valueOf(choice.condition) === false }}">
                         {{ $index + 1 | character }}. {{ choice.text }}
                     </md-button>
                 </md-card-actions>
