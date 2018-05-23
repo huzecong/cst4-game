@@ -19,7 +19,7 @@ let App = angular.module('myApp', [
     };
 });
 
-App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $http, $mdToast) {
+App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($scope, $http, $mdToast, $mdMenu) {
     let defaultEvent = {
         type: "main",
         name: "天下大计",
@@ -41,7 +41,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
                 ],
                 actions: [
                     exec(function () {
-                        loadScript('/static/scripts/stage1.js');
+                        loadScriptFromUrl('/static/scripts/stage1.js');
                     }),
                     achieve("开始游戏")
                 ]
@@ -57,7 +57,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
                 },
                 actions: [
                     exec(function () {
-                        loadScript('/static/scripts/stage1.js');
+                        loadScriptFromUrl('/static/scripts/stage1.js');
                     })
                 ]
             }
@@ -99,23 +99,27 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
 
     let imageCache = [];
 
-    function loadScript(url) {
+    function loadScript(js) {
+        $scope.events = eval(js);
+        initialize();
+
+        // load images
+        imageCache = [];
+        for (let event of $scope.events)
+            for (let page of event.pages)
+                if (page.image !== undefined) {
+                    let img = new Image();
+                    img.src = '/static/image/' + page.image;
+                    imageCache.push(img);
+                }
+
+        loadEvent(0);
+    }
+
+    function loadScriptFromUrl(url) {
         $http.get(url).then(function (response) {
             let currentScript = response.data;
-            $scope.events = eval(currentScript);
-            initialize();
-
-            // load images
-            imageCache = [];
-            for (let event of $scope.events)
-                for (let page of event.pages)
-                    if (page.image !== undefined) {
-                        let img = new Image();
-                        img.src = '/static/image/' + page.image;
-                        imageCache.push(img);
-                    }
-
-            loadEvent(0);
+            loadScript(currentScript);
         });
     }
 
@@ -126,7 +130,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
     }
 
     function recursiveAddText(currentText, textArray) {
-        if (textArray === null) return;
+        if (!textArray) return;
         if (typeof textArray === "string") {
             currentText.push(replaceVariables(textArray));
             return;
@@ -454,4 +458,23 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
                 "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
             .position("top left").hideDelay(5000));
     }
+
+    $scope.loadLocalScript = function () {
+        let f = document.createElement("input");
+        f.style.display = "none";
+        f.type = "file";
+        f.name = "file";
+        let eventListener = function () {
+            console.log(f.files[0].name);
+            let reader = new FileReader();
+            reader.onload = function (ev) {
+                console.log("Load complete");
+                loadScript(ev.target.result);
+            };
+            reader.readAsText(f.files[0]);
+            f.removeEventListener('change', eventListener);
+        };
+        f.addEventListener('change', eventListener);
+        f.click();
+    };
 }]);

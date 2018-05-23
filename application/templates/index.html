@@ -37,9 +37,19 @@
 
             <h2 flex md-truncate>天下大计</h2>
 
-            <md-button class="md-icon-button" aria-label="More">
-                <md-icon>more_vert</md-icon>
-            </md-button>
+            <md-menu md-position-mode="target-right target">
+                <md-button class="md-icon-button" aria-label="More" ng-click="$mdMenu.open($event)">
+                    <md-icon md-menu-origin>more_vert</md-icon>
+                </md-button>
+                <md-menu-content>
+                    <md-menu-item>
+                        <md-button ng-click="loadLocalScript()">
+                            <md-icon md-menu-align-target>cloud_upload</md-icon>
+                            载入本地剧本
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
         </div>
     </md-toolbar>
     <md-progress-linear class="progress-hint md-hue-1" md-mode="determinate"
