@@ -265,6 +265,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
         let loadPageImpl = function () {
             $scope.current.page = pageMap[label];
 
+            if ($scope.current.page.actionsBefore)
+                runActions($scope.current.page.actionsBefore, false);
+
             if ($scope.current.page.deadline !== undefined) {
                 let ddlConfig = $scope.current.page.deadline;
                 initDeadline(ddlConfig);
@@ -283,9 +286,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', function ($scope, $htt
                 }
                 $scope.current.choices = choices;
             }
-
-            if ($scope.current.page.actionsBefore)
-                runActions($scope.current.page.actionsBefore, false);
         };
 
         if (animate) {
