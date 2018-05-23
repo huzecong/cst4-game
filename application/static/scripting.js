@@ -246,7 +246,7 @@ class Exec extends Expression {
     }
 
     value() {
-        this.func();
+        return this.func();
     }
 }
 
