@@ -31,6 +31,6 @@ if __name__ == '__main__':
                     filename = os.path.join(dirname, filename)
                     if os.path.isfile(filename):
                         extra_files.append(filename)
-        app.run(host='0.0.0.0', port=app.config.get('PORT', 8000), debug=True, extra_files=extra_files)
+        app.run(host='127.0.0.1', port=app.config.get('PORT', 8000), debug=True, extra_files=extra_files)
     else:
         app.run(host='0.0.0.0', port=app.config.get('PORT', 8000), debug=False)
