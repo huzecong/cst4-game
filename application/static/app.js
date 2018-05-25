@@ -19,6 +19,19 @@ let App = angular.module('myApp', [
     };
 });
 
+function cheat() {
+    let initActions = [
+        set("#体力", 100),
+        set("#魅力", 100),
+        set("#成绩", 100),
+        set("#社工", 100),
+        set("#性别", "男"),
+        set("#姓名", "杨天龙")
+    ];
+    for (let action of initActions)
+        valueOf(action);
+}
+
 App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($scope, $http, $mdToast, $mdMenu) {
     let defaultEvent = {
         type: "main",
@@ -41,7 +54,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
                 ],
                 actions: [
                     exec(function () {
-                        loadScriptFromUrl('/static/scripts/stage1.js');
+                        loadScriptFromUrl('/static/scripts/merged_script.js');
                     }),
                     achieve("开始游戏")
                 ]
@@ -57,7 +70,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
                 },
                 actions: [
                     exec(function () {
-                        loadScriptFromUrl('/static/scripts/stage1.js');
+                        loadScriptFromUrl('/static/scripts/merged_script.js');
                     })
                 ]
             }
@@ -95,13 +108,30 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
     function initialize() {
         global.clear();
         local.clear();
+        $scope.current.ending = false;
+        let initActions = [
+            set("#脱单", false),
+            set("#体力", 0),
+            set("#魅力", 0),
+            set("#成绩", 0),
+            set("#直博", false),
+            set("#社工", 0)
+        ];
+        for (let action of initActions)
+            valueOf(action);
     }
+
+    initialize();
 
     let imageCache = [];
 
     function loadScript(js) {
-        $scope.events = eval(js);
+        let jsValue = eval(js);
+        if (!(jsValue instanceof Array))
+            jsValue = [jsValue];
+        $scope.events = jsValue;
         initialize();
+        // cheat();
 
         // load images
         imageCache = [];
@@ -120,12 +150,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
         $http.get(url).then(function (response) {
             let currentScript = response.data;
             loadScript(currentScript);
-        });
-    }
-
-    function replaceVariables(text) {
-        return text.replace(/{([^{}]+)}/g, function (str, name) {
-            return lookup(name).value();
         });
     }
 
@@ -165,19 +189,23 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
         }
 
         $scope.deadline.badChoicesText = ["开小差", "打盹", "放弃治疗"].slice(0, ddlConfig.badChoices | 0);
-        // if (ddlConfig.moving) {
-        //     setTimeout(function () {
-        //         let $board = document.querySelector(".deadline-board");
-        //         let $buttons = Array.prototype.slice.call(document.querySelectorAll(".deadline-board .md-button"));
-        //         console.log(document.querySelectorAll(".deadline-board .md-button"));
-        //         console.log($buttons);
-        //         let $left = $buttons.map(x => $board.offsetLeft - x.offsetLeft);
-        //         let $right = $buttons.map(x => $board.offsetLeft + $board.offsetWidth - x.offsetLeft - x.offsetWidth);
-        //         let $top = $buttons.map(x => $board.offsetTop - x.offsetTop);
-        //         let $bottom = $buttons.map(x => $board.offsetTop + $board.offsetHeight - x.offsetTop - x.offsetHeight);
-        //         console.log($left, $right, $top, $bottom);
-        //     }, 100);
-        // }
+        if (ddlConfig.moving) {
+            setTimeout(function () {
+                let $board = document.querySelector(".deadline-board");
+                let $buttons = Array.prototype.slice.call(document.querySelectorAll(".deadline-board .md-button"));
+                console.log(document.querySelectorAll(".deadline-board .md-button"));
+                console.log($buttons);
+                let $left = $buttons.map(x => $board.offsetLeft - x.offsetLeft);
+                let $right = $buttons.map(x => $board.offsetLeft + $board.offsetWidth - x.offsetLeft - x.offsetWidth);
+                let $top = $buttons.map(x => $board.offsetTop - x.offsetTop);
+                let $bottom = $buttons.map(x => $board.offsetTop + $board.offsetHeight - x.offsetTop - x.offsetHeight);
+                console.log($left, $right, $top, $bottom);
+                $buttons.forEach(function (value, index) {
+                    value.style.left = ($left[index] + Math.random() * ($right[index] - $left[index])) + "px";
+                    value.style.top = ($top[index] + Math.random() * ($bottom[index] - $top[index])) + "px";
+                });
+            }, 400);
+        }
 
         // Start countdown timer
         let startTime = Date.now();
@@ -284,7 +312,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
                 $scope.current.text = text;
 
                 let choices = [];
-                if ($scope.current.page.choices !== undefined && $scope.current.page.choices.length > 0) {
+                if ($scope.current.page.choices && $scope.current.page.choices.length > 0) {
                     for (let choice of $scope.current.page.choices) {
                         let displayChoice = Object.assign({}, choice);
                         displayChoice.text = valueOf(choice.text);
@@ -347,7 +375,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
                 text: [
                     "我们应该在这里汇总一下玩家的信息。",
                     "比如可以有：",
-                    "玩家姓名：{#姓名}，魅力值：{#魅力}。",
+                    Object.keys(global.values).map(x => x + "：{#" + x + "}").join("，") + "。",
                     "注意，输出前要确保变量存在，所以最好找个地方做全局的初始化。",
                     "目前结局之后只能刷新页面重来，之后大概会改。"
                 ]
@@ -384,6 +412,29 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
         loadEnding();
     }
 
+    let toast = [];
+
+    function showToast(msg) {
+        console.log("Toast:", msg);
+        toast.push(msg);
+        if (toast.length === 1) {
+            let curToast = null;
+            let nextToast = function () {
+                if (curToast !== null) {
+                    toast = toast.slice(1);
+                    // $mdToast.hide(curToast);
+                }
+                if (toast.length > 0) {
+                    let msg = toast[0];
+                    console.log("$mdToast:", msg);
+                    curToast = $mdToast.show($mdToast.simple().textContent(msg));
+                    setTimeout(nextToast, 3000);
+                }
+            };
+            nextToast();
+        }
+    }
+
     function runActions(actions, nextEventIfNoJump = true) {
         let jumpTarget = null;
         let endingName = null;
@@ -400,15 +451,13 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
             if (val instanceof Jump) {
                 jumpTarget = val.label;
             } else if (val instanceof Log) {
-                toastContent = val.msg;
+                showToast(val.msg);
+                // toastContent = val.msg;
             } else if (val instanceof Ending) {
                 endingName = val.name;
             }
         }
 
-        if (toastContent !== null) {
-            $mdToast.showSimple(toastContent);
-        }
         if (endingName !== null) {
             loadEnding(endingName);
         } else if (exec.length !== 0) {

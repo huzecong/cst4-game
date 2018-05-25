@@ -1,4 +1,5 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main", // main, random
     name: "新生舞会",
     stage: "大一",
@@ -151,4 +152,4 @@
             ],
         }
     ]
-}
+})

@@ -4,6 +4,7 @@ node_modules/
 tmp
 .DS_Store
 .idea
+scripts/merged_script.js
 
 # Bower components
 application/static/lib

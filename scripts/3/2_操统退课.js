@@ -10,8 +10,8 @@ Final pages of this scenario are:
     pass
     fail
 */
-
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "操作系统",
     stage: "大三",
@@ -20,7 +20,7 @@ Final pages of this scenario are:
             id: "start",
             //image: "TODO.jpg",
             text: [
-                "在大三下，你终于迎来了万众期待的重头戏——操作系统",
+                "在大三下，你终于迎来了万众期待的重头戏——操作系统。",
                 "在第一节课上，老师为大家介绍了两种考核方式：",
                 "做操作系统大作业 or 参加期末考试",
                 "你选择："
@@ -28,20 +28,20 @@ Final pages of this scenario are:
             choices: [
                 {
                     text: "大作业",
-                    actions: [ 
+                    actions: [
                         jump("project1")
                     ],
                     condition: ge("#成绩", 10).and(ge("#体力", 3))
                 },
                 {
                     text: "考试",
-                    actions: [ 
+                    actions: [
                         jump("exam1")
                     ]
                 },
                 {
                     text: "退课",
-                    actions: [ 
+                    actions: [
                         jump("drop")
                     ],
                 }
@@ -305,7 +305,7 @@ Final pages of this scenario are:
                 achieve("大三修完操作系统")
             ],
             text: [
-                "你成功通过了操作系统！",
+                "你成功修完了操作系统！",
                 "恭喜恭喜！大三下学期最大的难路虎被你打败了！"
             ],
             actions: [
@@ -335,4 +335,4 @@ Final pages of this scenario are:
             ],
         }
     ]
-}
+})

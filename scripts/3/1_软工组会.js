@@ -1,5 +1,5 @@
 // noinspection BadExpressionStatementJS
-{
+({
     type: "main",
     name: "软工组会",
     stage: "大三",
@@ -139,4 +139,4 @@
             ]
         }
     ]
-}
+})

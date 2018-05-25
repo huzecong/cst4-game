@@ -1,4 +1,5 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "random",
     name: "任选课",
     pages: [
@@ -86,35 +87,35 @@
                 }
             ]
         },
-        {   
+        {
             id: "art",
-                text: [
-                    "你选上了《中国陶瓷艺术》这门课，经过一学期的学习，请问：",
-                    "清代著名陶瓷单品、现藏于清华大学艺术博物馆的豇豆红小盘是哪个年代的作品？"
-                ],
-                image: "任选课/豇豆红小盘.jpg",
-                choices: [
-                    {
-                        text: "康熙",
-                        actions: [
-                            jump("wrong")
-                        ]
-                    },
-                    {
-                        text: "雍正",
-                        actions: [
-                            achieve("艺术达人"),
-                            flag("#任选课"),
-                            jump("correct")
-                        ]
-                    },
-                    {
-                        text: "乾隆",
-                        actions: [
-                            jump("wrong")
-                        ]
-                    }
-                ]
+            text: [
+                "你选上了《中国陶瓷艺术》这门课，经过一学期的学习，请问：",
+                "清代著名陶瓷单品、现藏于清华大学艺术博物馆的豇豆红小盘是哪个年代的作品？"
+            ],
+            image: "任选课/豇豆红小盘.jpg",
+            choices: [
+                {
+                    text: "康熙",
+                    actions: [
+                        jump("wrong")
+                    ]
+                },
+                {
+                    text: "雍正",
+                    actions: [
+                        achieve("艺术达人"),
+                        flag("#任选课"),
+                        jump("correct")
+                    ]
+                },
+                {
+                    text: "乾隆",
+                    actions: [
+                        jump("wrong")
+                    ]
+                }
+            ]
         },
         {
             id: "correct",
@@ -129,4 +130,4 @@
             ]
         }
     ]
-}
+})

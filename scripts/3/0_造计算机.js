@@ -12,8 +12,8 @@ Final pages of this scenario are:
     normalend1
     normalend2
 */
-
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "造计算机",
     stage: "大三",
@@ -116,7 +116,7 @@ Final pages of this scenario are:
                     ]
                 },
                 {
-                    text: "不行不行，还是去上课吧，期末考要是跪了也会挂啊。",
+                    text: "不行不行，还是去上课吧，期末考要是跪了也会挂啊",
                     actions: [
                         jump("challengefighting")
                     ]
@@ -126,6 +126,9 @@ Final pages of this scenario are:
         {
             id: "challengeend1",
             //image: "TODO.jpg",
+            actionsBefore: [
+                achieve("造32位计算机")
+            ],
             text: [
                 "你赶在DDL之前成功造出了32位MIPS计算机！",
                 "而且，你的32位计算机跑到了50 Mhz，开心的刘老师邀请你读他的博士生。",
@@ -136,8 +139,7 @@ Final pages of this scenario are:
             actions: [
                 decrease("#成绩", 1),
                 decrease("#体力", 2),
-                flag("#直博"),
-                achieve("造32位计算机")
+                flag("#直博")
             ]
         },
         {
@@ -153,7 +155,7 @@ Final pages of this scenario are:
         {
             id: "challengefighting_qte",
             deadline: {
-                targets: [60, 70],
+                targets: [90, 120],
                 title: "造32位计算机",
                 time: 12,
                 moving: false,
@@ -215,7 +217,7 @@ Final pages of this scenario are:
                 "大腿说：“计算机快造好了，大家今晚一起来408刷夜debug吧。”"
             ],
             actions: [
-                jump("normalfighting")
+                jump("normalfightingpre")
             ]
         },
         {
@@ -224,7 +226,7 @@ Final pages of this scenario are:
             text: [
                 "到了408，你才发现，大腿说的debug，是IDE安装的“bug”。",
                 "嗯对，大腿连IDE都还没安上去……",
-                "没办法了，只好大家一起爆肝了。"
+                "于是你选择："
             ],
             choices: [
                 {
@@ -288,4 +290,4 @@ Final pages of this scenario are:
             ]
         }
     ]
-}
+})

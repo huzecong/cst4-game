@@ -1,5 +1,28 @@
+import os
+
+
+def gather_scripts():
+    script_dir = 'scripts'
+    exclude_dirs = ['image']
+    folders = [d for d in os.listdir(script_dir) if os.path.isdir(os.path.join(script_dir, d))]
+    folders = sorted(set(folders).difference(exclude_dirs))
+
+    scripts = []
+    for d in folders:
+        files = sorted([f for f in os.listdir(os.path.join(script_dir, d)) if f.endswith('.js')])
+        for f in files:
+            with open(os.path.join(script_dir, d, f), 'r', encoding='utf-8') as rf:
+                scripts.append(rf.read())
+
+    js = '[' + ','.join(scripts) + ']'
+    with open(os.path.join(script_dir, 'merged_script.js'), 'w', encoding='utf-8') as f:
+        f.write(js)
+
+    print('Merged script file written')
+
+
 if __name__ == '__main__':
-    import os
+    gather_scripts()
 
     from application import app, initialize
 
@@ -23,7 +46,8 @@ if __name__ == '__main__':
                 'application/templates',
                 'application/modules',
                 'application/static'
-                ]
+                'scripts/'
+            ]
         extra_files = extra_dirs[:]
         for extra_dir in extra_dirs:
             for dirname, dirs, files in os.walk(extra_dir):

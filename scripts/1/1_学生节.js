@@ -8,8 +8,8 @@ Final pages of this scenario are:
     final
     alterfinal
 */
-
-[{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "学生节",
     stage: "大一",
@@ -25,7 +25,7 @@ Final pages of this scenario are:
             choices: [
                 {
                     text: "你们慢慢玩，我回去写程设作业去了",
-                    "actions" : [
+                    "actions": [
                         jump("homework")
                     ]
                 },
@@ -74,6 +74,17 @@ Final pages of this scenario are:
         },
         {
             id: "perform",
+            text: [
+                "转眼间就到了学生节当天。",
+                "马上就要上台表演了。你有点紧张，手心也微微渗出了汗。",
+                "“加油！”你在心里默默给自己打气，走上了舞台。"
+            ],
+            actions: [
+                jump("perform_qte")
+            ]
+        },
+        {
+            id: "perform_qte",
             deadline: {
                 targets: [50, 60],
                 title: "学生节表演",
@@ -190,6 +201,6 @@ Final pages of this scenario are:
                 increase("#魅力", 3)
             ]
         }
-    
+
     ]
-}]
+})

@@ -10,8 +10,8 @@ Final pages of this scenario are:
     memberfinal
     captainfinal
 */
-
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "暑期实践",
     stage: "大一",
@@ -73,7 +73,7 @@ Final pages of this scenario are:
             id: "membernex",
             //image: "TODO.jpg",
             text: [
-                "呼...今天一天的采访终于结束啦。",
+                "呼……今天一天的采访终于结束啦。",
                 "美滋滋地睡上一觉，明天又是紧张的行程啦。",
                 "“{#姓名}！你是贵系的吧？今天的录音资料不小心被我误删了，有木有办法恢复一下呀？”刚进入梦乡，队长就把你摇醒了。"
             ],
@@ -85,7 +85,7 @@ Final pages of this scenario are:
                     ]
                 },
                 {
-                    text: "唉，虽然不会恢复，但搜狗一下也许还能能搞定的，不管了，先答应下来吧。",
+                    text: "唉，虽然不会恢复，但搜狗一下也许还能能搞定的，不管了，先答应下来吧",
                     actions: [
                         jump("captionrepair")
                     ]
@@ -95,7 +95,7 @@ Final pages of this scenario are:
         {
             id: "memberno",
             text: [
-                "唉，这个队员看起来可不好惹...",
+                "噫，这个队员看起来可不好惹……",
                 "大家也没再麻烦过你，一起快快乐乐地继续着这段暑假实(lv)践(you)。"
             ],
             actions: [
@@ -135,7 +135,7 @@ Final pages of this scenario are:
                     ]
                 },
                 {
-                    text: "对着这款电脑，这位同学说：“这款电脑呢，性能很强劲啊，不过，这外观好像也忒差了一些...”，你推荐了这款",
+                    text: "对着这款电脑，这位同学说：“这款电脑呢，性能很强劲啊，不过，这外观好像也忒差了一些……”，你推荐了这款",
                     actions: [
                         eq("#性别", "男").then(jump("lose1")).else(jump("win"))
                     ]
@@ -236,14 +236,14 @@ Final pages of this scenario are:
             ],
             choices: [
                 {
-                    text: "保障每个队员的安全是队长的责任，我要陪这个队员一起去。",
+                    text: "保障每个队员的安全是队长的责任，我要陪这个队员一起去",
                     actions: [
                         flag("$b"),
                         jump("accompany")
                     ]
                 },
                 {
-                    text: "自己忘带自己活该，让队员自己一个人去吧。",
+                    text: "自己忘带自己活该，让队员自己一个人去吧",
                     actions: [
                         unflag("$b"),
                         jump("captainfinal")
@@ -315,7 +315,7 @@ Final pages of this scenario are:
             ],
             actions: [
                 flag("#脱单"),
-                jump("captionfinal")
+                jump("captainfinal")
             ]
         },
         {
@@ -335,4 +335,4 @@ Final pages of this scenario are:
             ]
         }
     ]
-}
+})

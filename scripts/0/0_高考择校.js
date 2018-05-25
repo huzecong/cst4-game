@@ -1,5 +1,5 @@
 // noinspection BadExpressionStatementJS
-{
+({
     type: "main",
     name: "高考择校",
     stage: "入学前",
@@ -81,4 +81,4 @@
             ]
         }
     ]
-}
+})

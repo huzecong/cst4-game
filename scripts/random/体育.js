@@ -1,4 +1,5 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "random",
     name: "体育",
     actionsBefore: [
@@ -94,9 +95,9 @@
             ],
             image: "/体育/训练.jpeg",
             actions: [
-                increase("#魅力", 1)
+                increase("#魅力", 1),
                 increase("#体育", 2)
             ]
         }
     ]
-}
+})

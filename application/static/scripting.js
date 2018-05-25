@@ -35,6 +35,12 @@ function lookup(key, typeIfCreate) {
     }
 }
 
+function replaceVariables(text) {
+    return text.replace(/{([^{}]+)}/g, function (str, name) {
+        return lookup(name).value();
+    });
+}
+
 function valueOf(expr) {
     if (typeof expr === "function") {
         return expr();
@@ -43,6 +49,8 @@ function valueOf(expr) {
     } else {
         if (isVariable(expr))
             return lookup(expr).value();
+        if (typeof expr === "string")
+            return replaceVariables(expr);
         return expr;
     }
 }

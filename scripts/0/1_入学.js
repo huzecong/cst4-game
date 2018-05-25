@@ -1,4 +1,5 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "入学",
     stage: "大一开学前",
@@ -45,4 +46,4 @@
             ]
         }
     ]
-}
+})

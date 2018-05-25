@@ -81,7 +81,7 @@
                 <md-card-actions layout="column" layout-align="start" ng-if="current.choices.length > 0">
                     <md-button ng-repeat="choice in current.choices"
                                ng-click="choose($index)"
-                               ng-disabled="{{ choice.condition && valueOf(choice.condition) === false }}">
+                               ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
                         {{ $index + 1 | character }}. {{ choice.text }}
                     </md-button>
                 </md-card-actions>
@@ -92,7 +92,7 @@
             </div>
             <div class="deadline-page" ng-if="current.page.deadline">
                 <md-card-content>
-                    <p>距离DDL还有：<b>{{ deadline.timeRemaining }}</b> 秒</p>
+                    <p>剩余时间：<b>{{ deadline.timeRemaining }}</b> 秒</p>
                     <div style="width: 100%; position: relative; margin-bottom: 5px;">
                         <div style="display: inline;"><b>{{ current.page.deadline.title }}</b> 进度：</div>
                         <b ng-if="deadline.grade > 0" style="display: inline; position: absolute; right: 0;">

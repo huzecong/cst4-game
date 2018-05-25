@@ -1,7 +1,8 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "random",
     name: "邀请跑步",
-    condition: unflagged("#脱单"),
+    condition: not(flagged("#脱单")),
     pages: [
         {
             id: "start",
@@ -28,7 +29,7 @@
                     actions: [
                         decrease("#魅力", 1)
                     ]
-                }           
+                }
             ]
         },
         {
@@ -52,4 +53,4 @@
             ]
         }
     ]
-}
+})

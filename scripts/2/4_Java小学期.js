@@ -1,4 +1,5 @@
-{
+// noinspection BadExpressionStatementJS
+({
     type: "main",
     name: "大二小学期",
     stage: "大二暑假",
@@ -19,7 +20,7 @@
                 {
                     text: "申请去台湾，可以顺便旅游",
                     actions: [
-                        ge("#成绩", 3).then(jump("tiwan")).else(jump("taiwan_fail"))
+                        ge("#成绩", 3).then(jump("taiwan")).else(jump("taiwan_fail"))
                     ]
                 }
             ]
@@ -40,9 +41,9 @@
                 "你度过了非常充实的五周小学期时光，下面来答一道题检验一下自己的学习成果吧！",
                 "有如图一段代码，请问它的运行结果是："
             ],
-            input: "$答案",
+            input: "$你的回答",
             actions: [
-                eq("$答案", "nullnull").then(jump("java_pass")).else(jump("java_fail"))
+                eq("$你的回答", "nullnull").then(jump("java_pass")).else(jump("java_fail"))
             ]
         },
         {
@@ -54,7 +55,7 @@
         },
         {
             id: "java_fail",
-            text: "抱歉，你对Java的理解还需要进一步提高。",
+            text: "看来，你对Java的理解还需要进一步提高呀。",
             actions: [
                 increase("#成绩", -1)
             ]
@@ -67,4 +68,4 @@
             ]
         }
     ]
-}
+})
