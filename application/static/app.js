@@ -38,33 +38,33 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
         name: "天下大计",
         stage: "计四年级毕业联欢",
         pages: [
-            {
-                id: "start",
-                image: "logo.jpeg",
-                choices: [
-                    {
-                        text: "开始游戏",
-                    },
-                    {
-                        text: "载入游戏",
-                    },
-                    {
-                        text: "成就列表",
-                    }
-                ],
-                actions: [
-                    exec(function () {
-                        loadScriptFromUrl('/static/scripts/merged_script.js');
-                    }),
-                    achieve("开始游戏")
-                ]
-            },
+            // {
+            //     id: "start",
+            //     image: "logo.jpeg",
+            //     choices: [
+            //         {
+            //             text: "开始游戏",
+            //         },
+            //         {
+            //             text: "载入游戏",
+            //         },
+            //         {
+            //             text: "成就列表",
+            //         }
+            //     ],
+            //     actions: [
+            //         exec(function () {
+            //             loadScriptFromUrl('/static/scripts/merged_script.js');
+            //         }),
+            //         achieve("开始游戏")
+            //     ]
+            // },
             {
                 id: "deadline",
                 deadline: {
                     targets: [3, 6, 9],
                     title: "造计算机",
-                    time: 10000000,
+                    time: 1000,
                     moving: true,
                     badChoices: 3
                 },
@@ -97,6 +97,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
         grade: 0,
         gradesList: [],
         timer: -1,
+        movingTimer: -1,
         badChoicesText: []
     };
     $scope.events = [];
@@ -193,17 +194,46 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
             setTimeout(function () {
                 let $board = document.querySelector(".deadline-board");
                 let $buttons = Array.prototype.slice.call(document.querySelectorAll(".deadline-board .md-button"));
-                console.log(document.querySelectorAll(".deadline-board .md-button"));
-                console.log($buttons);
+                let ratio = $board.offsetWidth / $board.offsetHeight;
                 let $left = $buttons.map(x => $board.offsetLeft - x.offsetLeft);
-                let $right = $buttons.map(x => $board.offsetLeft + $board.offsetWidth - x.offsetLeft - x.offsetWidth);
+                let $width = $buttons.map(x => $board.offsetWidth - x.offsetWidth);
                 let $top = $buttons.map(x => $board.offsetTop - x.offsetTop);
-                let $bottom = $buttons.map(x => $board.offsetTop + $board.offsetHeight - x.offsetTop - x.offsetHeight);
-                console.log($left, $right, $top, $bottom);
-                $buttons.forEach(function (value, index) {
-                    value.style.left = ($left[index] + Math.random() * ($right[index] - $left[index])) + "px";
-                    value.style.top = ($top[index] + Math.random() * ($bottom[index] - $top[index])) + "px";
-                });
+                let $height = $buttons.map(x => $board.offsetHeight - x.offsetHeight);
+
+                let deltaX = [], deltaY = [];
+                let speed = 0.5; // 30% in a second
+                for (let i in $buttons) {
+                    let theta = (Math.random() - 0.5) * Math.PI;
+                    let x = Math.cos(theta), y = Math.sin(theta);
+                    x *= speed;
+                    y *= speed;
+                    deltaX.push(x);
+                    deltaY.push(y);
+                }
+
+                let posX = [], posY = [];
+                for (let i in $buttons) {
+                    posX.push(-$left[i] / $width[i]);
+                    posY.push(-$top[i] / ratio / $height[i]);
+                }
+
+                function rectify(x) {
+                    let val = x % 2.0;
+                    if (val < 0) val += 2.0;
+                    if (val > 1.0) return 2.0 - val;
+                    else return val;
+                }
+
+                let fps = 60;
+                $scope.deadline.movingTimer = setInterval(function () {
+                    for (let i in $buttons) {
+                        let value = $buttons[i];
+                        posX[i] += deltaX[i] / fps;
+                        posY[i] += deltaY[i] / fps;
+                        value.style.left = ($left[i] + rectify(posX[i]) * $width[i]) + "px";
+                        value.style.top = ($top[i] + rectify(posY[i] * ratio) * $height[i]) + "px";
+                    }
+                }, 1000 / fps);
             }, 400);
         }
 
@@ -497,7 +527,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
     };
 
     function finishDeadline() {
-        clearInterval($scope.deadline.timer);
+        clearTimeout($scope.deadline.timer);
+        clearInterval($scope.deadline.movingTimer);
         console.log("QTE: " + $scope.deadline.gradesList[$scope.deadline.grade]);
 
         let actions = [set("$__QTE__", $scope.deadline.grade)];
