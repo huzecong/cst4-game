@@ -1,12 +1,15 @@
 import os
+import subprocess
 
-from flask import render_template, session, send_from_directory
+GIT_COMMIT_HASH = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii')
+
+from flask import render_template, session, send_from_directory, url_for
 
 from . import app
 
 @app.route('/')
 def route_index():
-    return render_template('index.html')
+    return render_template('index.html', static_version=GIT_COMMIT_HASH)
 
 @app.route('/favicon.ico')
 def route_favicon():

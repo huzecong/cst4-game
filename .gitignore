@@ -6,5 +6,7 @@ tmp
 .idea
 scripts/merged_script.js
 
+*.pyc
+
 # Bower components
 application/static/lib
