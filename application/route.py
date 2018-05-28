@@ -1,7 +1,10 @@
 import os
 import subprocess
 
-GIT_COMMIT_HASH = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii')
+try:
+    GIT_COMMIT_HASH = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
+except subprocess.CalledProcessError:
+    GIT_COMMIT_HASH = 'final'
 
 from flask import render_template, session, send_from_directory, url_for
 

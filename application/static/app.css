@@ -72,8 +72,8 @@ body > div > md-content {
     vertical-align: middle;
     border-radius: 2px;
     margin-top: 20px;
-    /*min-height: 116px;*/
     padding: 30px 10px;
+    position: relative;
 }
 
 .deadline-board md-button {
@@ -82,4 +82,33 @@ body > div > md-content {
 
 .deadline-board #work-button {
     z-index: 0;
+}
+
+.deadline-board .deadline-board-countdown {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    font-size: 30pt;
+    /* Put contents in center */
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 2px;
+    -webkit-transition: opacity 300ms linear;
+    -moz-transition: opacity 300ms linear;
+    -ms-transition: opacity 300ms linear;
+    -o-transition: opacity 300ms linear;
+    transition: opacity 300ms linear;
+}
+
+.deadline-board-countdown div {
+    -webkit-transition: transform 300ms ease-out, -webkit-transform 300ms ease-out;
+    -moz-transition: transform 300ms ease-out, -webkit-transform 300ms ease-out;
+    -ms-transition: transform 300ms ease-out, -webkit-transform 300ms ease-out;
+    -o-transition: transform 300ms ease-out, -webkit-transform 300ms ease-out;
+    transition: transform 300ms ease-out, -webkit-transform 300ms ease-out;
 }
