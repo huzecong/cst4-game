@@ -81,5 +81,5 @@ body > div > md-content {
 }
 
 .deadline-board #work-button {
-    z-index: 10;
+    z-index: 0;
 }

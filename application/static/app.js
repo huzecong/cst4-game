@@ -201,7 +201,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', function ($
                 let $height = $buttons.map(x => $board.offsetHeight - x.offsetHeight);
 
                 let deltaX = [], deltaY = [];
-                let speed = 0.5; // 30% in a second
+                let speed = 1.0; // 100% in a second
                 for (let i in $buttons) {
                     let theta = (Math.random() - 0.5) * Math.PI;
                     let x = Math.cos(theta), y = Math.sin(theta);
