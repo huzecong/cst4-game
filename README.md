@@ -5,7 +5,19 @@
 - 主要的代码是`application/static/app.js`和`application/static/scripting.js`，前者负责逻辑，后者负责解析剧本。
 - 网站只有一个网页，在`application/templates/index.html`中。
 
+## 运行方法
+
+```bash
+pip install flask     # install Flask (in Python 3.6)
+npm install -g bower  # install bower
+bower install         # download static files for the webpages
+python run.py         # start the server
+```
+
+之后，便可通过http://127.0.0.1:8000/访问网页。
+
 ## 语法说明
+
 剧本语法基于JavaScript，使用类似JSON的格式存储。
 
 #### 事件
