@@ -31,8 +31,8 @@
 <div ng-controller="AppCtrl" ng-cloak>
     <md-toolbar class="md-hue-2" md-whiteframe="2">
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings">
-                <md-icon>menu</md-icon>
+            <md-button class="md-icon-button" aria-label="Settings" ng-click="loadMainMenu()">
+                <md-icon>arrow_back</md-icon>
             </md-button>
 
             <h2 flex md-truncate>天下大计</h2>
@@ -69,7 +69,7 @@
             <img ng-if="current.page.image" ng-src="/static/image/{{ current.page.image }}"
                  class="md-card-image" alt="{{ current.page.image }}">
 
-            <div ng-if="current.page.deadline === undefined">
+            <div ng-if="current.pageType === 'text' || current.pageType === 'ending'">
                 <md-card-content>
                     <p ng-repeat="paragraph in current.text">{{ paragraph }}</p>
                     <md-input-container class="md-block" ng-if="current.page.input">
@@ -90,7 +90,8 @@
                     <md-button ng-click="choose(-1)">继续</md-button>
                 </md-card-actions>
             </div>
-            <div class="deadline-page" ng-if="current.page.deadline">
+
+            <div class="deadline-page" ng-if="current.pageType == 'deadline'">
                 <md-card-content>
                     <p>剩余时间：<b>{{ deadline.timeRemaining }}</b> 秒</p>
                     <div style="width: 100%; position: relative; margin-bottom: 5px;">
@@ -106,14 +107,31 @@
                                             value="{{ deadline.progress }}"></md-progress-linear>
                     </div>
                     <div class="deadline-board" md-whiteframe="1">
-                        <md-button id="work-button" ng-click="deadlineClick(1)" class="md-fab md-primary">肝!
+                        <md-button id="work-button" ng-click="deadlineClick(1)" class="md-fab md-primary"
+                                   style="z-index: 5;">肝!
                         </md-button>
                         <md-button ng-repeat="badChoice in deadline.badChoicesText"
-                                   id="rest-button-{{ $index + 1}}" ng-click="deadlineClick(-$index - 1)"
-                                   class="md-raised">{{ badChoice }}
+                                   ng-click="deadlineClick(-$index - 1)" class="md-raised"
+                                   style="z-index: {{ (deadline.badChoicesText.length - $index) * 2 }};">
+                            {{ badChoice }}
                         </md-button>
-                        <div class="deadline-board-countdown"><div><b>GO!</b></div></div>
+                        <div class="deadline-board-countdown">
+                            <div><b>GO!</b></div>
+                        </div>
                     </div>
+                </md-card-content>
+            </div>
+            <div class="achievements-page" ng-if="current.pageType == 'achievements'">
+                <md-card-content>
+                    <md-list flex>
+                        <md-list-item class="md-2-line" ng-repeat="achievement in achievements" ng-click="null">
+                            <img ng-src="" class="md-avatar" alt=""/>
+                            <div class="md-list-item-text">
+                                <h3>{{ achievement.name }}</h3>
+                                <p>{{ achievement.text }}</p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
                 </md-card-content>
             </div>
         </md-card>

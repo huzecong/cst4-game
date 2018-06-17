@@ -81,7 +81,7 @@ body > div > md-content {
 }
 
 .deadline-board #work-button {
-    z-index: 0;
+
 }
 
 .deadline-board .deadline-board-countdown {
@@ -91,6 +91,7 @@ body > div > md-content {
     top: 0;
     position: absolute;
     font-size: 30pt;
+    z-index: 10;
     /* Put contents in center */
     display: flex;
     flex-direction: column;
