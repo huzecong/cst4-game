@@ -253,12 +253,12 @@ Final pages of this scenario are:
         },
         {
             id: "accompany",
-            //image: "TODO.jpg",
+            image: "暑期实践/微积分.jpg",
             text: [
                 "你和这位队员边走边聊，从实践聊到生活，又从生活聊到学习",
                 "然后你们发现，你们竟然都上过苏宁的微积分！",
-                "于是，队员随手考了你一道微积分题：",
-                "\integral tan x dx ="
+                "于是，队员随手考了你一道微积分题，如上图所示。",
+                "你给出的答案是："
             ],
             choices: [
                 {

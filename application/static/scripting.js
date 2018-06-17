@@ -71,6 +71,8 @@ class Variable extends Expression {
 
     checkExists() {
         if (!(this.key in this.sto.values)) {
+            if (this.typeIfCreate === undefined)
+                throw new Error("Variable `" + this.key + "` does not exist");
             if (!(this.typeIfCreate in Storage.defaultValues))
                 throw new Error("Unsupported variable type: " + this.typeIfCreate);
             this.sto.values[this.key] = Storage.defaultValues[this.typeIfCreate];
@@ -121,10 +123,14 @@ class RelOp {
     }
 
     static eq(a, b) {
+        if (typeof a === "string" && typeof b === "string")
+            return a.toLowerCase() === b.toLowerCase();
         return a === b;
     }
 
     static ne(a, b) {
+        if (typeof a === "string" && typeof b === "string")
+            return a.toLowerCase() !== b.toLowerCase();
         return a !== b;
     }
 

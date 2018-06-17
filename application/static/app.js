@@ -512,14 +512,19 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let toastContent = null;
         let exec = [];
 
-        for (let action of actions) {
+        let nextActions = actions.slice();
+
+        while (nextActions.length > 0) {
+            let action = nextActions.shift();
             if (action instanceof Exec) {
                 exec.push(action);
                 continue;
             }
             let val = action.value();
             // console.log(action.constructor.name, '=>', val);
-            if (val instanceof Jump) {
+            if (Array.isArray(val)) {
+                nextActions = val.concat(nextActions);
+            } else if (val instanceof Jump) {
                 jumpTarget = val.label;
             } else if (val instanceof Log) {
                 showToast(val.msg);
@@ -649,6 +654,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             reader.onload = function (ev) {
                 console.log("Load complete");
                 loadScript(ev.target.result);
+                cheat();
+                showToast("已成功载入：" + f.files[0].name + "。");
             };
             reader.readAsText(f.files[0]);
             f.removeEventListener('change', eventListener);
