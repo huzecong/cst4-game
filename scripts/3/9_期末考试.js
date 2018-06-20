@@ -7,6 +7,7 @@
         {
             name: "计算机组成原理",
             points: 4,
+            condition: not(flagged("#计原退课")),
             questions: [
                 {
                     text: "不可用于解决控制冲突的是：",
@@ -36,6 +37,7 @@
         {
             name: "操作系统",
             points: 3,
+            condition: not(flagged("#操统退课")),
             questions: [
                 {
                     text: "判断正误：考虑写操作情况的改进时钟页面替换算法不会存在Belady现象。",
@@ -50,9 +52,13 @@
     pages: [
         {
             id: "final",
+            actionsBefore: [
+                flagged("#操统退课").then(increase("#不及格课程", 1)),
+                flagged("#计原退课").then(increase("#不及格课程", 1))
+            ],
             text: [
                 "你熬过了魔鬼一般的大三考试周。",
-                gt("#不及格课程", 0).then("注意，你有{#不及格课程}门考试不及格。你需要在大四毕业前通过这些课程，不然没法正常毕业。")
+                gt("#不及格课程", 0).then("注意，你仍有{#不及格课程}门课程未通过。你需要在大四毕业前通过这些课程，否则无法正常毕业。")
             ]
         }
     ]

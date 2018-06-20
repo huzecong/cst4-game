@@ -109,7 +109,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     function convertExamsToEvent(examEvent) {
-        let examNames = examEvent.exams.map(x => x.name);
+        let exams = examEvent.exams.filter(x => x.condition === undefined || x.condition.value());
+        let examNames = exams.map(x => x.name);
         let failedExamNames = failedExams.map(x => x.name);
         let event = {
             type: "normal",
@@ -160,7 +161,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             ];
         };
         let pageNum = 0;
-        let curExams = failedExams.concat(examEvent.exams);
+        let curExams = failedExams.concat(exams);
         failedExams = [];
         for (let exam of curExams) {
             let q = exam.questions.randomPick();

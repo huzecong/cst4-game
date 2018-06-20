@@ -91,7 +91,7 @@ class Variable extends Expression {
         this.checkExists();
         let varVal = this.sto.values[this.key];
         if (varVal !== null && typeof value !== typeof varVal)
-            throw new Error("Type mismatch during assignment");
+            throw new Error("Type mismatch during assignment of `" + this.key);
         this.sto.values[this.key] = value;
     }
 
