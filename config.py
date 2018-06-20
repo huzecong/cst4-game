@@ -1,3 +1,3 @@
-DEBUG = True
+DEBUG = False
 
 # EXPLAIN_TEMPLATE_LOADING = True
