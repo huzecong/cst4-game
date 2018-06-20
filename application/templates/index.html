@@ -31,7 +31,7 @@
 <div ng-controller="AppCtrl" ng-cloak>
     <md-toolbar class="md-hue-2" md-whiteframe="2">
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-click="loadMainMenu()">
+            <md-button ng-show="current.hasReturn" class="md-icon-button" aria-label="Settings" ng-click="loadMainMenu()">
                 <md-icon>arrow_back</md-icon>
             </md-button>
 
@@ -69,7 +69,7 @@
             <img ng-if="current.page.image" ng-src="/static/image/{{ current.page.image }}"
                  class="md-card-image" alt="{{ current.page.image }}">
 
-            <div ng-if="current.pageType === 'text' || current.pageType === 'ending'">
+            <div class="text-page" ng-if="current.pageType === 'text' || current.pageType === 'ending'">
                 <md-card-content>
                     <!--<p ng-repeat="paragraph in current.text">{{ paragraph | safe }}</p>-->
                     <div ng-bind-html="current.html"></div>

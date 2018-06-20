@@ -252,6 +252,13 @@ class Ending extends Expression {
     }
 }
 
+class Achievement extends Expression {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+}
+
 class Exec extends Expression {
     constructor(func) {
         super();
@@ -321,7 +328,7 @@ function decrease(key, delta) {
 }
 
 function achieve(name) {
-    return new Log("解锁成就：" + name);
+    return new Achievement(name);
 }
 
 function ending(name) {

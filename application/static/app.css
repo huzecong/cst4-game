@@ -8,11 +8,7 @@ md-card.storyboard img.md-card-image {
     border-radius: 0;
 }
 
-md-card.storyboard md-card-content {
-
-}
-
-md-card.storyboard md-card-content > p {
+md-card.storyboard .text-page md-card-content > p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     /*text-indent: 2em;*/

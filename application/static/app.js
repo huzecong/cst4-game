@@ -35,6 +35,7 @@ function cheat() {
 
 App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function ($scope, $http, $mdToast, $mdMenu, $timeout) {
     $scope.current = {
+        hasReturn: false,
         event: null,
         page: null,
         choices: [],
@@ -211,7 +212,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             valueOf(action);
     }
 
-    function loadScript(js) {
+    function loadScript(js, callback) {
         let jsValue = eval(js);
         if (!(jsValue instanceof Array))
             jsValue = [jsValue];
@@ -239,13 +240,17 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             imageCache.push(img);
         }
 
-        loadEventIndex(0);
+        if (callback !== undefined) {
+            callback();
+        } else {
+            loadEvent(0);
+        }
     }
 
-    function loadScriptFromUrl(url) {
+    function loadScriptFromUrl(url, callback) {
         $http.get(url).then(function (response) {
             let currentScript = response.data;
-            loadScript(currentScript);
+            loadScript(currentScript, callback);
         });
     }
 
@@ -498,11 +503,16 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
     }
 
-    function loadEvent(event, animate = true) {
+    function loadEvent(idx, animate = true) {
         let loadEventImpl = function () {
+            let event = $scope.events[idx];
+            $scope.current.pageType = "text";
+            $scope.current.eventIndex = idx;
+            $scope.current.progress = 100 * idx / $scope.events.length;
+
             if (event.type === "exam")
                 event = convertExamsToEvent(event);
-            console.log(event);
+            // console.log(event);
             $scope.current.event = event;
             // console.log($scope.current.event.name);
             pageMap = {};
@@ -523,11 +533,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
     }
 
-    function loadEventIndex(idx, animate = true) {
-        $scope.current.pageType = "text";
-        $scope.current.eventIndex = idx;
-        $scope.current.progress = 100 * idx / $scope.events.length;
-        loadEvent($scope.events[idx], animate);
+    function grantAchievement(name, toast = true) {
+        let achievementId = achievementMap[name];
+        if (achievementId === undefined)
+            throw "未定义的成就：" + name;
+        if (!achievementUnlocked[achievementId]) {
+            if (toast) showToast("解锁成就：" + name);
+            achievementUnlocked[achievementId] = true;
+        }
     }
 
     function loadEnding(name, animate = true) {
@@ -536,7 +549,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             ending = endingMap[name];
         } else {
             ending = {
-                name: "正常结局",
+                name: "毕业",
                 text: [
                     "我们应该在这里汇总一下玩家的信息。",
                     "比如可以有：",
@@ -548,6 +561,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
 
         let loadEndingImpl = function () {
+            $scope.current.hasReturn = true;
             $scope.pageType = "ending";
             $scope.current.event = {
                 name: ending.name,
@@ -559,15 +573,18 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             $scope.current.choices = [];
             loadText(ending.text);
             $scope.current.ending = true;
+            grantAchievement("结局：" + ending.name, false);
         };
         changeCardContent(loadEndingImpl, 0);
     }
 
     function loadAchievements(animate = true) {
         let loadAchievementsImpl = function () {
+            $scope.current.hasReturn = true;
             $scope.current.pageType = "achievements";
             $scope.achievements = [];
             let numAchievements = 0;
+            console.log(achievementsList);
             for (let i in achievementsList) {
                 if (achievementUnlocked[i]) {
                     $scope.achievements.push(achievementsList[i]);
@@ -595,7 +612,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             if ($scope.events[nextIndex].condition && valueOf($scope.events[nextIndex].condition) === false) {
                 ++nextIndex;
             } else {
-                loadEventIndex(nextIndex);
+                loadEvent(nextIndex);
                 return;
             }
         }
@@ -615,7 +632,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     }
                     if (toast.length > 0) {
                         let msg = toast[0];
-                        console.log("$mdToast:", msg);
+                        // console.log("$mdToast:", msg);
                         curToast = $mdToast.show($mdToast.simple().textContent(msg));
                         setTimeout(nextToast, 3000);
                     }
@@ -629,11 +646,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let jumpTarget = null;
         let endingName = null;
         let promises = [];
+        let hasExec = false;
 
         let nextActions = actions.slice();
 
         while (nextActions.length > 0) {
             let action = nextActions.shift();
+            if (action instanceof Exec)
+                hasExec = true;
             let val = action.value();
             if (val instanceof Promise) {
                 promises.push(val);
@@ -645,6 +665,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 showToast(val.msg);
             } else if (val instanceof Ending) {
                 endingName = val.name;
+            } else if (val instanceof Achievement) {
+                grantAchievement(val.name);
             }
         }
 
@@ -654,8 +676,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             let redirect = function() {
                 if (jumpTarget !== null) {
                     loadPage(jumpTarget);
-                } else if (nextEventIfNoJump) {
-                    console.log("End event");
+                } else if (!hasExec && nextEventIfNoJump) {
+                    // console.log("End event");
                     nextEvent();
                 }
             };
@@ -667,41 +689,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
     }
 
-    function loadMainMenu(animate = true) {
-        let defaultEvent = {
-            type: "main",
-            name: "天下大计",
-            stage: "计四年级毕业联欢",
-            pages: [
-                {
-                    id: "start",
-                    image: "logo.jpeg",
-                    choices: [
-                        {
-                            text: "开始游戏",
-                        },
-                        {
-                            text: "载入游戏",
-                        },
-                        {
-                            text: "成就列表",
-                        }
-                    ],
-                    actions: [
-                        exec(function () {
-                            loadScriptFromUrl('/static/scripts/merged_script.js');
-                        }),
-                        achieve("开始游戏")
-                    ],
-                    _noDefaultJump: true
-                }
-            ]
-        };
-        $scope.events = [defaultEvent];
-        $scope.current.event = defaultEvent;
-        loadEventIndex(0, animate);
-    }
-
     $scope.choose = function (index) {
         if (inTransition) return;
 
@@ -709,16 +696,16 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         if ($scope.current.page.actions)
             actions.push(...$scope.current.page.actions);
         if (index === -1) {
-            console.log("Choose continue");
+            // console.log("Choose continue");
         } else {
             let choice = $scope.current.page.choices[index];
-            console.log("Choose " + index + ": " + choice.text);
+            // console.log("Choose " + index + ": " + choice.text);
             if (choice.actions)
                 actions.push(...choice.actions);
         }
 
         if ($scope.current.page.input) {
-            console.log("Input " + $scope.current.page.input + ": " + $scope.current.input);
+            // console.log("Input " + $scope.current.page.input + ": " + $scope.current.input);
             set($scope.current.page.input, $scope.current.input).value()
         }
 
@@ -729,7 +716,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         clearTimeout($scope.deadline.timer);
         if ($scope.current.page.deadline.moving)
             clearInterval($scope.deadline.movingTimer);
-        console.log("QTE: " + $scope.deadline.gradesList[$scope.deadline.grade]);
+        // console.log("QTE: " + $scope.deadline.gradesList[$scope.deadline.grade]);
 
         let actions = [set("$__QTE__", $scope.deadline.grade)];
         if ($scope.current.page.actions)
@@ -755,22 +742,22 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     initialize();
 
+    $http.get('/static/scripts/achievements.js').then(function (response) {
+        let currentScript = response.data;
+        achievementsList = eval(currentScript);
+
+        for (let idx in achievementsList) {
+            achievementMap[achievementsList[idx].name] = idx;
+            achievementUnlocked.push(false);
+        }
+    });
+
     $http.get('/static/scripts/ending.js').then(function (response) {
         let currentScript = response.data;
         endingsList = eval(currentScript);
 
         for (let ending of endingsList)
             endingMap[ending.name] = ending;
-    });
-
-    $http.get('/static/scripts/achievements.js').then(function (response) {
-        let currentScript = response.data;
-        achievementsList = eval(currentScript);
-
-        for (let achievement of achievementsList) {
-            achievementMap[achievement.name] = achievement;
-            achievementUnlocked.push(false);
-        }
     });
 
     if (document.getElementsByTagName("html")[0].className.split(' ').includes('no-js')) {
@@ -791,10 +778,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         f.type = "file";
         f.name = "file";
         let eventListener = function () {
-            console.log(f.files[0].name);
+            // console.log(f.files[0].name);
             let reader = new FileReader();
             reader.onload = function (ev) {
-                console.log("Load complete");
+                // console.log("Load complete");
                 loadScript(ev.target.result);
                 cheat();
                 showToast("已成功载入：" + f.files[0].name + "。");
@@ -806,5 +793,41 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         f.click();
     };
 
-    loadMainMenu(false);
+    $scope.loadMainMenu = function(animate = true) {
+        $scope.current.hasReturn = false;
+        loadEvent(0, animate);
+    };
+
+    loadScriptFromUrl('/static/scripts/merged_script.js', function() {
+        let mainMenuEvent = {
+            type: "main",
+            name: "天下大计",
+            stage: "计四年级毕业联欢",
+            pages: [
+                {
+                    id: "start",
+                    image: "logo.jpeg",
+                    choices: [
+                        {
+                            text: "开始游戏",
+                        },
+                        {
+                            text: "载入游戏",
+                        },
+                        {
+                            text: "成就列表",
+                            actions: [
+                                exec(loadAchievements)
+                            ]
+                        }
+                    ],
+                    actions: [
+                        achieve("开始游戏")
+                    ]
+                }
+            ]
+        };
+        $scope.events.unshift(mainMenuEvent);
+        $scope.loadMainMenu(false);
+    });
 }]);
