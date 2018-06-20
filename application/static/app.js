@@ -1,12 +1,13 @@
 'use strict';
 
 let App = angular.module('myApp', [
-    'ngMaterial'
-]).config(['$locationProvider', '$mdThemingProvider',
-    function ($locationProvider, $mdThemingProvider) {
+    'ngMaterial', 'ngSanitize'
+]).config(['$locationProvider', '$mdThemingProvider', '$sanitizeProvider',
+    function ($locationProvider, $mdThemingProvider, $sanitizeProvider) {
         $locationProvider.hashPrefix('!');
         $mdThemingProvider.theme('default').primaryPalette('purple');
         $mdThemingProvider.enableBrowserColor();
+        $sanitizeProvider.addValidAttrs(["style"]);
     }
 ]).filter('character', function () {
     return function (input) {
@@ -70,6 +71,127 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     let achievementUnlocked = [];
     let achievementMap = {};
 
+    let failedExams = [];
+
+    function sleep(ms) {
+        return new Promise(resolve => {
+            inTransition = true;
+            setTimeout(() => {
+                inTransition = false;
+                resolve();
+            }, ms)
+        });
+    }
+
+    Array.prototype.shuffle = function () {
+        // Credit: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array/
+        let array = this.slice();
+        let currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    };
+
+    Array.prototype.randomPick = function() {
+        return this[Math.floor(Math.random() * this.length)];
+    };
+
+    function convertExamsToEvent(examEvent) {
+        let examNames = examEvent.exams.map(x => x.name);
+        let failedExamNames = failedExams.map(x => x.name);
+        let event = {
+            type: "normal",
+            name: "期末考试",
+            stage: $scope.current.event.stage,
+            pages: [
+                {
+                    id: "start",
+                    text: [
+                        $scope.current.event.stage + "的期末考试如期而至。",
+                        "你需要参加的考试有：",
+                        examNames.join("、")
+                    ],
+                    actions: [
+                        set("$不及格学分", 0),
+                        set("#不及格课程", 0)
+                    ]
+                }
+            ]
+        };
+        if (failedExamNames.length > 0) {
+            event.pages[0].text.push("你还需要补考下列重修课程：");
+            event.pages[0].text.push(failedExamNames.join("、"));
+        }
+
+        let correctAction = function (idx) {
+            return [
+                exec(async function () {
+                    let button = document.querySelectorAll("#question-choices > button")[idx];
+                    button.innerText = "正确";
+                    button.style.color = "green";
+                    await sleep(1000);
+                })
+            ];
+        };
+        let wrongAction = function (idx, exam) {
+            return [
+                exec(async function () {
+                    let button = document.querySelectorAll("#question-choices > button")[idx];
+                    button.innerText = "错误";
+                    button.style.color = "red";
+                    failedExams.push(exam);
+                    await sleep(1000);
+                }),
+                increase("$不及格学分", exam.points),
+                increase("#不及格课程", 1),
+                ge("$不及格学分", 20).then(ending("退学"))
+            ];
+        };
+        let pageNum = 0;
+        let curExams = failedExams.concat(examEvent.exams);
+        failedExams = [];
+        for (let exam of curExams) {
+            let q = exam.questions.randomPick();
+            let page = {
+                id: "q" + pageNum,
+                image: q.image,
+                text: [
+                    '<div style="text-align: center"><b>' + exam.name + "期末考试" + '</b><br/>' + "学分：" + exam.points + '</div>'
+                ].concat([q.text]),
+                choices: [{
+                    text: q.answer,
+                    actions: correctAction
+                }].concat(q.choices.map(x => ({
+                    text: x,
+                    actions: wrongAction
+                }))).shuffle().map((x, idx) => ({
+                    text: x.text,
+                    actions: x.actions(idx, exam)
+                })),
+                actions: []
+            };
+            ++pageNum;
+            event.pages.push(page);
+        }
+        for (let i = 0; i < pageNum; ++i)
+            event.pages[i].actions.push(jump("q" + i));
+        event.pages[pageNum].actions.push(jump("final"));
+        event.pages.push(...examEvent.pages);
+        return event;
+    }
+
     function initialize() {
         global.clear();
         local.clear();
@@ -80,8 +202,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             set("#魅力", 0),
             set("#成绩", 0),
             set("#直博", false),
-            set("#社工", 0)
+            set("#社工", 0),
+            set("#不合格课程", 0)
         ];
+        failedExams = [];
         for (let action of initActions)
             valueOf(action);
     }
@@ -95,14 +219,24 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         // cheat();
 
         // load images
+        let imagePaths = [];
         imageCache = [];
         for (let event of $scope.events)
-            for (let page of event.pages)
-                if (page.image !== undefined) {
-                    let img = new Image();
-                    img.src = '/static/image/' + page.image;
-                    imageCache.push(img);
-                }
+            if (event.type === "exam") {
+                for (let exam of event.exams)
+                    for (let q of exam.questions)
+                        if (q.image !== undefined)
+                            imagePaths.push(q.image)
+            } else {
+                for (let page of event.pages)
+                    if (page.image !== undefined)
+                        imagePaths.push(page.image);
+            }
+        for (let path of imagePaths) {
+            let img = new Image();
+            img.src = '/static/image/' + path;
+            imageCache.push(img);
+        }
 
         loadEventIndex(0);
     }
@@ -320,6 +454,13 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         });
     }
 
+    function loadText(pageText) {
+        let text = [];
+        recursiveAddText(text, pageText);
+        $scope.current.text = text;
+        $scope.current.html = text.map(x => "<p>" + x + "</p>").join("\n");
+    }
+
     function loadPage(label, animate = true) {
         let loadPageImpl = function () {
             if (!(label in pageMap)) {
@@ -335,9 +476,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 initDeadline(ddlConfig);
             } else {
                 $scope.current.pageType = "text";
-                let text = [];
-                recursiveAddText(text, $scope.current.page.text);
-                $scope.current.text = text;
+                loadText($scope.current.page.text);
 
                 let choices = [];
                 if ($scope.current.page.choices && $scope.current.page.choices.length > 0) {
@@ -360,6 +499,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     function loadEvent(event, animate = true) {
         let loadEventImpl = function () {
+            if (event.type === "exam")
+                event = convertExamsToEvent(event);
+            console.log(event);
             $scope.current.event = event;
             // console.log($scope.current.event.name);
             pageMap = {};
@@ -414,8 +556,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 image: ending.image,
             };
             $scope.current.choices = [];
-            $scope.current.text = [];
-            recursiveAddText($scope.current.text, ending.text);
+            loadText(ending.text);
             $scope.current.ending = true;
         };
         changeCardContent(loadEndingImpl, 0);
@@ -463,7 +604,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     let showToast = function () {
         let toast = [];
         return function (msg) {
-            console.log("Toast:", msg);
             toast.push(msg);
             if (toast.length === 1) {
                 let curToast = null;
@@ -487,26 +627,21 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     function runActions(actions, nextEventIfNoJump = true) {
         let jumpTarget = null;
         let endingName = null;
-        let toastContent = null;
-        let exec = [];
+        let promises = [];
 
         let nextActions = actions.slice();
 
         while (nextActions.length > 0) {
             let action = nextActions.shift();
-            if (action instanceof Exec) {
-                exec.push(action);
-                continue;
-            }
             let val = action.value();
-            // console.log(action.constructor.name, '=>', val);
-            if (Array.isArray(val)) {
+            if (val instanceof Promise) {
+                promises.push(val);
+            } else if (Array.isArray(val)) {
                 nextActions = val.concat(nextActions);
             } else if (val instanceof Jump) {
                 jumpTarget = val.label;
             } else if (val instanceof Log) {
                 showToast(val.msg);
-                // toastContent = val.msg;
             } else if (val instanceof Ending) {
                 endingName = val.name;
             }
@@ -514,15 +649,19 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
         if (endingName !== null) {
             loadEnding(endingName);
-        } else if (exec.length !== 0) {
-            for (let action of exec)
-                action.value();
         } else {
-            if (jumpTarget !== null) {
-                loadPage(jumpTarget);
-            } else if (nextEventIfNoJump) {
-                console.log("End event");
-                nextEvent();
+            let redirect = function() {
+                if (jumpTarget !== null) {
+                    loadPage(jumpTarget);
+                } else if (nextEventIfNoJump) {
+                    console.log("End event");
+                    nextEvent();
+                }
+            };
+            if (promises.length > 0) {
+                Promise.all(promises).then(redirect);
+            } else {
+                redirect();
             }
         }
     }
@@ -552,7 +691,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                             loadScriptFromUrl('/static/scripts/merged_script.js');
                         }),
                         achieve("开始游戏")
-                    ]
+                    ],
+                    _noDefaultJump: true
                 }
             ]
         };
@@ -581,7 +721,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             set($scope.current.page.input, $scope.current.input).value()
         }
 
-        runActions(actions);
+        runActions(actions, $scope.current.page._noDefaultJump !== true);
     };
 
     function finishDeadline() {
@@ -643,7 +783,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
             .position("top left").hideDelay(5000));
     }
-    
+
     $scope.loadLocalScript = function () {
         let f = document.createElement("input");
         f.style.display = "none";

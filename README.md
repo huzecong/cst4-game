@@ -14,7 +14,7 @@ bower install         # download static files for the webpages
 python run.py         # start the server
 ```
 
-之后，便可通过http://127.0.0.1:8000/访问网页。
+之后，便可通过<http://127.0.0.1:8000/>访问网页。
 
 ## 语法说明
 
