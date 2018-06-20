@@ -60,8 +60,15 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     $scope.events = [];
 
     let inTransition = false;
-
     let pageMap = {};
+    let imageCache = [];
+
+    let endingsList = [];
+    let endingMap = {};
+
+    let achievementsList = [];
+    let achievementUnlocked = [];
+    let achievementMap = {};
 
     function initialize() {
         global.clear();
@@ -78,10 +85,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         for (let action of initActions)
             valueOf(action);
     }
-
-    initialize();
-
-    let imageCache = [];
 
     function loadScript(js) {
         let jsValue = eval(js);
@@ -358,7 +361,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     function loadEvent(event, animate = true) {
         let loadEventImpl = function () {
             $scope.current.event = event;
-            console.log($scope.current.event.name);
+            // console.log($scope.current.event.name);
             pageMap = {};
             for (let page of $scope.current.event.pages) {
                 if (page.id in pageMap) {
@@ -383,17 +386,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         $scope.current.progress = 100 * idx / $scope.events.length;
         loadEvent($scope.events[idx], animate);
     }
-
-    let endingsList = [];
-    let endingMap = {};
-
-    $http.get('/static/scripts/ending.js').then(function (response) {
-        let currentScript = response.data;
-        endingsList = eval(currentScript);
-
-        for (let ending of endingsList)
-            endingMap[ending.name] = ending;
-    });
 
     function loadEnding(name, animate = true) {
         let ending = null;
@@ -429,21 +421,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         changeCardContent(loadEndingImpl, 0);
     }
 
-    let achievementsList = [];
-    let achievementUnlocked = [];
-    let achievementMap = {};
-
-    $http.get('/static/scripts/achievements.js').then(function (response) {
-        let currentScript = response.data;
-        achievementsList = eval(currentScript);
-
-        for (let achievement of achievementsList) {
-            achievementMap[achievement.name] = achievement;
-            achievementUnlocked.push(false);
-        }
-    });
-
-    function loadAchievements(animate=true) {
+    function loadAchievements(animate = true) {
         let loadAchievementsImpl = function () {
             $scope.current.pageType = "achievements";
             $scope.achievements = [];
@@ -463,8 +441,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 name: "成就列表",
                 stage: "已解锁成就：" + numAchievements + " / " + achievementsList.length
             };
-            $scope.current.page = {
-            };
+            $scope.current.page = {};
         };
         changeCardContent(loadAchievementsImpl, 0);
     }
@@ -483,28 +460,29 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         loadEnding();
     }
 
-    let toast = [];
-
-    function showToast(msg) {
-        console.log("Toast:", msg);
-        toast.push(msg);
-        if (toast.length === 1) {
-            let curToast = null;
-            let nextToast = function () {
-                if (curToast !== null) {
-                    toast = toast.slice(1);
-                    // $mdToast.hide(curToast);
-                }
-                if (toast.length > 0) {
-                    let msg = toast[0];
-                    console.log("$mdToast:", msg);
-                    curToast = $mdToast.show($mdToast.simple().textContent(msg));
-                    setTimeout(nextToast, 3000);
-                }
-            };
-            nextToast();
-        }
-    }
+    let showToast = function () {
+        let toast = [];
+        return function (msg) {
+            console.log("Toast:", msg);
+            toast.push(msg);
+            if (toast.length === 1) {
+                let curToast = null;
+                let nextToast = function () {
+                    if (curToast !== null) {
+                        toast = toast.slice(1);
+                        // $mdToast.hide(curToast);
+                    }
+                    if (toast.length > 0) {
+                        let msg = toast[0];
+                        console.log("$mdToast:", msg);
+                        curToast = $mdToast.show($mdToast.simple().textContent(msg));
+                        setTimeout(nextToast, 3000);
+                    }
+                };
+                nextToast();
+            }
+        };
+    }();
 
     function runActions(actions, nextEventIfNoJump = true) {
         let jumpTarget = null;
@@ -619,10 +597,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         runActions(actions);
     }
 
-    // if ($scope.current.page.deadline) {
-    //     initDeadline($scope.current.page.deadline);
-    // }
-
     $scope.deadlineClick = function (delta) {
         $scope.deadline.clicks = Math.max(0, $scope.deadline.clicks + delta);
         let clicks = $scope.deadline.clicks;
@@ -636,13 +610,40 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         $scope.deadline.grade = grade;
     };
 
-    if (window.innerWidth >= 960) {
+    // Initialization procedure
+
+    initialize();
+
+    $http.get('/static/scripts/ending.js').then(function (response) {
+        let currentScript = response.data;
+        endingsList = eval(currentScript);
+
+        for (let ending of endingsList)
+            endingMap[ending.name] = ending;
+    });
+
+    $http.get('/static/scripts/achievements.js').then(function (response) {
+        let currentScript = response.data;
+        achievementsList = eval(currentScript);
+
+        for (let achievement of achievementsList) {
+            achievementMap[achievement.name] = achievement;
+            achievementUnlocked.push(false);
+        }
+    });
+
+    if (document.getElementsByTagName("html")[0].className.split(' ').includes('no-js')) {
+        // Sneer at the user for using an old browser
+        $mdToast.show($mdToast.simple()
+            .textContent("作为计算机系的学生，好歹用个支持新特性的浏览器吧。")
+            .position("top left").hideDelay(5000));
+    } else if (window.innerWidth >= 960) {
         $mdToast.show($mdToast.simple()
             .textContent("推荐在手机上使用Chrome浏览器进行游戏。" +
                 "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
             .position("top left").hideDelay(5000));
     }
-
+    
     $scope.loadLocalScript = function () {
         let f = document.createElement("input");
         f.style.display = "none";
@@ -664,7 +665,5 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         f.click();
     };
 
-    // setTimeout(loadAchievements, 1000);
-    // setTimeout(loadMainMenu, 500);
     loadMainMenu(false);
 }]);
