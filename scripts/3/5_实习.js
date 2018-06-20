@@ -103,7 +103,7 @@ Final pages of this scenario are:
                             jump("q2")
                         ).else(jump("q1fail"))
                     ],
-                    condition: ge("#魅力", 4)
+                    // condition: ge("#魅力", 4)
                 }
             ]
         },
@@ -195,7 +195,7 @@ Final pages of this scenario are:
                 "看着{$面试官}，你不舍地踏出了公司大门。"
             ],
             actions: [
-                ge("$score", 3).then(
+                gt("$score", 3).then(
                     jump("success")
                 ).else(
                     jump("fail")
