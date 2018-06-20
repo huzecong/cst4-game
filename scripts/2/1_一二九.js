@@ -10,7 +10,7 @@ Final pages of this scenario are:
 // noinspection BadExpressionStatementJS
 ({
     type: "main",
-    name: "一二九",
+    name: "一二·九",
     stage: "大二",
     pages: [
         {
@@ -30,10 +30,10 @@ Final pages of this scenario are:
                 {
                     text: "我还是喜欢在人群中划水…",
                     actions: [
-                        ge("#魅力", 2).then(
+                        ge("#魅力", 2).then([
                             flag("$被抓"),
                             jump("caught")
-                        ).else(
+                        ]).else(
                             jump("memberfinal")
                         )
                     ]
