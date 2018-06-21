@@ -13,11 +13,19 @@
     <title>天下大计</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/static/app.css?version={- static_version -}">
+{% if debug %}
     <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/normalize.css">
     <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/main.css">
-    <link rel="stylesheet" href="/static/app.css?version={- static_version -}">
     <script src="/static/lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
     <link rel="stylesheet" href="/static/lib/angular-material/angular-material.min.css">
+{% else %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/css/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/css/normalize.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/js/vendor/modernizr-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/angular-material@1.1.9/angular-material.min.css">
+{% endif %}
     <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -31,7 +39,8 @@
 <div ng-controller="AppCtrl" ng-cloak>
     <md-toolbar class="md-hue-2" md-whiteframe="2">
         <div class="md-toolbar-tools">
-            <md-button ng-show="current.hasReturn" class="md-icon-button" aria-label="Settings" ng-click="loadMainMenu()">
+            <md-button ng-show="current.pageType == 'achievements' || current.pageType == 'ending'"
+                       class="md-icon-button" aria-label="Settings" ng-click="loadMainMenu()">
                 <md-icon>arrow_back</md-icon>
             </md-button>
 
@@ -87,7 +96,7 @@
                     </md-button>
                 </md-card-actions>
                 <md-card-actions layout="column" layout-align="center end"
-                                 ng-if="current.choices.length === 0 && !current.ending">
+                                 ng-if="current.choices.length === 0 && current.pageType != 'ending'">
                     <md-button ng-click="choose(-1)">继续</md-button>
                 </md-card-actions>
             </div>
@@ -139,14 +148,20 @@
     </md-content>
 </div>
 
-<!-- In production use:
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
--->
-<script src="/static/lib/angular/angular.min.js"></script>
-<script src="/static/lib/angular-animate/angular-animate.min.js"></script>
-<script src="/static/lib/angular-aria/angular-aria.min.js"></script>
-<script src="/static/lib/angular-material/angular-material.min.js"></script>
-<script src="/static/lib/angular-sanitize/angular-sanitize.min.js"></script>
+{% if debug %}
+    <script src="/static/lib/angular/angular.js"></script>
+    <script src="/static/lib/angular-animate/angular-animate.js"></script>
+    <script src="/static/lib/angular-aria/angular-aria.js"></script>
+    <script src="/static/lib/angular-material/angular-material.js"></script>
+    <script src="/static/lib/angular-sanitize/angular-sanitize.js"></script>
+{% else %}
+    <script src="https://cdn.jsdelivr.net/npm/angular@1.7.0/angular.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-route@1.7.0/angular-route.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-aria@1.7.0/angular-aria.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-material@1.1.9/angular-material.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-animate@1.7.0/angular-animate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-sanitize@1.7.0/angular-sanitize.min.js"></script>
+{% endif %}
 <script src="/static/scripting.js?version={- static_version -}"></script>
 <script src="/static/app.js?version={- static_version -}"></script>
 

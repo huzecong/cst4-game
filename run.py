@@ -27,6 +27,7 @@ if __name__ == '__main__':
     from application import app, initialize
 
     CONFIG_FILE = 'config.py'
+    PRODUCTION_CONFIG_FILE = 'config.production.py'
 
     # change Jinja2 template syntax, avoiding conflict with AngularJS
     jinja_options = app.jinja_options.copy()
@@ -37,6 +38,8 @@ if __name__ == '__main__':
     app.jinja_options = jinja_options
 
     app.config.from_pyfile(CONFIG_FILE)
+    if os.path.exists(PRODUCTION_CONFIG_FILE):
+        app.config.from_pyfile(PRODUCTION_CONFIG_FILE)
 
     initialize()
 

@@ -35,7 +35,6 @@ function cheat() {
 
 App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function ($scope, $http, $mdToast, $mdMenu, $timeout) {
     $scope.current = {
-        hasReturn: false,
         event: null,
         page: null,
         choices: [],
@@ -43,7 +42,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         text: null,
         input: "",
         eventIndex: -1,
-        ending: false,
         pageType: "text" // "deadline", "achievements", "ending"
     };
     $scope.deadline = {
@@ -197,7 +195,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     function initialize() {
         global.clear();
         local.clear();
-        $scope.current.ending = false;
         let initActions = [
             set("#脱单", false),
             set("#体力", 0),
@@ -554,15 +551,13 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     "我们应该在这里汇总一下玩家的信息。",
                     "比如可以有：",
                     Object.keys(global.values).map(x => x + "：{#" + x + "}").join("，") + "。",
-                    "注意，输出前要确保变量存在，所以最好找个地方做全局的初始化。",
-                    "目前结局之后只能刷新页面重来，之后大概会改。"
+                    "注意，输出前要确保变量存在，所以最好找个地方做全局的初始化。"
                 ]
             };
         }
 
         let loadEndingImpl = function () {
-            $scope.current.hasReturn = true;
-            $scope.pageType = "ending";
+            $scope.current.pageType = "ending";
             $scope.current.event = {
                 name: ending.name,
                 stage: "结局"
@@ -572,7 +567,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             };
             $scope.current.choices = [];
             loadText(ending.text);
-            $scope.current.ending = true;
             grantAchievement("结局：" + ending.name, false);
         };
         changeCardContent(loadEndingImpl, 0);
@@ -580,12 +574,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     function loadAchievements(animate = true) {
         let loadAchievementsImpl = function () {
-            $scope.current.hasReturn = true;
             $scope.current.pageType = "achievements";
             $scope.achievements = [];
             let numAchievements = 0;
-            console.log(achievementsList);
-            for (let i in achievementsList) {
+            for (let i = 0; i < achievementsList.length; ++i) {
                 if (achievementUnlocked[i]) {
                     $scope.achievements.push(achievementsList[i]);
                     ++numAchievements;
@@ -620,6 +612,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     }
 
     let showToast = function () {
+        // Encapsulate variable in a closure
         let toast = [];
         return function (msg) {
             toast.push(msg);
@@ -794,7 +787,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadMainMenu = function(animate = true) {
-        $scope.current.hasReturn = false;
         loadEvent(0, animate);
     };
 
@@ -810,9 +802,15 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     choices: [
                         {
                             text: "开始游戏",
+                            actions: [
+                                achieve("开始游戏")
+                            ]
                         },
                         {
                             text: "载入游戏",
+                            actions: [
+                                // exec(loadMemory)
+                            ]
                         },
                         {
                             text: "成就列表",
@@ -820,9 +818,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                                 exec(loadAchievements)
                             ]
                         }
-                    ],
-                    actions: [
-                        achieve("开始游戏")
                     ]
                 }
             ]
