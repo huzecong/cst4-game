@@ -15,26 +15,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="/static/app.css?version={- static_version -}">
-{% if debug %}
+    {% if debug %}
     <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/normalize.css">
     <link rel="stylesheet" href="/static/lib/html5-boilerplate/dist/css/main.css">
     <script src="/static/lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
     <link rel="stylesheet" href="/static/lib/angular-material/angular-material.min.css">
-{% else %}
+    {% else %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/css/main.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/css/normalize.min.css">
     <script src="https://cdn.jsdelivr.net/npm/html5-boilerplate@6.1.0/dist/js/vendor/modernizr-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/angular-material@1.1.9/angular-material.min.css">
-{% endif %}
+    {% endif %}
     <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-<!--[if lt IE 7]>
-<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-    your browser</a> to improve your experience.</p>
-<![endif]-->
+
+<div id="toast" style="display: none; padding: 5px; text-align: center;">
+    <p>天呐，你使用的居然是<b></b>。</p>
+    <p>请使用一个支持ES6以及HTML5标准的现代浏览器，如最新版的Chrome、Firefox、Edge，或者Safari。</p>
+</div>
+<script>
+    function checkUnsupportedBrowser() {
+        var isUC = navigator.userAgent.match(/UCBrowser/);
+        var chromeVersion = /Chrome\/(\d+)\./.exec(navigator.userAgent);
+        var isOldChrome = chromeVersion && parseInt(chromeVersion[1], 10) < 40;
+        var isIE = /*@cc_on!@*/ false || !!document.documentMode;
+        if (isUC) return "UC浏览器";
+        if (isOldChrome) return "过于老旧的Chrome浏览器";
+        if (isIE) return "IE浏览器";
+        return undefined;
+    }
+
+    var browserName = checkUnsupportedBrowser();
+    if (browserName !== undefined) {
+        document.getElementById("toast").getElementsByTagName("b")[0].innerText = browserName;
+        document.getElementById("toast").style.display = "block";
+    }
+</script>
 
 <div ng-controller="AppCtrl" ng-cloak>
     <md-toolbar class="md-hue-2" md-whiteframe="2">
@@ -88,7 +107,8 @@
                     </md-input-container>
                 </md-card-content>
 
-                <md-card-actions id="question-choices" layout="column" layout-align="start" ng-if="current.choices.length > 0">
+                <md-card-actions id="question-choices" layout="column" layout-align="start"
+                                 ng-if="current.choices.length > 0">
                     <md-button ng-repeat="choice in current.choices"
                                ng-click="choose($index)"
                                ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
@@ -149,18 +169,18 @@
 </div>
 
 {% if debug %}
-    <script src="/static/lib/angular/angular.js"></script>
-    <script src="/static/lib/angular-animate/angular-animate.js"></script>
-    <script src="/static/lib/angular-aria/angular-aria.js"></script>
-    <script src="/static/lib/angular-material/angular-material.js"></script>
-    <script src="/static/lib/angular-sanitize/angular-sanitize.js"></script>
+<script src="/static/lib/angular/angular.js"></script>
+<script src="/static/lib/angular-animate/angular-animate.js"></script>
+<script src="/static/lib/angular-aria/angular-aria.js"></script>
+<script src="/static/lib/angular-material/angular-material.js"></script>
+<script src="/static/lib/angular-sanitize/angular-sanitize.js"></script>
 {% else %}
-    <script src="https://cdn.jsdelivr.net/npm/angular@1.7.0/angular.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-route@1.7.0/angular-route.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-aria@1.7.0/angular-aria.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-material@1.1.9/angular-material.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-animate@1.7.0/angular-animate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/angular-sanitize@1.7.0/angular-sanitize.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular@1.7.0/angular.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-route@1.7.0/angular-route.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-aria@1.7.0/angular-aria.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-material@1.1.9/angular-material.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-animate@1.7.0/angular-animate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/angular-sanitize@1.7.0/angular-sanitize.min.js"></script>
 {% endif %}
 <script src="/static/scripting.js?version={- static_version -}"></script>
 <script src="/static/app.js?version={- static_version -}"></script>

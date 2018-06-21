@@ -103,7 +103,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         return array;
     };
 
-    Array.prototype.randomPick = function() {
+    Array.prototype.randomPick = function () {
         return this[Math.floor(Math.random() * this.length)];
     };
 
@@ -387,6 +387,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     }
 
     function shrinkElement(element, height, callback, duration = 400) {
+        if (inTransition) return;
         let sectionHeight = element.offsetHeight;
         let tempTransition = element.style.transition;
         element.style.transition = "";
@@ -666,7 +667,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         if (endingName !== null) {
             loadEnding(endingName);
         } else {
-            let redirect = function() {
+            let redirect = function () {
                 if (jumpTarget !== null) {
                     loadPage(jumpTarget);
                 } else if (!hasExec && nextEventIfNoJump) {
@@ -753,12 +754,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             endingMap[ending.name] = ending;
     });
 
-    if (document.getElementsByTagName("html")[0].className.split(' ').includes('no-js')) {
-        // Sneer at the user for using an old browser
-        $mdToast.show($mdToast.simple()
-            .textContent("作为计算机系的学生，好歹用个支持新特性的浏览器吧。")
-            .position("top left").hideDelay(5000));
-    } else if (window.innerWidth >= 960) {
+    if (window.innerWidth >= 960) {
         $mdToast.show($mdToast.simple()
             .textContent("推荐在手机上使用Chrome浏览器进行游戏。" +
                 "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
@@ -786,11 +782,11 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         f.click();
     };
 
-    $scope.loadMainMenu = function(animate = true) {
+    $scope.loadMainMenu = function (animate = true) {
         loadEvent(0, animate);
     };
 
-    loadScriptFromUrl('/static/scripts/merged_script.js', function() {
+    loadScriptFromUrl('/static/scripts/merged_script.js', function () {
         let mainMenuEvent = {
             type: "main",
             name: "天下大计",
