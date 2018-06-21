@@ -14,11 +14,11 @@ Final pages of this scenario are:
 ({
     type: "main",
     name: "暑期实践",
-    stage: "大一",
+    stage: "大一暑假",
     pages: [
         {
             id: "start",
-            image: "暑期实践/实践logo.png",
+            image: "暑期实践/实践logo.jpg",
             text: [
                 "愉快的大一生活行将结束，愉快的暑假生活就要展开。",
                 "暑期实践可以说是假期的重头戏了，听说也是诞生爱情的地方哟~"
@@ -71,7 +71,7 @@ Final pages of this scenario are:
         },
         {
             id: "membernex",
-            image: "暑期实践/修电脑的.jpeg",
+            image: "暑期实践/修电脑的.jpg",
             text: [
                 "呼……今天一天的采访终于结束啦。",
                 "美滋滋地睡上一觉，明天又是紧张的行程啦。",
@@ -277,7 +277,7 @@ Final pages of this scenario are:
         },
         {
             id: "wrong",
-            image: "暑期实践/苏宁.jpeg",
+            image: "暑期实践/苏宁.jpg",
             text: [
                 eq("#性别", "男").then([
                     "你答错了她出的题。",
@@ -296,7 +296,7 @@ Final pages of this scenario are:
         },
         {
             id: "right",
-            image: "暑期实践/苏宁.jpeg",
+            image: "暑期实践/苏宁.jpg",
             actionsBefore: [
                 achieve("恋爱")
             ],

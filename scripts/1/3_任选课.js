@@ -1,7 +1,8 @@
 // noinspection BadExpressionStatementJS
 ({
-    type: "random",
+    type: "normal",
     name: "任选课",
+    stage: "大一",
     pages: [
         {
             id: "start",

@@ -59,7 +59,7 @@ Final pages of this scenario are:
         },
         {
             id: "homework",
-            image: "学生节/魔方.png",
+            image: "学生节/魔方.jpg",
             text: [
                 "2014.12.28，这是学生节的日子。",
                 "不过对你而言，更值得纪念的是，你趁着大家都去看学生节，第一个码完了程设魔方大作业！"
@@ -174,7 +174,7 @@ Final pages of this scenario are:
         },
         {
             id: "alterfinal",
-            image: "学生节/酒井夜话.png",
+            image: "学生节/酒井夜话.jpg",
             actionsBefore: [
                 achieve("一次成功的学生节节目")
             ],
@@ -190,7 +190,7 @@ Final pages of this scenario are:
         },
         {
             id: "final",
-            image: "学生节/J43节目.png",
+            image: "学生节/J43节目.jpg",
             actionsBefore: [
                 achieve("一次成功的学生节节目")
             ],

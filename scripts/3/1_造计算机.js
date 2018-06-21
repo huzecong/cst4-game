@@ -20,7 +20,7 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            image: "造计算机/奋战三星期.png",
+            image: "造计算机/奋战三星期.jpg",
             text: [
                 "大三上，你终于也要直面早已久闻大名的计原了！",
                 "刘老师告诉同学们，今年的造计算机有两种选择："
@@ -49,7 +49,7 @@ Final pages of this scenario are:
         },
         {
             id: "drop",
-            image: "造计算机/退课截图.png",
+            image: "造计算机/退课截图.jpg",
             text: [
                 "于是你十分机智地退掉了计原……",
                 "嗯，好像之前很少有人这么干过……",
@@ -93,7 +93,7 @@ Final pages of this scenario are:
         },
         {
             id: "challenge1fail",
-            image: "造计算机/不可能打工的.png",
+            image: "造计算机/不可能打工的.jpg",
             text: [
                 "调是不可能调好了，这辈子都不可能调好的。",
                 "其实原因很简单，板子里的SDRAM坏了。",
@@ -105,7 +105,7 @@ Final pages of this scenario are:
         },
         {
             id: "challenge2",
-            image: "造计算机/刘卫东上课.png",
+            image: "造计算机/刘卫东上课.jpg",
             text: [
                 "这周就是32位挑战性试验的检查DDL了。",
                 "然而今天有一节计原课，听说要讲些和期末考相关的很重要的东西。",
@@ -263,7 +263,7 @@ Final pages of this scenario are:
         },
         {
             id: "normalend1",
-            image: "造计算机/ok.png",
+            image: "造计算机/ok.jpg",
             actionsBefore: [
                 achieve("造计算机")
             ],
@@ -279,7 +279,7 @@ Final pages of this scenario are:
         },
         {
             id: "normalend2",
-            image: "造计算机/ok.png",
+            image: "造计算机/ok.jpg",
             actionsBefore: [
                 achieve("造计算机")
             ],

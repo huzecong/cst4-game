@@ -114,14 +114,13 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let event = {
             type: "normal",
             name: "期末考试",
-            stage: $scope.current.event.stage,
+            stage: examEvent.stage,
             pages: [
                 {
                     id: "start",
                     text: [
-                        $scope.current.event.stage + "的期末考试如期而至。",
-                        "你需要参加的考试有：",
-                        examNames.join("、")
+                        examEvent.stage + "的期末考试如期而至。",
+                        "你需要参加的考试有：" + examNames.join("、")
                     ],
                     actions: [
                         set("$不及格学分", 0),
@@ -131,8 +130,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             ]
         };
         if (failedExamNames.length > 0) {
-            event.pages[0].text.push("你还需要补考下列重修课程：");
-            event.pages[0].text.push(failedExamNames.join("、"));
+            event.pages[0].text.push("你还需要补考下列重修课程：" + failedExamNames.join("、"));
         }
 
         let correctAction = function (idx) {
@@ -161,7 +159,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         };
         let pageNum = 0;
         let curExams = failedExams.concat(exams);
-        failedExams = [];
+        failedExams = examEvent.exams.filter(x => x.condition !== undefined && !x.condition.value()); // take it next year
         for (let exam of curExams) {
             let q = exam.questions.randomPick();
             let page = {

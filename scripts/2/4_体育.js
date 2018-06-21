@@ -1,7 +1,8 @@
 // noinspection BadExpressionStatementJS
 ({
-    type: "random",
+    type: "normal",
     name: "体育",
+    stage: "大二",
     actionsBefore: [
         eq("#性别", "男").then(
             set("$异性", "女")

@@ -1,7 +1,8 @@
 // noinspection BadExpressionStatementJS
 ({
-    type: "random",
+    type: "normal",
     name: "邀请跑步",
+    stage: "大二",
     condition: not(flagged("#脱单")),
     pages: [
         {

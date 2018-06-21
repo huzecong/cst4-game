@@ -17,7 +17,7 @@ Final pages of this scenario are:
 ({
     type: "main",
     name: "暑研支线",
-    stage: "大三",
+    stage: "大三暑假",
     pages: [
         {
             id: "start",
@@ -66,7 +66,7 @@ Final pages of this scenario are:
         },
         {
             id: "noreply",
-            image: "暑研/无响应.png",
+            image: "暑研/无响应.jpg",
             text: [
                 "也许是发得太迟，也许是运气不佳，",
                 "你发出去的套磁邮件如石沉大海，",
@@ -84,7 +84,7 @@ Final pages of this scenario are:
         },
         {
             id: "prepare",
-            image:"暑研/美国.png",
+            image:"暑研/美国.jpg",
             text: [
                 "你成功获得了美帝某谷/村的某知名高校的暑期研修机会！",
                 "签证、报闯世界、租房子、机票……",
@@ -267,7 +267,7 @@ Final pages of this scenario are:
         },
         {
             id: "work",
-            image: "暑研/ddl.png",
+            image: "暑研/ddl.jpg",
             text: [
                 "转眼间，暑研就要结束了。",
                 "你的老板希望能发一篇paper，而你的进度仍然遥遥无期……",
@@ -280,11 +280,11 @@ Final pages of this scenario are:
         {
             id: "work_qte",
             deadline: {
-                targets: [60, 100],
+                targets: [80, 100],
                 title: "赶paper",
                 time: 12,
-                moving: false,
-                badChoices: 1
+                moving: true,
+                badChoices: 3
             },
             actions: [
                 eq("$__QTE__", 2).then(

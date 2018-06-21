@@ -18,7 +18,7 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            image: "操统退课/logo.png",
+            image: "操统退课/logo.jpg",
             text: [
                 "在大三下，你终于迎来了万众期待的重头戏——操作系统。",
                 "操统如此多娇，引无数大佬把课退掉。",
@@ -174,7 +174,7 @@ Final pages of this scenario are:
         },
         {
             id: "exam1",
-            image: "操统退课/向勇mooc.png",
+            image: "操统退课/向勇mooc.jpg",
             text: [
                 "操统的考试，总是比其他课要快一拍。",
                 "你是在第六周，考试前的那一周，才发现这个事实的。",
@@ -201,7 +201,7 @@ Final pages of this scenario are:
         },
         {
             id: "exam1pass",
-            image: "操统退课/期中卷.png",
+            image: "操统退课/期中卷.jpg",
             text: [
                 "恭喜你，你费劲九牛二虎之力，你成功通过了操统期中！",
                 "唉，这种刷夜真是太消耗体力了……"
@@ -247,7 +247,7 @@ Final pages of this scenario are:
         },
         {
             id: "exam2",
-            image: "操统退课/陈渝mooc.png",
+            image: "操统退课/陈渝mooc.jpg",
             text: [
                 "操统的期末考试，也是一如既往地比其他课要快一拍。",
                 "进程线程管程信号量都是什么玩意儿？",
