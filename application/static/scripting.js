@@ -91,7 +91,7 @@ class Variable extends Expression {
         this.checkExists();
         let varVal = this.sto.values[this.key];
         if (varVal !== null && typeof value !== typeof varVal)
-            throw new Error("Type mismatch during assignment");
+            throw new Error("Type mismatch during assignment of `" + this.key);
         this.sto.values[this.key] = value;
     }
 
@@ -252,6 +252,13 @@ class Ending extends Expression {
     }
 }
 
+class Achievement extends Expression {
+    constructor(name) {
+        super();
+        this.name = name;
+    }
+}
+
 class Exec extends Expression {
     constructor(func) {
         super();
@@ -321,7 +328,7 @@ function decrease(key, delta) {
 }
 
 function achieve(name) {
-    return new Log("解锁成就：" + name);
+    return new Achievement(name);
 }
 
 function ending(name) {

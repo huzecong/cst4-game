@@ -54,6 +54,9 @@ Final pages of this scenario are:
                 "于是你十分机智地退掉了计原……",
                 "嗯，好像之前很少有人这么干过……",
                 "造计算机是啥，不存在的。"
+            ],
+            actions: [
+                flag("#计原退课")
             ]
         },
         {

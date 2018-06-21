@@ -12,7 +12,7 @@ from . import app
 
 @app.route('/')
 def route_index():
-    return render_template('index.html', static_version=GIT_COMMIT_HASH)
+    return render_template('index.html', static_version=GIT_COMMIT_HASH, debug=app.config['DEBUG'])
 
 @app.route('/favicon.ico')
 def route_favicon():

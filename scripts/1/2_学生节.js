@@ -27,13 +27,15 @@ Final pages of this scenario are:
                     text: "你们慢慢玩，我回去写程设作业去了...",
                     "actions": [
                         jump("homework")
-                    ]
+                    ],
+                    condition: not(flagged("#班长"))
                 },
                 {
                     text: "我就当个安静的吃瓜观众吧",
                     actions: [
                         jump("audience")
-                    ]
+                    ],
+                    condition: not(flagged("#班长"))
                 },
                 {
                     text: eq("#性别", "男").then(

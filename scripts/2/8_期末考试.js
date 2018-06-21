@@ -1,0 +1,40 @@
+// noinspection BadExpressionStatementJS
+({
+    type: "exam",
+    actionsBefore: [
+    ],
+    exams: [
+        {
+            name: "数据结构",
+            points: 4,
+            questions: [
+                {
+                    text: "将有序列表 L 均分为 Θ(h) 的 k 段，则对 L 进行插入排序的复杂度至多为：",
+                    answer: "Θ(h²k)",
+                    choices: [
+                        "Θ(hk)",
+                        "Θ(hk²)",
+                        "Θ(h²k²)"
+                    ]
+                }
+            ]
+        },
+        // {
+        //     name: "电子学基础",
+        //     points: 3,
+        // },
+        // {
+        //     name: "数字逻辑电路",
+        //     points: 3,
+        // },
+    ],
+    pages: [
+        {
+            id: "final",
+            text: [
+                "大二的考试周就这么过去了。",
+                gt("#不及格课程", 0).then("你有{#不及格课程}门考试不及格。你需要在大三重修这些课程，并再次参加考试。加油吧。")
+            ]
+        }
+    ]
+})

@@ -10,3 +10,5 @@ scripts/merged_script.js
 
 # Bower components
 application/static/lib
+
+config.production.py

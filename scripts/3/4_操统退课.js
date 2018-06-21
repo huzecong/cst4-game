@@ -338,6 +338,9 @@ Final pages of this scenario are:
                 "终于可以笑看其他同学被lab和考试折磨到哭了啊哈哈",
                 "不过明年就该换他们嘲讽我了……"
             ],
+            actions: [
+                flag("#操统退课")
+            ]
         }
     ]
 })
