@@ -1,6 +1,7 @@
 // noinspection BadExpressionStatementJS
 ({
     type: "exam",
+    stage: "大一",
     actionsBefore: [
     ],
     exams: [
