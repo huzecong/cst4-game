@@ -20,7 +20,7 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            //image: "TODO.jpg",
+            image: "造计算机/奋战三星期.png",
             text: [
                 "大三上，你终于也要直面早已久闻大名的计原了！",
                 "刘老师告诉同学们，今年的造计算机有两种选择："
@@ -31,7 +31,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("challenge1")
                     ],
-                    condition: ge("#成绩", 10).and(ge("#体力", 6))
+                    condition: ge("#成绩", 3).and(ge("#体力", 3))
                 },
                 {
                     text: "当个普通组员，造16位计算机",
@@ -49,7 +49,7 @@ Final pages of this scenario are:
         },
         {
             id: "drop",
-            //image: "TODO.jpg",
+            image: "造计算机/退课截图.png",
             text: [
                 "于是你十分机智地退掉了计原……",
                 "嗯，好像之前很少有人这么干过……",
@@ -63,7 +63,7 @@ Final pages of this scenario are:
                 "刚拿到板子，你就遇到了一个棘手的问题。",
                 "不知道怎么回事，SDRAM就是写不进去啊！",
                 "时序没问题，状态机也没问题，改成样例代码都还是写不进去啊！",
-                "你选择："
+                "怎么办..."
             ],
             choices: [
                 {
@@ -90,7 +90,7 @@ Final pages of this scenario are:
         },
         {
             id: "challenge1fail",
-            //image: "TODO.jpg",
+            image: "造计算机/不可能打工的.png",
             text: [
                 "调是不可能调好了，这辈子都不可能调好的。",
                 "其实原因很简单，板子里的SDRAM坏了。",
@@ -102,7 +102,7 @@ Final pages of this scenario are:
         },
         {
             id: "challenge2",
-            //image: "TODO.jpg",
+            image: "造计算机/刘卫东上课.png",
             text: [
                 "这周就是32位挑战性试验的检查DDL了。",
                 "然而今天有一节计原课，听说要讲些和期末考相关的很重要的东西。",
@@ -167,7 +167,7 @@ Final pages of this scenario are:
         },
         {
             id: "challengeend2",
-            //image: "TODO.jpg",
+            image: "造计算机/板子.jpg",
             actionsBefore: [
                 achieve("造32位计算机")
             ],
@@ -194,7 +194,7 @@ Final pages of this scenario are:
         },
         {
             id: "challengeend3",
-            //image: "TODO.jpg",
+            image: "造计算机/板子.jpg",
             text: [
                 "虽然刷了好几个夜，然而，你还是没能造出32位计算机。",
                 "于是计原华丽丽的挂了……",
@@ -224,9 +224,9 @@ Final pages of this scenario are:
             id: "normalfightingpre",
             //image: "TODO.jpg",
             text: [
-                "到了408，你才发现，大腿说的debug，是IDE安装的“bug”。",
-                "嗯对，大腿连IDE都还没安上去……",
-                "于是你选择："
+                "到了408，你才发现，大腿说的debug，是IDE安装程序的“bug”。",
+                "IDE都还没安上去……安上去……上去……去……",
+                "咋办呢…"
             ],
             choices: [
                 {
@@ -260,14 +260,14 @@ Final pages of this scenario are:
         },
         {
             id: "normalend1",
-            //image: "TODO.jpg",
+            image: "造计算机/ok.png",
             actionsBefore: [
                 achieve("造计算机")
             ],
             text: [
                 "经过几个晚上的爆肝，你们终于造出了16位计算机！",
-                "不造计算机，枉为贵系人。",
-                "造完计算机，你真正成为一个贵系人了。"
+                // "不造计算机，枉为贵系人。",
+                "啊哈哈劳资也是造过计算机的贵系人了~"
             ],
             actions: [
                 increase("#体力", 2),
@@ -276,14 +276,14 @@ Final pages of this scenario are:
         },
         {
             id: "normalend2",
-            //image: "TODO.jpg",
+            image: "造计算机/ok.png",
             actionsBefore: [
                 achieve("造计算机")
             ],
             text: [
                 "你选择了弃疗。",
                 "不过还好有组员们和大腿的帮助，你们在检查时成功打印出了“OK”。",
-                "虽然之前和之后都没能再成功复现……"
+                "啥，你问我能不能复现？不存在的。嗯。"
             ],
             actions: [
                 increase("#体力", 1),

@@ -18,10 +18,10 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            //image: "TODO.jpg",
+            image: "暑期实践/实践logo.png",
             text: [
                 "愉快的大一生活行将结束，愉快的暑假生活就要展开。",
-                "暑期实践可以说是假期的重头戏了，你也早已做好了自己的打算。"
+                "暑期实践可以说是假期的重头戏了，听说也是诞生爱情的地方哟~"
             ],
             choices: [
                 {
@@ -35,20 +35,20 @@ Final pages of this scenario are:
                     actions: [
                         jump("member")
                     ],
-                    condition: ge("#体力", 1)
+                    condition: ge("#体力", 0)
                 },
                 {
                     text: "我这种有魅力有领导力的人，当然要自己carry，当队长啦。",
                     actions: [
                         jump("captain")
                     ],
-                    condition: ge("#魅力", 3).and(ge("#体力", 2))
+                    condition: ge("#魅力", 0).and(ge("#体力", 0))
                 }
             ]
         },
         {
             id: "home",
-            //image: "TODO.jpg",
+            image: "暑期实践/葛优躺.jpg",
             text: [
                 "看着大家纷秀在朋友圈的暑期实践，你露出了满意的微笑。",
                 "你们那有空调么？",
@@ -71,7 +71,7 @@ Final pages of this scenario are:
         },
         {
             id: "membernex",
-            //image: "TODO.jpg",
+            image: "暑期实践/修电脑的.jpeg",
             text: [
                 "呼……今天一天的采访终于结束啦。",
                 "美滋滋地睡上一觉，明天又是紧张的行程啦。",
@@ -188,7 +188,7 @@ Final pages of this scenario are:
             text: [
                 "“嗯嗯，正巧，我也觉得这款比较好，真是英雄所见略同啊！”",
                 not(flagged("#脱单")).then([
-                    "随后的实践中，你们发现，不仅在审美与选择上，你们的偏向高度一致。",
+                    "随后的实践中，你们发现，不仅在审美与选择上，你们一拍即合。",
                     "三观、性格等等，你们都是天生的best match。",
                     eq("#性别", "男").then([
                         "十分自然地，在实践的最后一天，你向她表了白，在全体组员的祝福中，你们在一起了。"
@@ -232,7 +232,7 @@ Final pages of this scenario are:
             id: "captionmatter",
             //image: "TODO.jpg",
             text: [
-                "到了实践地，一位队员发现忘带毛巾了，需要步行到十公里外的镇子里买。"
+                "到了实践地，一位队员发现忘带毛巾了，需要步行到十公里外的镇上买。"
             ],
             choices: [
                 {
@@ -277,7 +277,7 @@ Final pages of this scenario are:
         },
         {
             id: "wrong",
-            //image: "TODO.jpg",
+            image: "暑期实践/苏宁.jpeg",
             text: [
                 eq("#性别", "男").then([
                     "你答错了她出的题。",
@@ -296,18 +296,18 @@ Final pages of this scenario are:
         },
         {
             id: "right",
-            //image: "TODO.jpg",
+            image: "暑期实践/苏宁.jpeg",
             actionsBefore: [
                 achieve("恋爱")
             ],
             text: [
                 eq("#性别", "男").then([
-                    "你答对了她出的题。",
+                    "感谢苏宁！你答对了她出的题。",
                     "她非常开心，随后又聊了很多各种各样的话题。",
                     "发现聪明又漂亮的她，竟然和你惊人的合拍。",
                     "实践结束后，你俩十分自然地在一起了。"
                 ]).else([
-                    "你答对了他出的题。",
+                    "感谢苏宁！你答对了他出的题。",
                     "他非常开心，随后又聊了很多各种各样的话题。",
                     "你发现他帅气的外表下，还有着一颗温柔又体贴的内心，你喜欢上了他。",
                     "实践结束后，你俩十分自然地在一起了。"
@@ -320,7 +320,7 @@ Final pages of this scenario are:
         },
         {
             id: "captainfinal",
-            //image: "TODO.jpg",
+            image: "暑期实践/实践颁奖.jpg",
             actionsBefore: [
                 achieve("暑期实践"),
                 flagged("$b").then(achieve("校优秀实践支队"))

@@ -24,19 +24,19 @@ Final pages of this scenario are:
             //image:"TODO.jpg",
             text: [
                 "世界这么大，我想去看看。",
-                "暑期研修就是让你好好看看的绝佳机会。",
+                "暑期研修就是让你好(rou)好(shen)看(fan)看(qiang)的绝佳机会。",
                 "你选择："
             ],
             choices: [
                 {
-                    text: "去国外有什么好，又远又村，不如国内待着",
+                    text: "去国外有什么好，又远又村，还是世界一流的贵系好",
                     actions: [
                         jump("noaboard")
                     ]
                 },
                 {
                     text: "寒假发套磁信",
-                    condition: ge("#魅力", 2).and(ge("#成绩", 6)).and(not(flagged("#直博"))),
+                    condition: ge("#魅力", 1).and(ge("#成绩", 3)).and(not(flagged("#直博"))),
                     actions: [
                         jump("prepare")
                     ]
@@ -66,7 +66,7 @@ Final pages of this scenario are:
         },
         {
             id: "noreply",
-            //image:"TODO.jpg",
+            image: "暑研/无响应.png",
             text: [
                 "也许是发得太迟，也许是运气不佳，",
                 "你发出去的套磁邮件如石沉大海，",
@@ -78,18 +78,18 @@ Final pages of this scenario are:
             //image:"TODO.jpg",
             text: [
                 "在国内，",
-                "抑或是在实验室搬砖，抑或是去某大厂实习，",
+                "抑或是在大佬组里搬砖，抑或是去某大(e)厂实习，",
                 "你也度过了一个充实的暑假。"
             ]
         },
         {
             id: "prepare",
-            //image:"TODO.jpg",
+            image:"暑研/美国.png",
             text: [
-                "你成功获得了美帝某谷/村的某知名高校的暑期研修名额。",
-                "签证、闯世界报名、租房子、机票……",
-                "你踏实而稳健地完成了各项准备工作。",
-                "美好的国外研修，在你面前徐徐展开……"
+                "你成功获得了美帝某谷/村的某知名高校的暑期研修机会！",
+                "签证、报闯世界、租房子、机票……",
+                "你稳如poi地完成了各项准备工作（额，虽然签证被check了两个月）",
+                "美帝三月游，在你面前徐徐展开……"
             ],
             actions: [
                 set("$friendship", 0),
@@ -100,9 +100,9 @@ Final pages of this scenario are:
         },
         {
             id: "lab",
-            //image:"TODO.jpg",
+            image: "暑研/托福小哥.jpg",
             text: [
-                "在实验室，你遇到了一个萌萌哒的印度师兄。",
+                "在实验室，你遇到了一个萌萌哒的印度师兄（不要拿托福小哥骗我...）",
                 "老板指定你就跟着他research了。",
                 "这个周末，热爱music的师兄邀请你陪他去听orchestra。"
             ],
@@ -124,7 +124,7 @@ Final pages of this scenario are:
         },
         {
             id: "bro",
-            //image:"TODO.jpg",
+            image: "暑研/orchestra.jpg",
             text: [
                 "你和师兄一起看了场orchestra。",
                 "虽然你觉得很无聊，但师兄津津有味。",
@@ -171,12 +171,13 @@ Final pages of this scenario are:
         },
         {
             id: "joinhanabi",
-            //image:"TODO.jpg",
+            image: "暑研/花火.jpg",
             text: [
                 "焰火在城市上空美丽地绽放着。",
                 "映照着一行人快乐的面庞。",
                 "你们围坐在草地上，像周围正在picnic的美国人一样，",
-                "然后打起了狼人杀（???）。"
+                "打起了狼人杀（???）。",
+                "“噢天呐，快看那群奇怪的中国人，他们在进行什么神秘的东方武术？”"
             ],
             actions: [
                 increase("#魅力", 1),
@@ -186,10 +187,10 @@ Final pages of this scenario are:
         },
         {
             id: "mid",
-            //image:"TODO.jpg",
+            image: "暑研/书堆.jpg",
             text: [
                 "其实暑研生活中，占大头的，还是漫长又辛苦的research。",
-                "和小学期的同学相比，感觉只是换了个搬砖的地方..."
+                "和小学期的同学相比，只是换了个搬砖的地方..."
             ],
             actions: [
                 jump("nyc")
@@ -220,7 +221,7 @@ Final pages of this scenario are:
         },
         {
             id: "joinnyc",
-            //image:"TODO.jpg",
+            image: "暑研/洛克菲勒.jpg",
             text: [
                 "于是，一行人就这么浩浩荡荡来到了大纽约。",
                 "百老汇、自由女神、华尔街、大都会博物馆……",
@@ -229,12 +230,13 @@ Final pages of this scenario are:
             actions: [
                 increase("#魅力", 1),
                 increase("$lovepotential", 1),
-                ge("#魅力", 7).and(ge("$lovepotential", 2)).and(not(flagged("#脱单"))).then(jump("love")).else(jump("work"))
+                ge("$lovepotential", 2).and(not(flagged("#脱单"))).then(jump("love")).else(jump("work"))
+                // ge("#魅力", 2).and(ge("$lovepotential", 2)).and(not(flagged("#脱单"))).then(jump("love")).else(jump("work"))
             ]
         },
         {
             id: "love",
-            //image:"TODO.jpg",
+            image: "暑研/酒杯.jpeg",
             text: [
                 "在灯红酒绿地曼哈顿，",
                 "几轮下来，大家在bar里都有点微醺，",
@@ -265,6 +267,7 @@ Final pages of this scenario are:
         },
         {
             id: "work",
+            image: "暑研/ddl.png",
             text: [
                 "转眼间，暑研就要结束了。",
                 "你的老板希望能发一篇paper，而你的进度仍然遥遥无期……",

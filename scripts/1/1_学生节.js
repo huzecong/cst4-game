@@ -16,15 +16,15 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            //image: "TODO.jpg",
+            image: "学生节/logo.jpg",
             text: [
                 "时间过得很快，转眼到了学生节的季节。",
-                "这一年一度的狂欢，始终是同学们对贵系最深刻的记忆之一。",
-                "你决定："
+                "这一年一度的狂欢，始终是同学们对贵系最深刻最美好的记忆之一。",
+                "你怎么好意思错过呢~"
             ],
             choices: [
                 {
-                    text: "你们慢慢玩，我回去写程设作业去了",
+                    text: "你们慢慢玩，我回去写程设作业去了...",
                     "actions": [
                         jump("homework")
                     ]
@@ -43,21 +43,21 @@ Final pages of this scenario are:
                     ),
                     actions: [
                         jump("perform")
-                    ],
-                    condition: ge("#体力", 1)
+                    ]//,
+                    // condition: ge("#体力", 1)
                 },
                 {
-                    text: "作为圈里人，我要来当导演",
+                    text: "作为圈里人，我要当班剧导演",
                     actions: [
                         jump("director")
-                    ],
-                    condition: ge("#体力", 2)
+                    ]//,
+                    // condition: ge("#体力", 2)
                 }
             ]
         },
         {
             id: "homework",
-            //image: "TODO.jpg",
+            image: "学生节/魔方.png",
             text: [
                 "2014.12.28，这是学生节的日子。",
                 "不过对你而言，更值得纪念的是，你趁着大家都去看学生节，第一个码完了程设魔方大作业！"
@@ -110,7 +110,7 @@ Final pages of this scenario are:
         },
         {
             id: "director",
-            //image: "TODO.jpg",
+            image: "学生节/划水.gif",
             text: [
                 "你成为了班级节目的导演。",
                 "然而，你发现事情并不简单……",
@@ -161,7 +161,7 @@ Final pages of this scenario are:
         },
         {
             id: "roommate",
-            //image: "TODO.jpg",
+            image: "学生节/摄像头.jpg",
             text: [
                 "没办法了，偷偷在床上放一个摄像头，录下寝室精彩的夜谈会作为节目凑合一下吧……",
                 "嗯，看起来效果还挺不错。"
@@ -172,7 +172,7 @@ Final pages of this scenario are:
         },
         {
             id: "alterfinal",
-            //image: "TODO.jpg",
+            image: "学生节/酒井夜话.png",
             actionsBefore: [
                 achieve("一次成功的学生节节目")
             ],
@@ -188,7 +188,7 @@ Final pages of this scenario are:
         },
         {
             id: "final",
-            //image: "TODO.jpg",
+            image: "学生节/J43节目.png",
             actionsBefore: [
                 achieve("一次成功的学生节节目")
             ],
