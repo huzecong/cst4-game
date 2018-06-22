@@ -1,7 +1,10 @@
 // noinspection BadExpressionStatementJS
 ({
     type: "exam",
+    stage: "大三",
     actionsBefore: [
+        // flag("#操统退课"),
+        // flag("#计原退课")
     ],
     exams: [
         {
@@ -54,11 +57,20 @@
             id: "final",
             actionsBefore: [
                 flagged("#操统退课").then(increase("#不及格课程", 1)),
-                flagged("#计原退课").then(increase("#不及格课程", 1))
+                flagged("#计原退课").then(increase("#不及格课程", 1)),
+                flagged("#操统退课").and(flagged("#计原退课")).then(
+                    set("$msg", "，其中包括已退课的计算机组成原理与操作系统")
+                ).else(flagged("#操统退课").then(
+                    set("$msg", "，其中包括已退课的操作系统")
+                ).else(flagged("#计原退课").then(
+                    set("$msg", "，其中包括已退课的计算机组成原理")
+                ).else(
+                    set("$msg", "")
+                )))
             ],
             text: [
                 "你熬过了魔鬼一般的大三考试周。",
-                gt("#不及格课程", 0).then("注意，你仍有{#不及格课程}门课程未通过。你需要在大四毕业前通过这些课程，否则无法正常毕业。")
+                gt("#不及格课程", 0).then("注意，你仍有{#不及格课程}门课程未通过{$msg}。你需要在大四毕业前通过这些课程，否则无法正常毕业。")
             ]
         }
     ]

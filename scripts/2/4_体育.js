@@ -1,7 +1,7 @@
 // noinspection BadExpressionStatementJS
 ({
     type: "normal",
-    name: "体育",
+    name: "体育代表队",
     stage: "大二",
     actionsBefore: [
         eq("#性别", "男").then(

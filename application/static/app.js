@@ -108,6 +108,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     function convertExamsToEvent(examEvent) {
+        if (examEvent.actionsBefore !== undefined)
+            runActions(examEvent.actionsBefore);
+
         let exams = examEvent.exams.filter(x => x.condition === undefined || x.condition.value());
         let examNames = exams.map(x => x.name);
         let failedExamNames = failedExams.map(x => x.name);
@@ -120,7 +123,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     id: "start",
                     text: [
                         examEvent.stage + "的期末考试如期而至。",
-                        "你需要参加的考试有：" + examNames.join("、")
                     ],
                     actions: [
                         set("$不及格学分", 0),
@@ -129,6 +131,11 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 }
             ]
         };
+        if (examNames.length > 0) {
+            event.pages[0].text.push("你需要参加的考试有：" + examNames.join("、"));
+        } else {
+            event.pages[0].text.push("你没有需要参加的考试。");
+        }
         if (failedExamNames.length > 0) {
             event.pages[0].text.push("你还需要补考下列重修课程：" + failedExamNames.join("、"));
         }
@@ -386,6 +393,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     function shrinkElement(element, height, callback, duration = 400) {
         if (inTransition) return;
+        console.log("shrink", height);
         let sectionHeight = element.offsetHeight;
         let tempTransition = element.style.transition;
         element.style.transition = "";
@@ -412,6 +420,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     }
 
     function expandElement(element, callback, duration = 400) {
+        console.log("expand");
         let tempHeight = element.style.height;
         let tempTransition = element.style.transition;
         element.style.transition = "";
@@ -471,7 +480,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             $scope.current.page = pageMap[label];
 
             if ($scope.current.page.actionsBefore)
-                runActions($scope.current.page.actionsBefore, false);
+                runActions($scope.current.page.actionsBefore);
 
             if ($scope.current.page.deadline !== undefined) {
                 let ddlConfig = $scope.current.page.deadline;
@@ -634,7 +643,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         };
     }();
 
-    function runActions(actions, nextEventIfNoJump = true) {
+    function runActions(actions, nextEventIfNoJump = false) {
         let jumpTarget = null;
         let endingName = null;
         let promises = [];
@@ -701,7 +710,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             set($scope.current.page.input, $scope.current.input).value()
         }
 
-        runActions(actions, $scope.current.page._noDefaultJump !== true);
+        runActions(actions, true);
     };
 
     function finishDeadline() {
@@ -714,7 +723,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         if ($scope.current.page.actions)
             actions.push(...$scope.current.page.actions);
 
-        runActions(actions);
+        runActions(actions, true);
     }
 
     $scope.deadlineClick = function (delta) {

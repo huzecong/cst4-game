@@ -1,6 +1,7 @@
 // noinspection BadExpressionStatementJS
 ({
     type: "exam",
+    stage: "大二",
     actionsBefore: [
     ],
     exams: [
@@ -9,7 +10,7 @@
             points: 4,
             questions: [
                 {
-                    text: "将有序列表 L 均分为 Θ(h) 的 k 段，则对 L 进行插入排序的复杂度至多为：",
+                    text: "将有序列表 L 均分为 Θ(h) 的 k 段，然后将每段随机打乱，则对 L 进行插入排序的复杂度至多为：",
                     answer: "Θ(h²k)",
                     choices: [
                         "Θ(hk)",
