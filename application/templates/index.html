@@ -70,10 +70,24 @@
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content>
+                    {% if debug %}
                     <md-menu-item>
                         <md-button ng-click="loadLocalScript()">
                             <md-icon md-menu-align-target>cloud_upload</md-icon>
                             载入本地剧本
+                        </md-button>
+                    </md-menu-item>
+                    {% endif %}
+                    <md-menu-item>
+                        <md-button ng-click="saveMemory()">
+                            <md-icon md-menu-align-target>save</md-icon>
+                            保存游戏进度
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="loadMemory()">
+                            <md-icon md-menu-align-target>book</md-icon>
+                            载入游戏进度
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>

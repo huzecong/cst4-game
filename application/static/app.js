@@ -508,7 +508,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
     }
 
-    function loadEvent(idx, animate = true) {
+    function loadEvent(idx, animate = true, pageId = 'start') {
         let loadEventImpl = function () {
             let event = $scope.events[idx];
             $scope.current.pageType = "text";
@@ -527,8 +527,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 }
                 pageMap[page.id] = page;
             }
+            $scope.current.input = "";  // only reset input box upon event switching
 
-            loadPage('start', false);
+            loadPage(pageId, false);
         };
 
         if (animate) {
@@ -793,6 +794,31 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         loadEvent(0, animate);
     };
 
+    $scope.loadMemory = function () {
+        if (["_global", "_local", "_eventIndex", "_pageId"].some(x => !localStorage.getItem(x))) {
+            showToast("不存在游戏存档");
+            return;
+        }
+        global.values = JSON.parse(localStorage.getItem("_global"));
+        local.values = JSON.parse(localStorage.getItem("_local"));
+        let eventIndex = parseInt(localStorage.getItem("_eventIndex"));
+        let pageId = localStorage.getItem("_pageId");
+        loadEvent(eventIndex, true, pageId);
+        showToast("载入完成");
+    };
+
+    $scope.saveMemory = function () {
+        if ($scope.current.pageType === "ending" || $scope.current.pageType === "achievements") {
+            showToast("当前页面无法存档");
+            return;
+        }
+        localStorage.setItem("_global", JSON.stringify(global.values));
+        localStorage.setItem("_local", JSON.stringify(local.values));
+        localStorage.setItem("_eventIndex", $scope.current.eventIndex);
+        localStorage.setItem("_pageId", $scope.current.page.id);
+        showToast("保存完成");
+    };
+
     loadScriptFromUrl('/static/scripts/merged_script.js', function () {
         let mainMenuEvent = {
             type: "main",
@@ -812,7 +838,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                         {
                             text: "载入游戏",
                             actions: [
-                                // exec(loadMemory)
+                                exec($scope.loadMemory)
                             ]
                         },
                         {
