@@ -33,6 +33,13 @@ function cheat() {
         valueOf(action);
 }
 
+function printVariables() {
+    console.log("全局变量：");
+    console.log(Object.entries(global.values).map(x => x[0] + ": " + x[1]).join("\n"));
+    console.log("局部变量：");
+    console.log(Object.entries(local.values).map(x => x[0] + ": " + x[1]).join("\n"));
+}
+
 App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function ($scope, $http, $mdToast, $mdMenu, $timeout) {
     $scope.current = {
         event: null,
@@ -393,7 +400,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     function shrinkElement(element, height, callback, duration = 400) {
         if (inTransition) return;
-        console.log("shrink", height);
         let sectionHeight = element.offsetHeight;
         let tempTransition = element.style.transition;
         element.style.transition = "";
@@ -404,7 +410,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             element.style.transition = tempTransition + " height " + duration + "ms";
 
             requestAnimationFrame(function () {
-                // console.log("shrink: " + sectionHeight + " to " + height);
                 let eventListener = function (e) {
                     inTransition = false;
 
@@ -420,7 +425,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     }
 
     function expandElement(element, callback, duration = 400) {
-        console.log("expand");
         let tempHeight = element.style.height;
         let tempTransition = element.style.transition;
         element.style.transition = "";
@@ -433,7 +437,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             element.style.transition = tempTransition + " height " + duration + "ms";
 
             requestAnimationFrame(function () {
-                // console.log("expand: " + tempHeight + " to " + targetHeight);
                 let eventListener = function (e) {
                     inTransition = false;
 
