@@ -12,7 +12,7 @@ Final pages of this scenario are:
 ({
     type: "main",
     name: "学生节",
-    stage: "大一",
+    stage: "大二",
     pages: [
         {
             id: "start",
@@ -24,7 +24,7 @@ Final pages of this scenario are:
             ],
             choices: [
                 {
-                    text: "你们慢慢玩，我回去写程设作业去了...",
+                    text: "你们慢慢玩，我回去写作业去了...",
                     "actions": [
                         jump("homework")
                     ],
@@ -59,10 +59,10 @@ Final pages of this scenario are:
         },
         {
             id: "homework",
-            image: "学生节/魔方.jpg",
+            image: "学生节/PA.png",
             text: [
                 "2014.12.28，这是学生节的日子。",
-                "不过对你而言，更值得纪念的是，你趁着大家都去看学生节，第一个码完了程设魔方大作业！"
+                "不过对你而言，更值得纪念的是，你趁着大家都去看学生节，第一个写完了数据结构作业！"
             ]
         },
         {
@@ -133,7 +133,8 @@ Final pages of this scenario are:
                 }
             ],
             actions: [
-                decrease("#体力", 2)
+                decrease("#体力", 2),
+                increase("#社工", 2)
             ]
         },
         {
@@ -185,7 +186,7 @@ Final pages of this scenario are:
                 "果然，艺术从未高于生活。"
             ],
             actions: [
-                increase("#魅力", 6)
+                increase("#魅力", 3)
             ]
         },
         {

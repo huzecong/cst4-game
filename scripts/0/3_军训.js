@@ -64,7 +64,7 @@ Final pages of this scenario are:
                 "你不禁为自己的智商感到高兴~"
             ],
             actions: [
-                increase("#成绩", 1)
+                increase("#成绩", 0)
             ]
         },
         {
@@ -74,7 +74,7 @@ Final pages of this scenario are:
                 "但这是你很长一段时间以来，走得最远的路了。"
             ],
             actions: [
-                increase("#体力", 1)
+                increase("#体力", 3)
             ]
         }
     ]

@@ -47,7 +47,7 @@ Final pages of this scenario are:
                 "于是在很长的一段时间，你被全校人各种围追堵截。"
             ],
             actions: [
-                decrease("#魅力", 5)
+                decrease("#魅力", 3)
             ]
         },
         {
@@ -64,7 +64,7 @@ Final pages of this scenario are:
                 "由于需(ma)求(wei)方(zhi)总是摆着一副黑脸，你无法从中揣测出他对你们进展的评价，于是你们总是在没日没夜地肝……"
             ],
             actions: [
-                decrease("#体力", 5)
+                decrease("#体力", 3)
             ]
         }
     ]

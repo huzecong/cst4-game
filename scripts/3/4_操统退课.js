@@ -167,7 +167,7 @@ Final pages of this scenario are:
                 }
             ],
             actions: [
-                increase("#成绩", 5),
+                increase("#成绩", 3),
                 increase("#体力", 2),
                 increase("#魅力", 2)
             ]

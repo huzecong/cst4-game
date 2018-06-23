@@ -42,7 +42,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("captain")
                     ],
-                    condition: ge("#魅力", 0).and(ge("#体力", 0))
+                    condition: ge("#魅力", 2).and(ge("#体力", 1))
                 }
             ]
         },
@@ -224,7 +224,8 @@ Final pages of this scenario are:
                 "你们雄赳赳气昂昂地出发啦。"
             ],
             actions: [
-                decrease("#体力", 2),
+                increase("#魅力", 2),
+                increase("#社工", 2),
                 jump("captionmatter")
             ]
         },

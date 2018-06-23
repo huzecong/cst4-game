@@ -15,7 +15,7 @@ Final pages of this scenario are:
 ({
     type: "main",
     name: "男女生节",
-    stage: "大二",
+    stage: "大一",
     pages: [
         {
             id: "start",

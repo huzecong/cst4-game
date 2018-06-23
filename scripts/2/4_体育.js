@@ -45,7 +45,7 @@
                 "从此你经常去紫操跑步，锻炼了强健的体魄。"
             ],
             actions: [
-                increase("#体育", 1)
+                increase("#体力", 2)
             ]
         },
         {
@@ -55,7 +55,7 @@
                 "通过系队训练，你的核心力量和灵活性都得到了提高。"
             ],
             actions: [
-                increase("#体育", 1)
+                increase("#体力", 2)
             ]
         },
         {
@@ -86,7 +86,7 @@
             ],
             image: "/体育/足球.jpeg",
             actions: [
-                increase("#体育", 1)
+                increase("#体力", 2)
             ]
         },
         {
@@ -96,8 +96,8 @@
             ],
             image: "/体育/训练.jpeg",
             actions: [
-                increase("#魅力", 1),
-                increase("#体育", 2)
+                increase("#魅力", 3),
+                increase("#体力", 2)
             ]
         }
     ]

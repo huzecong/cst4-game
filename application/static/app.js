@@ -261,7 +261,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         local.clear();
         let initActions = [
             set("#脱单", false),
-            set("#体力", 0),
+            set("#体力", 10),
             set("#魅力", 0),
             set("#成绩", 0),
             set("#直博", false),

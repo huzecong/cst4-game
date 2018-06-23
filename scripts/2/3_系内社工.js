@@ -54,6 +54,7 @@ Final pages of this scenario are:
                     text: "加入学生会",
                     actions: [
                         increase("#魅力", 2),
+                        increase("#社工", 2),
                         decrease("#体力", 2),
                         set("$sast", "0"),
                         jump("studentunion")
@@ -64,6 +65,7 @@ Final pages of this scenario are:
                     text: "加入科协",
                     actions: [
                         increase("#魅力", 2),
+                        increase("#社工", 2),
                         decrease("#体力", 2),
                         jump("sast")
                     ],
@@ -73,6 +75,7 @@ Final pages of this scenario are:
                     text: "学生会、科协我全都要！",
                     actions: [
                         increase("#魅力", 4),
+                        increase("#社工", 2),
                         decrease("#体力", 5),
                         set("$sast", "1"),
                         jump("studentunion")

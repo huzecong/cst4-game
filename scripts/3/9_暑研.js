@@ -57,7 +57,7 @@ Final pages of this scenario are:
                 },
                 {
                     text: "参加官方暑研项目",
-                    condition: ge("#成绩", 10).and(not(flagged("#直博"))),
+                    condition: ge("#成绩", 8).and(not(flagged("#直博"))),
                     actions: [
                         jump("prepare")
                     ]
