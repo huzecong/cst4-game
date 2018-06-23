@@ -60,7 +60,7 @@
                 {
                     text: eq("$复读次数", 0).then("当然是北大").else("还是北大吧"),
                     actions: [
-                        ending("未名湖畔")
+                        ending("考入北大")
                     ]
                 },
                 {

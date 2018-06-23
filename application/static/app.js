@@ -74,7 +74,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     let endingMap = {};
 
     let achievementsList = [];
-    let achievementUnlocked = [];
     let achievementMap = {};
 
     let failedExams = [];
@@ -546,10 +545,27 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let achievementId = achievementMap[name];
         if (achievementId === undefined)
             throw "未定义的成就：" + name;
-        if (!achievementUnlocked[achievementId]) {
+        let bitStr = localStorage.getItem("_achievements");
+        if (bitStr[achievementId] === "0") {
             if (toast) showToast("解锁成就：" + name);
-            achievementUnlocked[achievementId] = true;
+            bitStr = bitStr.substr(0, achievementId) + "1" + bitStr.substr(achievementId + 1);
+            localStorage.setItem("_achievements", bitStr);
         }
+    }
+
+    function drawEndingImage(path) {
+        let image = new Image();
+        image.src = '/static/image/' + path;
+        image.onload = function () {
+            let canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0);
+            ctx.font = "400 20pt SimHei";
+            ctx.fillText(global.values['姓名'], 128, 103);
+            document.querySelector(".md-card-image").src = canvas.toDataURL("image/jpg", 1.0);
+        };
     }
 
     function loadEnding(name, animate = true) {
@@ -574,11 +590,12 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 name: ending.name,
                 stage: "结局"
             };
-            $scope.current.page = {
-                image: ending.image,
-            };
+            drawEndingImage(ending.image);
             $scope.current.choices = [];
-            loadText(ending.text);
+            loadText([
+                '<div style="font-size: smaller; text-align: right;">' +
+                '   <i>长按或右键单击保存图片。</i>' +
+                '</div>'].concat(ending.text));
             grantAchievement("结局：" + ending.name, false);
         };
         changeCardContent(loadEndingImpl, 0);
@@ -589,8 +606,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             $scope.current.pageType = "achievements";
             $scope.achievements = [];
             let numAchievements = 0;
+            let bitStr = localStorage.getItem("_achievements");
             for (let i = 0; i < achievementsList.length; ++i) {
-                if (achievementUnlocked[i]) {
+                if (bitStr[i] === "1") {
                     $scope.achievements.push(achievementsList[i]);
                     ++numAchievements;
                 } else {
@@ -751,10 +769,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let currentScript = response.data;
         achievementsList = eval(currentScript);
 
-        for (let idx in achievementsList) {
+        for (let idx in achievementsList)
             achievementMap[achievementsList[idx].name] = idx;
-            achievementUnlocked.push(false);
-        }
+        if (localStorage.getItem("_achievements") === null)
+            localStorage.setItem("_achievements", "0".repeat(achievementsList.length));
     });
 
     $http.get('/static/scripts/ending.js').then(function (response) {
