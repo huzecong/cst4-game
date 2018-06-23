@@ -21,20 +21,70 @@ let App = angular.module('myApp', [
 });
 
 App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function _mainController($scope, $http, $mdToast, $mdMenu, $timeout, _rawScriptingJS) {
+    // dirty recursion trick to ensure synchronicity
     if (_rawScriptingJS === undefined) {
         let args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
         $http.get('/static/scripting.js').then(function (response) {
             args = args.concat([response.data]);
-            console.log(args);
             _mainController.apply(null, args);
         });
         return;
     }
-    // VariableStorage to be assigned by eval
-    let global = null;
-    let local = null;
     eval(_rawScriptingJS);  // evil impl that breaks under strict mode
-    // if strict mode is required, simply copy-paste scripting.js into this scope
+    // if strict mode is required, simply copy-paste `scripting.js` into this scope
+
+    let storage = (function () {
+        // Load localStorage into memory
+        let memory = {};
+        for (let i = 0; i < localStorage.length; ++i) {
+            let key = localStorage.key(i);
+            memory[key] = localStorage.getItem(key);
+        }
+        // Rewrite our own storage methods
+        let setItem = (function () {
+            let setItem = localStorage.setItem.bind(localStorage);
+            return function (key, value) {
+                setItem(key, value);
+                memory[key] = value;
+            };
+        })();
+        let getItem = (function () {
+            let getItem = localStorage.getItem.bind(localStorage);
+            return function (key) {
+                return getItem(key);
+            };
+        })();
+        // Setup daemon for data integrity check
+        let lastTime = new Date();
+        setInterval(function () {
+            let curTime = new Date();
+            if (curTime - lastTime >= 700) {
+                // Something's wrong... The user might have paused execution in the debugger!
+                grantAchievement("_你好像在作弊");
+            }
+            let intact = true;
+            for (let key in memory) {
+                if (memory[key] !== getItem(key)) {
+                    intact = false;
+                    setItem(key, memory[key]);
+                }
+            }
+            if (!intact) {
+                // Something's wrong... The user might have modified local storage through the console!
+                grantAchievement("_你好像在作弊");
+            }
+            lastTime = curTime;
+        }, 500);
+        return {
+            setItem: setItem,
+            getItem: getItem
+        };
+    })();
+    // Prevent the user from using localStorage
+    localStorage.setItem = undefined;
+    localStorage.getItem = undefined;
+    localStorage.key = undefined;
+    localStorage.removeItem = undefined;
 
     $scope.current = {
         event: null,
@@ -63,7 +113,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     let inTransition = false;
     let pageMap = {};
-    let imageCache = [];
 
     let endingsList = [];
     let endingMap = {};
@@ -72,6 +121,15 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     let achievementMap = {};
 
     let failedExams = [];
+
+    let cacheImage = (function () {
+        let imageCache = [];
+        return function (path) {
+            let img = new Image();
+            img.src = '/static/image/' + path;
+            imageCache.push(img);
+        };
+    })();
 
     function sleep(ms) {
         return new Promise(resolve => {
@@ -224,24 +282,17 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         // cheat();
 
         // load images
-        let imagePaths = [];
-        imageCache = [];
         for (let event of $scope.events)
             if (event.type === "exam") {
                 for (let exam of event.exams)
                     for (let q of exam.questions)
                         if (q.image !== undefined)
-                            imagePaths.push(q.image)
+                            cacheImage(q.image);
             } else {
                 for (let page of event.pages)
                     if (page.image !== undefined)
-                        imagePaths.push(page.image);
+                        cacheImage(page.image);
             }
-        for (let path of imagePaths) {
-            let img = new Image();
-            img.src = '/static/image/' + path;
-            imageCache.push(img);
-        }
 
         if (callback !== undefined) {
             callback();
@@ -540,11 +591,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let achievementId = achievementMap[name];
         if (achievementId === undefined)
             throw "未定义的成就：" + name;
-        let bitStr = localStorage.getItem("_achievements");
+        let bitStr = storage.getItem("_achievements");
         if (bitStr[achievementId] === "0") {
-            if (toast) showToast("解锁成就：" + name);
+            if (toast) {
+                if (name.startsWith("_")) name = name.substr(1);
+                showToast("解锁成就：" + name);
+            }
             bitStr = bitStr.substr(0, achievementId) + "1" + bitStr.substr(achievementId + 1);
-            localStorage.setItem("_achievements", bitStr);
+            storage.setItem("_achievements", bitStr);
         }
     }
 
@@ -588,18 +642,30 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let loadAchievementsImpl = function () {
             $scope.current.pageType = "achievements";
             $scope.achievements = [];
-            let numAchievements = 0;
-            let bitStr = localStorage.getItem("_achievements");
+            let numAchievements = 0, totalAchievements = 0;
+            let bitStr = storage.getItem("_achievements");
             for (let i = 0; i < achievementsList.length; ++i) {
-                if (bitStr[i] === "1") {
-                    $scope.achievements.push(achievementsList[i]);
-                    ++numAchievements;
+                if (achievementsList[i].name.startsWith("_")) {
+                    if (bitStr[i] === "1") {
+                        $scope.achievements.push({
+                            name: achievementsList[i].name.substr(1),
+                            text: achievementsList[i].text
+                        });
+                        ++numAchievements;
+                    }
                 } else {
-                    $scope.achievements.push({
-                        name: "？？？",
-                        text: "？？？"
-                    });
+                    ++totalAchievements;
+                    if (bitStr[i] === "1") {
+                        $scope.achievements.push(achievementsList[i]);
+                        ++numAchievements;
+                    } else {
+                        $scope.achievements.push({
+                            name: "？？？",
+                            text: "？？？"
+                        });
+                    }
                 }
+
             }
             $scope.current.event = {
                 name: "成就列表",
@@ -768,14 +834,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadMemory = function () {
-        if (["_global", "_local", "_eventIndex", "_pageId"].some(x => !localStorage.getItem(x))) {
+        if (["_global", "_local", "_eventIndex", "_pageId"].some(x => !storage.getItem(x))) {
             showToast("不存在游戏存档");
             return;
         }
-        global.values = JSON.parse(localStorage.getItem("_global"));
-        local.values = JSON.parse(localStorage.getItem("_local"));
-        let eventIndex = parseInt(localStorage.getItem("_eventIndex"));
-        let pageId = localStorage.getItem("_pageId");
+        global.values = JSON.parse(storage.getItem("_global"));
+        local.values = JSON.parse(storage.getItem("_local"));
+        let eventIndex = parseInt(storage.getItem("_eventIndex"));
+        let pageId = storage.getItem("_pageId");
         loadEvent(eventIndex, true, pageId);
         showToast("载入完成");
     };
@@ -785,10 +851,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             showToast("当前页面无法存档");
             return;
         }
-        localStorage.setItem("_global", JSON.stringify(global.values));
-        localStorage.setItem("_local", JSON.stringify(local.values));
-        localStorage.setItem("_eventIndex", $scope.current.eventIndex);
-        localStorage.setItem("_pageId", $scope.current.page.id);
+        storage.setItem("_global", JSON.stringify(global.values));
+        storage.setItem("_local", JSON.stringify(local.values));
+        storage.setItem("_eventIndex", $scope.current.eventIndex);
+        storage.setItem("_pageId", $scope.current.page.id);
         showToast("保存完成");
     };
 
@@ -805,18 +871,21 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let currentScript = response.data;
         achievementsList = eval(currentScript);
 
-        for (let idx in achievementsList)
+        for (let idx = 0; idx < achievementsList.length; ++idx)
             achievementMap[achievementsList[idx].name] = idx;
-        if (localStorage.getItem("_achievements") === null)
-            localStorage.setItem("_achievements", "0".repeat(achievementsList.length));
+        if (storage.getItem("_achievements") === null)
+            storage.setItem("_achievements", "0".repeat(achievementsList.length));
     });
 
     $http.get('/static/scripts/ending.js').then(function (response) {
         let currentScript = response.data;
         endingsList = eval(currentScript);
 
-        for (let ending of endingsList)
+        for (let ending of endingsList) {
             endingMap[ending.name] = ending;
+            if (ending.image)
+                cacheImage(ending.image);
+        }
     });
 
     initialize();

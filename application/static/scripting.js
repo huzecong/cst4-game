@@ -1,4 +1,4 @@
-class VariableStorage {
+var VariableStorage = class {
     constructor() {
         this.values = {};
     }
@@ -10,7 +10,7 @@ class VariableStorage {
     clear() {
         this.values = {};
     }
-}
+};
 
 VariableStorage.defaultValues = {
     "string": "",
@@ -55,13 +55,13 @@ function valueOf(expr) {
     }
 }
 
-class Expression {
+var Expression = class {
     value() {
         return this;
     }
-}
+};
 
-class Variable extends Expression {
+var Variable = class extends Expression {
     constructor(sto, key, typeIfCreate) {
         super();
         this.sto = sto;
@@ -81,7 +81,7 @@ class Variable extends Expression {
 
     value() {
         this.checkExists();
-        let varVal = this.sto.values[this.key];
+        var varVal = this.sto.values[this.key];
         if (varVal === null)
             varVal = 0;
         return varVal;
@@ -89,7 +89,7 @@ class Variable extends Expression {
 
     set(value) {
         this.checkExists();
-        let varVal = this.sto.values[this.key];
+        var varVal = this.sto.values[this.key];
         if (varVal !== null && typeof value !== typeof varVal)
             throw new Error("Type mismatch during assignment of `" + this.key);
         this.sto.values[this.key] = value;
@@ -97,15 +97,15 @@ class Variable extends Expression {
 
     delta(value) {
         this.checkExists();
-        let varVal = this.sto.values[this.key];
+        var varVal = this.sto.values[this.key];
         if (varVal === null) varVal = 0;
         if (typeof varVal !== "number")
             throw new Error("`increase`/`decrease` on non-number types");
         this.sto.values[this.key] = varVal + value;
     }
-}
+};
 
-class RelOp {
+var RelOp = class {
     static gt(a, b) {
         return a > b;
     }
@@ -138,16 +138,16 @@ class RelOp {
         if (isVariable(a)) a = lookup(a, "number");
         if (isVariable(b)) b = lookup(b, "number");
         return function () {
-            let valA = valueOf(a);
-            let valB = valueOf(b);
-            let retVal = func(valA, valB);
+            var valA = valueOf(a);
+            var valB = valueOf(b);
+            var retVal = func(valA, valB);
             // console.log(func, valA, valB, retVal);
             return retVal;
         }
     }
-}
+};
 
-class Conditional extends Expression {
+var Conditional = class extends Expression {
     constructor(cond) {
         super();
         this.cond = cond;
@@ -172,17 +172,17 @@ class Conditional extends Expression {
     }
 
     value() {
-        let cond = valueOf(this.cond);
+        var cond = valueOf(this.cond);
         if (typeof cond !== "boolean")
             throw new Error("Conditional not evaluated to boolean");
-        for (let expr of this.andExprs) {
-            let val = valueOf(expr);
+        for (var expr of this.andExprs) {
+            var val = valueOf(expr);
             if (typeof val !== "boolean")
                 throw new Error("Conditional in `and` not evaluated to boolean");
             cond = cond && val;
         }
-        for (let expr of this.orExprs) {
-            let val = valueOf(expr);
+        for (var expr of this.orExprs) {
+            var val = valueOf(expr);
             if (typeof val !== "boolean")
                 throw new Error("Conditional in `or` not evaluated to boolean");
             cond = cond || val;
@@ -214,9 +214,9 @@ class Conditional extends Expression {
         this.elseClause = expr;
         return this;
     }
-}
+};
 
-class Assignment extends Expression {
+var Assignment = class extends Expression {
     constructor(a, b) {
         super();
         this.a = a;
@@ -224,42 +224,42 @@ class Assignment extends Expression {
     }
 
     value() {
-        let val = valueOf(this.b);
+        var val = valueOf(this.b);
         this.a.set(val);
         // console.log("assign " + this.a.key + " " + val);
         return val;
     }
-}
+};
 
-class Jump extends Expression {
+var Jump = class extends Expression {
     constructor(label) {
         super();
         this.label = label;
     }
-}
+};
 
-class Log extends Expression {
+var Log = class extends Expression {
     constructor(msg) {
         super();
         this.msg = msg;
     }
-}
+};
 
-class Ending extends Expression {
+var Ending = class extends Expression {
     constructor(name) {
         super();
         this.name = name;
     }
-}
+};
 
-class Achievement extends Expression {
+var Achievement = class extends Expression {
     constructor(name) {
         super();
         this.name = name;
     }
-}
+};
 
-class Exec extends Expression {
+var Exec = class extends Expression {
     constructor(func) {
         super();
         this.func = func;
@@ -268,7 +268,7 @@ class Exec extends Expression {
     value() {
         return this.func();
     }
-}
+};
 
 function ge(a, b) {
     return new Conditional(RelOp.forward(RelOp.ge, a, b));
@@ -317,7 +317,7 @@ function set(key, value) {
 }
 
 function increase(key, delta) {
-    let variable = lookup(key, "number");
+    var variable = lookup(key, "number");
     return new Assignment(variable, function () {
         return variable.value() + delta;
     });
