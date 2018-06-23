@@ -1,4 +1,4 @@
-class Storage {
+class VariableStorage {
     constructor() {
         this.values = {};
     }
@@ -12,14 +12,14 @@ class Storage {
     }
 }
 
-Storage.defaultValues = {
+VariableStorage.defaultValues = {
     "string": "",
     "boolean": false,
     "number": 0
 };
 
-global = new Storage();
-local = new Storage();
+global = new VariableStorage();
+local = new VariableStorage();
 
 function isVariable(key) {
     return typeof key === "string" && (key.startsWith("$") || key.startsWith("#"));
@@ -73,9 +73,9 @@ class Variable extends Expression {
         if (!(this.key in this.sto.values)) {
             if (this.typeIfCreate === undefined)
                 throw new Error("Variable `" + this.key + "` does not exist");
-            if (!(this.typeIfCreate in Storage.defaultValues))
+            if (!(this.typeIfCreate in VariableStorage.defaultValues))
                 throw new Error("Unsupported variable type: " + this.typeIfCreate);
-            this.sto.values[this.key] = Storage.defaultValues[this.typeIfCreate];
+            this.sto.values[this.key] = VariableStorage.defaultValues[this.typeIfCreate];
         }
     }
 

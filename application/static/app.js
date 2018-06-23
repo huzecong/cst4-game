@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 let App = angular.module('myApp', [
     'ngMaterial', 'ngSanitize'
@@ -20,27 +20,22 @@ let App = angular.module('myApp', [
     };
 });
 
-function cheat() {
-    let initActions = [
-        set("#体力", 100),
-        set("#魅力", 100),
-        set("#成绩", 100),
-        set("#社工", 100),
-        set("#性别", "男"),
-        set("#姓名", "杨天龙")
-    ];
-    for (let action of initActions)
-        valueOf(action);
-}
+App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function _mainController($scope, $http, $mdToast, $mdMenu, $timeout, _rawScriptingJS) {
+    if (_rawScriptingJS === undefined) {
+        let args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+        $http.get('/static/scripting.js').then(function (response) {
+            args = args.concat([response.data]);
+            console.log(args);
+            _mainController.apply(null, args);
+        });
+        return;
+    }
+    // VariableStorage to be assigned by eval
+    let global = null;
+    let local = null;
+    eval(_rawScriptingJS);  // evil impl that breaks under strict mode
+    // if strict mode is required, simply copy-paste scripting.js into this scope
 
-function printVariables() {
-    console.log("全局变量：");
-    console.log(Object.entries(global.values).map(x => x[0] + ": " + x[1]).join("\n"));
-    console.log("局部变量：");
-    console.log(Object.entries(local.values).map(x => x[0] + ": " + x[1]).join("\n"));
-}
-
-App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout', function ($scope, $http, $mdToast, $mdMenu, $timeout) {
     $scope.current = {
         event: null,
         page: null,
@@ -570,19 +565,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     function loadEnding(name, animate = true) {
         let ending = null;
-        if (name !== undefined) {
-            ending = endingMap[name];
-        } else {
-            ending = {
-                name: "毕业",
-                text: [
-                    "我们应该在这里汇总一下玩家的信息。",
-                    "比如可以有：",
-                    Object.keys(global.values).map(x => x + "：{#" + x + "}").join("，") + "。",
-                    "注意，输出前要确保变量存在，所以最好找个地方做全局的初始化。"
-                ]
-            };
-        }
+        ending = endingMap[name];
 
         let loadEndingImpl = function () {
             $scope.current.pageType = "ending";
@@ -638,7 +621,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 return;
             }
         }
-        loadEnding();
+        loadEnding("顺利毕业");
     }
 
     let showToast = function () {
@@ -761,45 +744,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         $scope.deadline.grade = grade;
     };
 
-    // Initialization procedure
-
-    initialize();
-
-    $http.get('/static/scripts/achievements.js').then(function (response) {
-        let currentScript = response.data;
-        achievementsList = eval(currentScript);
-
-        for (let idx in achievementsList)
-            achievementMap[achievementsList[idx].name] = idx;
-        if (localStorage.getItem("_achievements") === null)
-            localStorage.setItem("_achievements", "0".repeat(achievementsList.length));
-    });
-
-    $http.get('/static/scripts/ending.js').then(function (response) {
-        let currentScript = response.data;
-        endingsList = eval(currentScript);
-
-        for (let ending of endingsList)
-            endingMap[ending.name] = ending;
-    });
-
-    if (window.innerWidth >= 960) {
-        $mdToast.show($mdToast.simple()
-            .textContent("推荐在手机上使用Chrome浏览器进行游戏。" +
-                "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
-            .position("top left").hideDelay(5000));
-    }
-
     $scope.loadLocalScript = function () {
         let f = document.createElement("input");
         f.style.display = "none";
         f.type = "file";
         f.name = "file";
         let eventListener = function () {
-            // console.log(f.files[0].name);
             let reader = new FileReader();
             reader.onload = function (ev) {
-                // console.log("Load complete");
                 loadScript(ev.target.result);
                 cheat();
                 showToast("已成功载入：" + f.files[0].name + "。");
@@ -840,6 +792,34 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         showToast("保存完成");
     };
 
+    if (window.innerWidth >= 960) {
+        $mdToast.show($mdToast.simple()
+            .textContent("推荐在手机上使用Chrome浏览器进行游戏。" +
+                "当然，也可以使用桌面版Chrome浏览器，进入审查元素并选择移动端视图。")
+            .position("top left").hideDelay(5000));
+    }
+
+    // Load data
+
+    $http.get('/static/scripts/achievements.js').then(function (response) {
+        let currentScript = response.data;
+        achievementsList = eval(currentScript);
+
+        for (let idx in achievementsList)
+            achievementMap[achievementsList[idx].name] = idx;
+        if (localStorage.getItem("_achievements") === null)
+            localStorage.setItem("_achievements", "0".repeat(achievementsList.length));
+    });
+
+    $http.get('/static/scripts/ending.js').then(function (response) {
+        let currentScript = response.data;
+        endingsList = eval(currentScript);
+
+        for (let ending of endingsList)
+            endingMap[ending.name] = ending;
+    });
+
+    initialize();
     loadScriptFromUrl('/static/scripts/merged_script.js', function () {
         let mainMenuEvent = {
             type: "main",
@@ -875,4 +855,27 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         $scope.events.unshift(mainMenuEvent);
         $scope.loadMainMenu(false);
     });
+
+    function cheat() {
+        let initActions = [
+            set("#体力", 100),
+            set("#魅力", 100),
+            set("#成绩", 100),
+            set("#社工", 100),
+            set("#性别", "男"),
+            set("#姓名", "杨天龙")
+        ];
+        for (let action of initActions)
+            valueOf(action);
+    }
+
+    function printVariables() {
+        console.log("全局变量：");
+        console.log(Object.entries(global.values).map(x => x[0] + ": " + x[1]).join("\n"));
+        console.log("局部变量：");
+        console.log(Object.entries(local.values).map(x => x[0] + ": " + x[1]).join("\n"));
+    }
+
+    window.cheat = cheat;
+    window.printVariables = printVariables;
 }]);
