@@ -669,7 +669,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             }
             $scope.current.event = {
                 name: "成就列表",
-                stage: "已解锁成就：" + numAchievements + " / " + achievementsList.length
+                stage: "已解锁成就：" + numAchievements + " / " + totalAchievements
             };
             $scope.current.page = {};
         };
