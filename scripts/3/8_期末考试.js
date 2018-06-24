@@ -2,10 +2,7 @@
 ({
     type: "exam",
     stage: "大三",
-    actionsBefore: [
-        // flag("#操统退课"),
-        // flag("#计原退课")
-    ],
+    actionsBefore: [],
     exams: [
         {
             name: "计算机组成原理",
@@ -75,7 +72,7 @@
                 ])
             ],
             actions: [
-                ge("$不及格学分", 20).then(ending("退学"))
+                ge("$不及格学分", 20).then(ending("被迫退学"))
             ]
         }
     ]

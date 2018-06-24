@@ -3,16 +3,16 @@
     type: "normal",
     name: "体育代表队",
     stage: "大二",
-    actionsBefore: [
-        eq("#性别", "男").then(
-            set("$异性", "女")
-        ).else(
-            set("$异性", "男")
-        )
-    ],
     pages: [
         {
             id: "start",
+            actionsBefore: [
+                eq("#性别", "男").then(
+                    set("$异性", "女")
+                ).else(
+                    set("$异性", "男")
+                )
+            ],
             text: [
                 "你有加入系队并参加比赛的机会，你更喜欢哪种运动？"
             ],

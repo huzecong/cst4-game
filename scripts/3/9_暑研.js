@@ -16,7 +16,7 @@ Final pages of this scenario are:
 // noinspection BadExpressionStatementJS
 ({
     type: "main",
-    name: "暑研支线",
+    name: "暑期研修",
     stage: "大三暑假",
     pages: [
         {
@@ -284,7 +284,7 @@ Final pages of this scenario are:
         {
             id: "work_qte",
             deadline: {
-                targets: [80, 100],
+                targets: [50, 60],
                 title: "赶paper",
                 time: 12,
                 moving: true,

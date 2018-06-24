@@ -98,10 +98,10 @@ Final pages of this scenario are:
                 {
                     text: "即兴发挥，将自己的学习成绩、项目经历娓娓道来",
                     actions: [
-                        ge("#魅力", 4).then(
+                        ge("#魅力", 4).then([
                             increase("$score", 2),
                             jump("q2")
-                        ).else(jump("q1fail"))
+                        ]).else(jump("q1fail"))
                     ],
                     explanation: "平时与人沟通太少，没有练习表达能力",
                     condition: ge("#魅力", 2)
@@ -135,10 +135,10 @@ Final pages of this scenario are:
                 {
                     text: "写出稍微复杂的、基于迭代的算法",
                     actions: [
-                        ge("#成绩", 4).then(
+                        ge("#成绩", 4).then([
                             increase("$score", 2),
                             jump("q3")
-                        ).else(jump("q2fail"))
+                        ]).else(jump("q2fail"))
                     ],
                 }
             ]
@@ -170,10 +170,10 @@ Final pages of this scenario are:
                 {
                     text: "强调自己有精力，即使在晚上也愿意来",
                     actions: [
-                        ge("#体力", 4).then(
+                        ge("#体力", 4).then([
                             increase("$score", 2),
                             jump("final")
-                        ).else(jump("q3fail"))
+                        ]).else(jump("q3fail"))
                     ],
                 }
             ]

@@ -38,7 +38,7 @@
                 ])
             ],
             actions: [
-                ge("$不及格学分", 20).then(ending("退学"))
+                ge("$不及格学分", 20).then(ending("被迫退学"))
             ]
         }
     ]

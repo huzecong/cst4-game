@@ -360,7 +360,7 @@
                         increase("$论文撰写", 1),
                         set("$action", "论文撰写")
                     ],
-                    condition: gt("实验", 0),
+                    condition: gt("$实验", 0),
                     explanation: "进行实验后才可开始论文撰写"
                 },
                 {
@@ -378,7 +378,7 @@
             id: "before_thesis",
             text: [
                 ne("$action", "").then("你在第十三到十四周完成了{$action}。"),
-                lt("$实验", 2).then(
+                gt("$实验", 0).and(lt("$实验", 2)).then(
                     "你的实验结果不太理想，不过也没有时间调了。"
                 ).else(gt("$实验", 2).then(
                     "你的实验结果较好，符合预期。"
@@ -396,7 +396,7 @@
         {
             id: "thesis_easy",
             deadline: {
-                targets: [60, 80, 100],
+                targets: [80, 90, 105],
                 title: "写论文",
                 time: 15,
                 moving: true,
@@ -410,7 +410,7 @@
         {
             id: "thesis_hard",
             deadline: {
-                targets: [80, 100, 120],
+                targets: [55, 65, 80],
                 title: "写论文",
                 time: 15,
                 moving: true,
@@ -515,13 +515,14 @@
         {
             id: "second_defense_prepare",
             deadline: {
-                targets: [40],
+                targets: [30],
                 title: "准备全系答辩",
                 time: 8,
                 moving: true,
                 badChoices: 3
             },
             actions: [
+                set("$全系答辩", 0),
                 set("$全系答辩", "$__QTE__"),
                 jump("second_defense")
             ]
@@ -543,7 +544,7 @@
         {
             id: "outstanding",
             actionsBefore: [
-                achieve("优秀毕业论文")
+                achieve("优秀毕业设计")
             ],
             text: [
                 "你顺利通过了评优答辩，论文被评为了优秀毕业论文！",

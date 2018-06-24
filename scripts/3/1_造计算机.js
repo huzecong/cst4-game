@@ -160,7 +160,7 @@ Final pages of this scenario are:
         {
             id: "challengefighting_qte",
             deadline: {
-                targets: [90],
+                targets: [80],
                 title: "造32位计算机",
                 time: 12,
                 moving: true,

@@ -385,7 +385,7 @@ Final pages of this scenario are:
                 eq("$请问图中所画的是什么", "红黑树")
                     .or(eq("$请问图中所画的是什么", "red-black tree"))
                     .or(eq("$请问图中所画的是什么", "red black tree"))
-                    .then(jump("arenapass")).else("arenafail")
+                    .then(jump("arenapass")).else(jump("arenafail"))
             ]
         },
         {

@@ -110,7 +110,7 @@ Final pages of this scenario are:
         {
             id: "project2_qte",
             deadline: {
-                targets: [70],
+                targets: [100],
                 title: "刷板子",
                 time: 14,
                 badChoices: 2,
