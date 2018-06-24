@@ -114,7 +114,6 @@ Final pages of this scenario are:
         },
         {
             id: "director",
-            image: "学生节/划水.gif",
             text: [
                 "你成为了班级节目的导演。",
                 "然而，你发现事情并不简单……",
