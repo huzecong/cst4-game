@@ -32,6 +32,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     }
     eval(_rawScriptingJS);  // evil impl that breaks under strict mode
     // if strict mode is required, simply copy-paste `scripting.js` into this scope
+    $scope.valueOf = valueOf;
 
     $scope.current = {
         event: null,

@@ -127,7 +127,7 @@
                          ng-click="choice.condition && choice.condition.value() === false && explain($index)">
                         <md-button ng-click="choose($index)"
                                    ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
-                            {{ $index + 1 | character }}. {{ choice.text }}
+                            {{ $index + 1 | character }}. {{ valueOf(choice.text) }}
                         </md-button>
                     </div>
                 </md-card-actions>
