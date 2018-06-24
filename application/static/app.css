@@ -1,7 +1,26 @@
 /* app css stylesheet */
 
+html, body {
+    /* fix toast display on mobile */
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+
+    /* disable double-tap on iOS */
+    touch-action: manipulation;
+}
+
 md-content {
-    padding-bottom: 50px !important; /* prevent toasts covering buttons */
+    /* prevent toasts covering buttons */
+    padding-bottom: 50px !important;
+
+    /* prevent viewport from bouncing, combined with iNoBounce.js */
+    /*-webkit-overflow-scrolling: touch;*/
 }
 
 md-card.storyboard {

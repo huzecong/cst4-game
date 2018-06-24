@@ -12,7 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>天下大计</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link rel="stylesheet" href="/static/app.css?version={- static_version -}">
     {% if debug %}
@@ -28,6 +29,8 @@
     {% endif %}
     <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!--<script src="/static/lib/inobounce/inobounce.js"></script>-->
 </head>
 
 <body>
@@ -108,8 +111,8 @@
 
             <md-divider></md-divider>
 
-            <img ng-if="current.page.image" ng-src="/static/image/{{ current.page.image }}"
-                 class="md-card-image" alt="{{ current.page.image }}">
+            <img ng-if="current.image" class="md-card-image" alt="{{ current.page.image }}"
+                 ng-src="{{ current.image }}">
 
             <div class="text-page" ng-if="current.pageType === 'text' || current.pageType === 'ending'">
                 <md-card-content>
@@ -125,7 +128,7 @@
                                  ng-if="current.choices.length > 0">
                     <div class="choice-button-wrapper" ng-repeat="choice in current.choices"
                          ng-click="choice.condition && choice.condition.value() === false && explain($index)">
-                        <md-button ng-click="choose($index)"
+                        <md-button ng-click="choose($event, $index)"
                                    ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
                             {{ $index + 1 | character }}. {{ valueOf(choice.text) }}
                         </md-button>
@@ -133,7 +136,7 @@
                 </md-card-actions>
                 <md-card-actions layout="column" layout-align="center end"
                                  ng-if="current.choices.length === 0 && current.pageType != 'ending'">
-                    <md-button ng-click="choose(-1)">继续</md-button>
+                    <md-button ng-click="choose($event, -1)">继续</md-button>
                 </md-card-actions>
             </div>
 
@@ -167,6 +170,7 @@
                     </div>
                 </md-card-content>
             </div>
+
             <div class="achievements-page" ng-if="current.pageType == 'achievements'">
                 <md-card-content>
                     <md-list flex>

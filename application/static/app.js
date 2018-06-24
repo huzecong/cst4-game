@@ -132,18 +132,19 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     text: [
                         examEvent.stage + "的期末考试如期而至。",
                     ],
+                    actions: []
                 }
             ]
         };
         if (examEvent.actionsBefore !== undefined)
             event.pages[0].actionsBefore.push(...examEvent.actionsBefore);
         if (examNames.length > 0) {
-            event.pages[0].text.push("你需要参加的考试有：" + examNames.join("、"));
+            event.pages[0].text.push("你需要参加的考试有：" + examNames.join("、") + "。");
         } else if (failedExamNames.length === 0) {
             event.pages[0].text.push("你没有需要参加的考试。");
         }
         if (failedExamNames.length > 0) {
-            event.pages[0].text.push("你还需要补考下列重修课程：" + failedExamNames.join("、"));
+            event.pages[0].text.push("你还需要补考下列重修课程：" + failedExamNames.join("、") + "。");
         }
 
         let correctAction = function (idx) {
@@ -276,7 +277,9 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         $scope.deadline = {
             progress: 0,
             clicks: 0,
-            targets: ddlConfig.targets.slice().sort(),
+            targets: ddlConfig.targets.slice().sort(function (a, b) {
+                return a - b;  // Array.sort defaults to lexicographical sort of strings... WTF
+            }),
             timeRemaining: ddlConfig.time,
             grade: 0
         };
@@ -352,7 +355,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                         $scope.deadline.timeRemaining = remaining;
                     });
                 }
-            }, 1000);
+            }, 500);
         };
 
         let actuallyInit = function () {
@@ -440,13 +443,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             };
         })();
         // Setup daemon for data integrity check
-        let lastTime = new Date();
+        // let lastTime = new Date();
         let interval = setInterval(function () {
-            let curTime = new Date();
-            if (curTime - lastTime >= 700) {
-                // Something's wrong... The user might have paused execution in the debugger!
-                grantAchievement(_cheatAchievement);
-            }
+            // Can't do this, because switching apps to background on mobile devices would stop JS execution
+            // let curTime = new Date();
+            // if (curTime - lastTime >= 700) {
+            //     // Something's wrong... The user might have paused execution in the debugger!
+            //     grantAchievement(_cheatAchievement);
+            // }
             let intact = true;
             for (let key in memory) {
                 if (memory[key] !== getItem(key)) {
@@ -458,7 +462,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 // Something's wrong... The user might have modified local storage through the console!
                 grantAchievement("_你好像在作弊");
             }
-            lastTime = curTime;
+            // lastTime = curTime;
         }, 500);
         window.stopDaemon = function () {
             clearInterval(interval);
@@ -531,6 +535,12 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 throw '跳转的页面标识"' + label + '"未定义';
             }
             $scope.current.page = pageMap[label];
+            let image = $scope.current.page.image;
+            if (image === undefined) {
+                $scope.current.image = undefined;
+            } else {
+                $scope.current.image = 'static/image/' + image;
+            }
 
             if ($scope.current.page.actionsBefore)
                 runActions($scope.current.page.actionsBefore);
@@ -618,7 +628,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             ctx.drawImage(image, 0, 0);
             ctx.font = "400 20pt Arial SimHei";
             ctx.fillText(global.values['姓名'], 128, 103);
-            document.querySelector(".md-card-image").src = canvas.toDataURL("image/jpg", 1.0);
+            // document.querySelector(".md-card-image").src = canvas.toDataURL("image/jpg", 1.0);
+            $scope.$apply(function () {
+                $scope.current.image = canvas.toDataURL("image/jpg", 1.0);
+            });
         };
     }
 
@@ -630,9 +643,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             $scope.current.pageType = "ending";
             $scope.current.event = {
                 name: ending.name,
-                stage: "结局"
+                stage: ending.stage
             };
-            $scope.current.page.image = ending.image;
             drawEndingImage(ending.image);
             $scope.current.choices = [];
             loadText([
@@ -771,7 +783,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
     }
 
-    $scope.choose = function (index) {
+    $scope.choose = function ($event, index) {
+        $event.stopPropagation();
         if (inTransition) return;
 
         let actions = [];
@@ -797,7 +810,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     $scope.explain = function (index) {
         let explanation = $scope.current.page.choices[index].explanation;
         if (explanation !== undefined)
-            showToast("不可选原因：" + explanation);
+            showToast("不可选原因：" + valueOf(explanation));
     };
 
     function finishDeadline() {
