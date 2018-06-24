@@ -82,7 +82,7 @@
         {
             id: "qte-solo",
             deadline: {
-                targets: [60, 70],
+                targets: [50, 60],
                 title: "肝软工组会",
                 time: 12,
                 moving: true,

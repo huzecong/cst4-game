@@ -160,11 +160,11 @@ Final pages of this scenario are:
         {
             id: "challengefighting_qte",
             deadline: {
-                targets: [90, 120],
+                targets: [90],
                 title: "造32位计算机",
                 time: 12,
-                moving: false,
-                badChoices: 0
+                moving: true,
+                badChoices: 1
             },
             actions: [
                 ge("$__QTE__", 1).then(jump("challengeend2")).else(jump("challengeend3"))
@@ -202,14 +202,13 @@ Final pages of this scenario are:
             image: "造计算机/板子.jpg",
             text: [
                 "虽然刷了好几个夜，然而，你还是没能造出32位计算机。",
-                "于是计原华丽丽的挂了……",
-                "只好来年再战计原了……",
-                "这次只造16位计算机吧。"
+                "为了避免挂科，你赶在退课DDL之前把计原退了。",
+                "只好明年再战。"
             ],
             actions: [
+                flag("#计原退课"),
                 decrease("#成绩", 1),
                 decrease("#体力", 1),
-                jump("start")
             ]
         },
         {
@@ -253,7 +252,7 @@ Final pages of this scenario are:
         {
             id: "normalfighting",
             deadline: {
-                targets: [50, 70],
+                targets: [70],
                 title: "造计算机",
                 time: 12,
                 moving: false,

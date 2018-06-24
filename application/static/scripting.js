@@ -81,7 +81,7 @@ var Variable = class extends Expression {
 
     value() {
         this.checkExists();
-        var varVal = this.sto.values[this.key];
+        let varVal = this.sto.values[this.key];
         if (varVal === null)
             varVal = 0;
         return varVal;
@@ -89,7 +89,7 @@ var Variable = class extends Expression {
 
     set(value) {
         this.checkExists();
-        var varVal = this.sto.values[this.key];
+        let varVal = this.sto.values[this.key];
         if (varVal !== null && typeof value !== typeof varVal)
             throw new Error("Type mismatch during assignment of `" + this.key);
         this.sto.values[this.key] = value;
@@ -97,7 +97,7 @@ var Variable = class extends Expression {
 
     delta(value) {
         this.checkExists();
-        var varVal = this.sto.values[this.key];
+        let varVal = this.sto.values[this.key];
         if (varVal === null) varVal = 0;
         if (typeof varVal !== "number")
             throw new Error("`increase`/`decrease` on non-number types");
@@ -165,24 +165,22 @@ var Conditional = class extends Expression {
     }
 
     or(expr) {
-        if (this.andExprs.length > 0)
-            throw new Error("`and` is called on this conditional");
         this.orExprs.push(expr);
         return this;
     }
 
     value() {
-        var cond = valueOf(this.cond);
+        let cond = valueOf(this.cond);
         if (typeof cond !== "boolean")
             throw new Error("Conditional not evaluated to boolean");
-        for (var expr of this.andExprs) {
-            var val = valueOf(expr);
+        for (let expr of this.andExprs) {
+            let val = valueOf(expr);
             if (typeof val !== "boolean")
                 throw new Error("Conditional in `and` not evaluated to boolean");
             cond = cond && val;
         }
-        for (var expr of this.orExprs) {
-            var val = valueOf(expr);
+        for (let expr of this.orExprs) {
+            let val = valueOf(expr);
             if (typeof val !== "boolean")
                 throw new Error("Conditional in `or` not evaluated to boolean");
             cond = cond || val;
@@ -224,7 +222,7 @@ var Assignment = class extends Expression {
     }
 
     value() {
-        var val = valueOf(this.b);
+        let val = valueOf(this.b);
         this.a.set(val);
         // console.log("assign " + this.a.key + " " + val);
         return val;
@@ -317,9 +315,9 @@ function set(key, value) {
 }
 
 function increase(key, delta) {
-    var variable = lookup(key, "number");
+    let variable = lookup(key, "number");
     return new Assignment(variable, function () {
-        return variable.value() + delta;
+        return variable.value() + valueOf(delta);
     });
 }
 

@@ -24,7 +24,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     // dirty recursion trick to ensure synchronicity
     if (_rawScriptingJS === undefined) {
         let args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-        $http.get('/static/scripting.js').then(function (response) {
+        $http.get('/static/scripting.js?' + _jsVersion).then(function (response) {
             args = args.concat([response.data]);
             _mainController.apply(null, args);
         });
@@ -115,9 +115,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     function convertExamsToEvent(examEvent) {
-        if (examEvent.actionsBefore !== undefined)
-            runActions(examEvent.actionsBefore);
-
         let exams = examEvent.exams.filter(x => x.condition === undefined || x.condition.value());
         let examNames = exams.map(x => x.name);
         let failedExamNames = failedExams.map(x => x.name);
@@ -128,16 +125,18 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             pages: [
                 {
                     id: "start",
+                    actionsBefore: [
+                        set("$不及格学分", 0),
+                        set("#不及格课程", 0)
+                    ],
                     text: [
                         examEvent.stage + "的期末考试如期而至。",
                     ],
-                    actions: [
-                        set("$不及格学分", 0),
-                        set("#不及格课程", 0)
-                    ]
                 }
             ]
         };
+        if (examEvent.actionsBefore !== undefined)
+            event.pages[0].actionsBefore.push(...examEvent.actionsBefore);
         if (examNames.length > 0) {
             event.pages[0].text.push("你需要参加的考试有：" + examNames.join("、"));
         } else if (failedExamNames.length === 0) {
@@ -167,8 +166,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     await sleep(1000);
                 }),
                 increase("$不及格学分", exam.points),
-                increase("#不及格课程", 1),
-                ge("$不及格学分", 20).then(ending("退学"))
+                increase("#不及格课程", 1)
             ];
         };
         let pageNum = 0;
@@ -308,7 +306,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
             let deltaX = [], deltaY = [];
             let speed = 0.5; // 100% in a second
-            for (let i in $buttons) {
+            for (let i = 0; i < $buttons.length; ++i) {
                 let theta = (Math.random() - 0.5) * Math.PI;
                 let x = Math.cos(theta), y = Math.sin(theta);
                 x *= speed;
@@ -318,7 +316,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             }
 
             let posX = [], posY = [];
-            for (let i in $buttons) {
+            for (let i = 0; i < $buttons.length; ++i) {
                 posX.push(-$left[i] / $width[i]);
                 posY.push(-$top[i] / ratio / $height[i]);
             }
@@ -332,7 +330,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
             let fps = 60;
             $scope.deadline.movingTimer = setInterval(function () {
-                for (let i in $buttons) {
+                for (let i = 0; i < $buttons.length; ++i) {
                     let value = $buttons[i];
                     posX[i] += deltaX[i] / fps;
                     posY[i] += deltaY[i] / fps;
@@ -797,8 +795,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.explain = function (index) {
-        console.log($scope.current.page.choices[index].condition);
-        console.log($scope.current.page.choices[index].condition.value());
         let explanation = $scope.current.page.choices[index].explanation;
         if (explanation !== undefined)
             showToast("不可选原因：" + explanation);
@@ -887,7 +883,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     // Load data
 
-    $http.get('/static/scripts/achievements.js').then(function (response) {
+    $http.get('/static/scripts/achievements.js?' + _jsVersion).then(function (response) {
         let currentScript = response.data;
         achievementsList = eval(currentScript);
 
@@ -897,7 +893,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             storage.setItem("_achievements", "0".repeat(achievementsList.length));
     });
 
-    $http.get('/static/scripts/ending.js').then(function (response) {
+    $http.get('/static/scripts/ending.js?' + _jsVersion).then(function (response) {
         let currentScript = response.data;
         endingsList = eval(currentScript);
 
@@ -909,7 +905,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     });
 
     initialize();
-    loadScriptFromUrl('/static/scripts/merged_script.js', function () {
+    loadScriptFromUrl('/static/scripts/merged_script.js?' + _jsVersion, function () {
         // let mainMenuEvent =
         // $scope.events.unshift(mainMenuEvent);
         $scope.loadMainMenu(false);

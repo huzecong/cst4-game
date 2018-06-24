@@ -90,9 +90,9 @@ Final pages of this scenario are:
         {
             id: "perform_qte",
             deadline: {
-                targets: [50, 60],
+                targets: [45],
                 title: "学生节表演",
-                time: 12,
+                time: 8,
                 moving: false,
                 badChoices: 0
             },

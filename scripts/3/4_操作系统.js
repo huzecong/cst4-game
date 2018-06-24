@@ -18,7 +18,7 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            image: "操统退课/logo.jpg",
+            image: "操作系统/logo.jpg",
             text: [
                 "在大三下，你终于迎来了万众期待的重头戏——操作系统。",
                 "操统如此多娇，引无数大佬把课退掉。",
@@ -63,7 +63,7 @@ Final pages of this scenario are:
         {
             id: "project1_qte",
             deadline: {
-                targets: [50, 60],
+                targets: [60],
                 title: "操统lab",
                 time: 12,
                 moving: false,
@@ -99,7 +99,7 @@ Final pages of this scenario are:
         {
             id: "project2",
             text: [
-                "第十三周就要交成果了。每周例会上，chyyuu & xyong催促的语气也越来越重。",
+                "第十三周就要交成果了。每周例会上，chyyuu & xyong 催促的语气也越来越重。",
                 "然而，板子还是那么玄学，汇编也还是那么晦涩……",
                 "没办法，只能又爆肝了……"
             ],
@@ -110,7 +110,7 @@ Final pages of this scenario are:
         {
             id: "project2_qte",
             deadline: {
-                targets: [70, 80],
+                targets: [70],
                 title: "刷板子",
                 time: 14,
                 badChoices: 2,
@@ -177,7 +177,7 @@ Final pages of this scenario are:
         },
         {
             id: "exam1",
-            image: "操统退课/向勇mooc.jpg",
+            image: "操作系统/向勇mooc.jpg",
             text: [
                 "操统的考试，总是比其他课要快一拍。",
                 "你是在第六周，考试前的那一周，才发现这个事实的。",
@@ -191,20 +191,24 @@ Final pages of this scenario are:
         {
             id: "exam1_qte",
             deadline: {
-                targets: [50, 60],
+                targets: [60],
                 title: "操统复习",
                 time: 12,
                 moving: false,
                 badChoices: 0
             },
             actions: [
-                ge("$__QTE__", 1).then(increase("$pass", 1)),
-                ge("$__QTE__", 1).then(jump("exam1pass")).else(jump("exam1fail"))
+                ge("$__QTE__", 1).then([
+                    increase("$pass", 1),
+                    jump("exam1pass")
+                ]).else(
+                    jump("exam1fail")
+                )
             ]
         },
         {
             id: "exam1pass",
-            image: "操统退课/期中卷.jpg",
+            image: "操作系统/期中卷.jpg",
             text: [
                 "恭喜你，你费劲九牛二虎之力，你成功通过了操统期中！",
                 "唉，这种刷夜真是太消耗体力了……"
@@ -252,7 +256,7 @@ Final pages of this scenario are:
         },
         {
             id: "exam2",
-            image: "操统退课/陈渝mooc.jpg",
+            image: "操作系统/陈渝mooc.jpg",
             text: [
                 "操统的期末考试，也是一如既往地比其他课要快一拍。",
                 "进程线程管程信号量都是什么玩意儿？",
@@ -265,15 +269,19 @@ Final pages of this scenario are:
         {
             id: "exam2_qte",
             deadline: {
-                targets: [60, 70],
+                targets: [70],
                 title: "操统复习",
                 time: 15,
                 moving: false,
                 badChoices: 1
             },
             actions: [
-                ge("$__QTE__", 1).then(increase("$pass", 1)),
-                ge("$__QTE__", 1).then(jump("exam2pass")).else(jump("exam2fail"))
+                ge("$__QTE__", 1).then([
+                    increase("$pass", 1),
+                    jump("exam2pass")
+                ]).else(
+                    jump("exam2fail")
+                )
             ]
         },
         {
