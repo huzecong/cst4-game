@@ -74,7 +74,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let imageCache = [];
         return function (path) {
             let img = new Image();
-            img.src = '/static/image/' + path;
+            img.src = '/static/image/' + path + '?' + _jsVersion;
             imageCache.push(img);
         };
     })();
