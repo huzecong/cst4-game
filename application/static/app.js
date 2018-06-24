@@ -464,9 +464,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             }
             // lastTime = curTime;
         }, 500);
-        window.stopDaemon = function () {
-            clearInterval(interval);
-        };
+
         return {
             setItem: setItem,
             getItem: getItem
@@ -923,27 +921,4 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         // $scope.events.unshift(mainMenuEvent);
         $scope.loadMainMenu(false);
     });
-
-    function cheat() {
-        let initActions = [
-            set("#体力", 100),
-            set("#魅力", 100),
-            set("#成绩", 100),
-            set("#社工", 100),
-            set("#性别", "男"),
-            set("#姓名", "杨天龙")
-        ];
-        for (let action of initActions)
-            valueOf(action);
-    }
-
-    function printVariables() {
-        console.log("全局变量：");
-        console.log(Object.entries(global.values).map(x => x[0] + ": " + x[1]).join("\n"));
-        console.log("局部变量：");
-        console.log(Object.entries(local.values).map(x => x[0] + ": " + x[1]).join("\n"));
-    }
-
-    window.cheat = cheat;
-    window.printVariables = printVariables;
 }]);
