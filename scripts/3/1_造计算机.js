@@ -31,6 +31,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("challenge1")
                     ],
+                    explanation: "精力不足，或是成绩hold不住",
                     condition: ge("#成绩", 3).and(ge("#体力", 3))
                 },
                 {
@@ -86,6 +87,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("drop")
                     ],
+                    explanation: "都选了挑战项目了，还想退课？",
                     condition: eq(1, 0)
                     // this should always be false, you will never have a chance to drop 
                 }
@@ -237,6 +239,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("normalfighting")
                     ],
+                    explanation: "体力不够了……",
                     condition: ge("#体力", 2)
                 },
                 {

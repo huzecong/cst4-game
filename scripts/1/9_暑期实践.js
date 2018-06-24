@@ -35,6 +35,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("member")
                     ],
+                    explanation: "精力不够",
                     condition: ge("#体力", 0)
                 },
                 {
@@ -42,6 +43,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("captain")
                     ],
+                    explanation: "精力不够，或是魅力不够",
                     condition: ge("#魅力", 2).and(ge("#体力", 1))
                 }
             ]

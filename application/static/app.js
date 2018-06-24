@@ -33,59 +33,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     eval(_rawScriptingJS);  // evil impl that breaks under strict mode
     // if strict mode is required, simply copy-paste `scripting.js` into this scope
 
-    let storage = (function () {
-        // Load localStorage into memory
-        let memory = {};
-        for (let i = 0; i < localStorage.length; ++i) {
-            let key = localStorage.key(i);
-            memory[key] = localStorage.getItem(key);
-        }
-        // Rewrite our own storage methods
-        let setItem = (function () {
-            let setItem = localStorage.setItem.bind(localStorage);
-            return function (key, value) {
-                setItem(key, value);
-                memory[key] = value;
-            };
-        })();
-        let getItem = (function () {
-            let getItem = localStorage.getItem.bind(localStorage);
-            return function (key) {
-                return getItem(key);
-            };
-        })();
-        // Setup daemon for data integrity check
-        let lastTime = new Date();
-        setInterval(function () {
-            let curTime = new Date();
-            if (curTime - lastTime >= 700) {
-                // Something's wrong... The user might have paused execution in the debugger!
-                grantAchievement("_你好像在作弊");
-            }
-            let intact = true;
-            for (let key in memory) {
-                if (memory[key] !== getItem(key)) {
-                    intact = false;
-                    setItem(key, memory[key]);
-                }
-            }
-            if (!intact) {
-                // Something's wrong... The user might have modified local storage through the console!
-                grantAchievement("_你好像在作弊");
-            }
-            lastTime = curTime;
-        }, 500);
-        return {
-            setItem: setItem,
-            getItem: getItem
-        };
-    })();
-    // Prevent the user from using localStorage
-    localStorage.setItem = undefined;
-    localStorage.getItem = undefined;
-    localStorage.key = undefined;
-    localStorage.removeItem = undefined;
-
     $scope.current = {
         event: null,
         page: null,
@@ -192,7 +139,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         };
         if (examNames.length > 0) {
             event.pages[0].text.push("你需要参加的考试有：" + examNames.join("、"));
-        } else {
+        } else if (failedExamNames.length === 0) {
             event.pages[0].text.push("你没有需要参加的考试。");
         }
         if (failedExamNames.length > 0) {
@@ -202,7 +149,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let correctAction = function (idx) {
             return [
                 exec(async function () {
-                    let button = document.querySelectorAll("#question-choices > button")[idx];
+                    let button = document.querySelectorAll("#question-choices > .choice-button-wrapper > button")[idx];
                     button.innerText = "正确";
                     button.style.color = "green";
                     await sleep(1000);
@@ -212,7 +159,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let wrongAction = function (idx, exam) {
             return [
                 exec(async function () {
-                    let button = document.querySelectorAll("#question-choices > button")[idx];
+                    let button = document.querySelectorAll("#question-choices > .choice-button-wrapper > button")[idx];
                     button.innerText = "错误";
                     button.style.color = "red";
                     failedExams.push(exam);
@@ -251,7 +198,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
         for (let i = 0; i < pageNum; ++i)
             event.pages[i].actions.push(jump("q" + i));
-        event.pages[pageNum].actions.push(jump("final"));
+        if (failedExams.length > 0 || exams.length > 0)
+            event.pages[pageNum].actions.push(jump("final"));
         event.pages.push(...examEvent.pages);
         return event;
     }
@@ -266,7 +214,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             set("#成绩", 0),
             set("#直博", false),
             set("#社工", 0),
-            set("#不合格课程", 0)
+            set("#不及格课程", 0)
         ];
         failedExams = [];
         for (let action of initActions)
@@ -279,7 +227,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             jsValue = [jsValue];
         $scope.events = jsValue;
         initialize();
-        // cheat();
 
         // load images
         for (let event of $scope.events)
@@ -300,6 +247,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             loadEvent(0);
         }
     }
+
+    let _cheatAchievement = "_你好像在作弊";
 
     function loadScriptFromUrl(url, callback) {
         $http.get(url).then(function (response) {
@@ -469,6 +418,63 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         });
     }
 
+    // Safely hidden here... :)
+    let storage = (function () {
+        // Load localStorage into memory
+        let memory = {};
+        for (let i = 0; i < localStorage.length; ++i) {
+            let key = localStorage.key(i);
+            memory[key] = localStorage.getItem(key);
+        }
+        // Rewrite our own storage methods
+        let setItem = (function () {
+            let setItem = localStorage.setItem.bind(localStorage);
+            return function (key, value) {
+                setItem(key, value);
+                memory[key] = value;
+            };
+        })();
+        let getItem = (function () {
+            let getItem = localStorage.getItem.bind(localStorage);
+            return function (key) {
+                return getItem(key);
+            };
+        })();
+        // Setup daemon for data integrity check
+        let lastTime = new Date();
+        let interval = setInterval(function () {
+            let curTime = new Date();
+            if (curTime - lastTime >= 700) {
+                // Something's wrong... The user might have paused execution in the debugger!
+                grantAchievement(_cheatAchievement);
+            }
+            let intact = true;
+            for (let key in memory) {
+                if (memory[key] !== getItem(key)) {
+                    intact = false;
+                    setItem(key, memory[key]);
+                }
+            }
+            if (!intact) {
+                // Something's wrong... The user might have modified local storage through the console!
+                grantAchievement("_你好像在作弊");
+            }
+            lastTime = curTime;
+        }, 500);
+        window.stopDaemon = function () {
+            clearInterval(interval);
+        };
+        return {
+            setItem: setItem,
+            getItem: getItem
+        };
+    })();
+    // Prevent the user from using localStorage
+    localStorage.setItem = undefined;
+    localStorage.getItem = undefined;
+    localStorage.key = undefined;
+    localStorage.removeItem = undefined;
+
     function expandElement(element, callback, duration = 400) {
         let tempHeight = element.style.height;
         let tempTransition = element.style.transition;
@@ -611,7 +617,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             canvas.height = image.height;
             let ctx = canvas.getContext("2d");
             ctx.drawImage(image, 0, 0);
-            ctx.font = "400 20pt SimHei";
+            ctx.font = "400 20pt Arial SimHei";
             ctx.fillText(global.values['姓名'], 128, 103);
             document.querySelector(".md-card-image").src = canvas.toDataURL("image/jpg", 1.0);
         };
@@ -627,6 +633,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 name: ending.name,
                 stage: "结局"
             };
+            $scope.current.page.image = ending.image;
             drawEndingImage(ending.image);
             $scope.current.choices = [];
             loadText([
@@ -649,7 +656,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     if (bitStr[i] === "1") {
                         $scope.achievements.push({
                             name: achievementsList[i].name.substr(1),
-                            text: achievementsList[i].text
+                            text: achievementsList[i].text,
+                            image: achievementsList[i].image
                         });
                         ++numAchievements;
                     }
@@ -661,7 +669,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     } else {
                         $scope.achievements.push({
                             name: "？？？",
-                            text: "？？？"
+                            text: "？？？",
+                            image: "成就/未知.png"
                         });
                     }
                 }
@@ -690,10 +699,12 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         loadEnding("顺利毕业");
     }
 
-    let showToast = function () {
+    let showToast = (function () {
         // Encapsulate variable in a closure
         let toast = [];
+        let toastHideDelay = 2000;
         return function (msg) {
+            if (toast.includes(msg)) return;
             toast.push(msg);
             if (toast.length === 1) {
                 let curToast = null;
@@ -705,14 +716,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     if (toast.length > 0) {
                         let msg = toast[0];
                         // console.log("$mdToast:", msg);
-                        curToast = $mdToast.show($mdToast.simple().textContent(msg));
-                        setTimeout(nextToast, 3000);
+                        curToast = $mdToast.show($mdToast.simple().textContent(msg).hideDelay(toastHideDelay));
+                        setTimeout(nextToast, toastHideDelay);
                     }
                 };
                 nextToast();
             }
         };
-    }();
+    })();
 
     function runActions(actions, nextEventIfNoJump = false) {
         let jumpTarget = null;
@@ -782,6 +793,14 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
 
         runActions(actions, true);
+    };
+
+    $scope.explain = function (index) {
+        console.log($scope.current.page.choices[index].condition);
+        console.log($scope.current.page.choices[index].condition.value());
+        let explanation = $scope.current.page.choices[index].explanation;
+        if (explanation !== undefined)
+            showToast("不可选原因：" + explanation);
     };
 
     function finishDeadline() {
@@ -890,38 +909,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     initialize();
     loadScriptFromUrl('/static/scripts/merged_script.js', function () {
-        let mainMenuEvent = {
-            type: "main",
-            name: "天下大计",
-            stage: "计四年级毕业联欢",
-            pages: [
-                {
-                    id: "start",
-                    image: "logo.jpeg",
-                    choices: [
-                        {
-                            text: "开始游戏",
-                            actions: [
-                                achieve("开始游戏")
-                            ]
-                        },
-                        {
-                            text: "载入游戏",
-                            actions: [
-                                exec($scope.loadMemory)
-                            ]
-                        },
-                        {
-                            text: "成就列表",
-                            actions: [
-                                exec(loadAchievements)
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
-        $scope.events.unshift(mainMenuEvent);
+        // let mainMenuEvent =
+        // $scope.events.unshift(mainMenuEvent);
         $scope.loadMainMenu(false);
     });
 

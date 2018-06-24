@@ -2,7 +2,6 @@
 ({
     type: "exam",
     stage: "大四",
-    conditions: gt("#不及格课程", 0),
     exams: [],
     pages: [
         {

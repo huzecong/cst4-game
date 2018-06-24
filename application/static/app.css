@@ -1,5 +1,9 @@
 /* app css stylesheet */
 
+md-content {
+    padding-bottom: 50px !important; /* prevent toasts covering buttons */
+}
+
 md-card.storyboard {
     overflow: hidden;
 }
@@ -12,6 +16,15 @@ md-card.storyboard .text-page md-card-content > p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     /*text-indent: 2em;*/
+}
+
+md-card-actions .choice-button-wrapper {
+    display: inline-grid;
+}
+
+.achievements-page .md-list-item-text {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 md-card.storyboard md-card-actions .md-button {

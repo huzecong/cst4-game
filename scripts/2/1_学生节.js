@@ -28,14 +28,16 @@ Final pages of this scenario are:
                     "actions": [
                         jump("homework")
                     ],
-                    condition: not(flagged("#班长"))
+                    condition: not(flagged("#班长")),
+                    explanation: "作为班长，还是得在学生节中出一份力的"
                 },
                 {
                     text: "我就当个安静的吃瓜观众吧",
                     actions: [
                         jump("audience")
                     ],
-                    condition: not(flagged("#班长"))
+                    condition: not(flagged("#班长")),
+                    explanation: "作为班长，还是得在学生节中出一份力的"
                 },
                 {
                     text: eq("#性别", "男").then(
@@ -59,7 +61,7 @@ Final pages of this scenario are:
         },
         {
             id: "homework",
-            image: "学生节/PA.png",
+            image: "学生节/PA.jpg",
             text: [
                 "2014.12.28，这是学生节的日子。",
                 "不过对你而言，更值得纪念的是，你趁着大家都去看学生节，第一个写完了数据结构作业！"

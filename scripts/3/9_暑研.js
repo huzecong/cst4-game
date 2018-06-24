@@ -36,6 +36,7 @@ Final pages of this scenario are:
                 },
                 {
                     text: "寒假发套磁信",
+                    explanation: flagged("#直博").then("你已经保研了，暑假得在实验室干活").else("你的成绩不够，或是表达能力不强"),
                     condition: ge("#魅力", 1).and(ge("#成绩", 3)).and(not(flagged("#直博"))),
                     actions: [
                         jump("prepare")
@@ -43,6 +44,7 @@ Final pages of this scenario are:
                 },
                 {
                     text: "二月发套瓷信",
+                    explanation: flagged("#直博").then("你已经保研了，暑假得在实验室干活").else("你的表达能力不够强"),
                     condition: ge("#魅力", 4).and(not(flagged("#直博"))),
                     actions: [
                         jump("prepare")
@@ -50,6 +52,7 @@ Final pages of this scenario are:
                 },
                 {
                     text: "三月发套瓷信",
+                    explanation: "你已经保研了，暑假得在实验室干活",
                     condition: not(flagged("#直博")),
                     actions: [
                         jump("noreply")
@@ -57,6 +60,7 @@ Final pages of this scenario are:
                 },
                 {
                     text: "参加官方暑研项目",
+                    explanation: flagged("#直博").then("你已经保研了，暑假得在实验室干活").else("你的成绩不够"),
                     condition: ge("#成绩", 8).and(not(flagged("#直博"))),
                     actions: [
                         jump("prepare")

@@ -59,7 +59,8 @@ Final pages of this scenario are:
                         set("$sast", "0"),
                         jump("studentunion")
                     ],
-                    condition: ge("#体力", 2)
+                    condition: ge("#体力", 2),
+                    explanation: "精力不足"
                 },
                 {
                     text: "加入科协",
@@ -69,7 +70,8 @@ Final pages of this scenario are:
                         decrease("#体力", 2),
                         jump("sast")
                     ],
-                    condition: ge("#体力", 2)
+                    condition: ge("#体力", 2),
+                    explanation: "精力不足"
                 },
                 {
                     text: "学生会、科协我全都要！",
@@ -80,7 +82,8 @@ Final pages of this scenario are:
                         set("$sast", "1"),
                         jump("studentunion")
                     ],
-                    condition: ge("#体力", 5)
+                    condition: ge("#体力", 5),
+                    explanation: "精力不足"
                 },
                 {
                     text: "啥都不选",
@@ -94,7 +97,7 @@ Final pages of this scenario are:
             id: "studentunion",
             image: "学生会/学生会主席.jpg",
             text: [
-                "和学生会主席一阵尬聊"
+                "和学生会主席一阵尬聊……"
             ],
             actions: [
                 jump("host")
@@ -113,7 +116,8 @@ Final pages of this scenario are:
                         decrease("#体力", 1),
                         jump("hostend")
                     ],
-                    condition: ge("#体力", 1)
+                    condition: ge("#体力", 1),
+                    explanation: "精力不足，无法接锅"
                 },
                 {
                     text: "默默不说话",
@@ -129,7 +133,7 @@ Final pages of this scenario are:
                 // todo 魅力阈值 待定吧
                 flagged("#脱单").or(ge("#魅力", 4)).then([
                     "主席把任务安排给了你们。",
-                    "你们的关系在合作中得到的升华。"
+                    "你们的关系在合作中得到了升华。"
                 ]).else([
                     "{$对象}有些深情地望向你，然后突然甩锅……",
                     "于是你只好和另一个人去完成这项工作。"
@@ -210,7 +214,7 @@ Final pages of this scenario are:
         {
             id: "qte-jury",
             deadline: {
-                targets: [60],
+                targets: [40],
                 title: "对象所有权争夺",
                 time: 10,
                 moving: true,
@@ -362,7 +366,7 @@ Final pages of this scenario are:
             id: "sast",
             image: "科协/科协主席.jpg",
             text: [
-                "和科协主席一阵尬聊"
+                "和科协主席一阵尬聊……"
             ],
             actions: [
                 jump("arena")

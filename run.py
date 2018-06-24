@@ -9,7 +9,7 @@ def gather_scripts():
 
     scripts = []
     for d in folders:
-        files = sorted([f for f in os.listdir(os.path.join(script_dir, d)) if f.endswith('.js')])
+        files = sorted([f for f in os.listdir(os.path.join(script_dir, d)) if f.endswith('.js') and not f.startswith('_')])
         for f in files:
             with open(os.path.join(script_dir, d, f), 'r', encoding='utf-8') as rf:
                 scripts.append(rf.read())

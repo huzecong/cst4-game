@@ -103,7 +103,8 @@ Final pages of this scenario are:
                             jump("q2")
                         ).else(jump("q1fail"))
                     ],
-                    // condition: ge("#魅力", 4)
+                    explanation: "平时与人沟通太少，没有练习表达能力",
+                    condition: ge("#魅力", 2)
                 }
             ]
         },

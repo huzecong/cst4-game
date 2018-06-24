@@ -32,7 +32,7 @@
 
 <body>
 
-<div id="toast" style="display: none; padding: 5px; text-align: center;">
+<div id="laugh-at-the-user" style="display: none; padding: 5px; text-align: center;">
     <p>天呐，你使用的居然是<b></b>。</p>
     <p>请使用一个支持ES6以及HTML5标准的现代浏览器，如最新版的Chrome、Firefox、Edge，或者Safari。</p>
 </div>
@@ -123,11 +123,13 @@
 
                 <md-card-actions id="question-choices" layout="column" layout-align="start"
                                  ng-if="current.choices.length > 0">
-                    <md-button ng-repeat="choice in current.choices"
-                               ng-click="choose($index)"
-                               ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
-                        {{ $index + 1 | character }}. {{ choice.text }}
-                    </md-button>
+                    <div class="choice-button-wrapper" ng-repeat="choice in current.choices"
+                         ng-click="choice.condition && choice.condition.value() === false && explain($index)">
+                        <md-button ng-click="choose($index)"
+                                   ng-disabled="{{ choice.condition && choice.condition.value() === false }}">
+                            {{ $index + 1 | character }}. {{ choice.text }}
+                        </md-button>
+                    </div>
                 </md-card-actions>
                 <md-card-actions layout="column" layout-align="center end"
                                  ng-if="current.choices.length === 0 && current.pageType != 'ending'">
@@ -169,7 +171,7 @@
                 <md-card-content>
                     <md-list flex>
                         <md-list-item class="md-2-line" ng-repeat="achievement in achievements" ng-click="null">
-                            <img ng-src="" class="md-avatar" alt=""/>
+                            <img ng-src="/static/image/{{ achievement.image }}" class="md-avatar" alt=""/>
                             <div class="md-list-item-text">
                                 <h3>{{ achievement.name }}</h3>
                                 <p>{{ achievement.text }}</p>

@@ -45,7 +45,6 @@
                 {
                     text: "额尔德特·文绣",
                     actions: [
-                        achieve("文史达人"),
                         flag("#任选课"),
                         jump("correct")
                     ]
@@ -81,7 +80,6 @@
                 {
                     text: "由军人、公务员、教师组成的群体",
                     actions: [
-                        achieve("政经达人"),
                         flag("#任选课"),
                         jump("correct")
                     ]
@@ -105,7 +103,6 @@
                 {
                     text: "雍正",
                     actions: [
-                        achieve("艺术达人"),
                         flag("#任选课"),
                         jump("correct")
                     ]

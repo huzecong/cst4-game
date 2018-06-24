@@ -32,6 +32,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("project1")
                     ],
+                    explanation: "精力不足，或是成绩hold不住",
                     condition: ge("#成绩", 3).and(ge("#体力", 2))
                 },
                 {
@@ -112,7 +113,8 @@ Final pages of this scenario are:
                 targets: [70, 80],
                 title: "刷板子",
                 time: 14,
-                badChoices: 2
+                badChoices: 2,
+                moving: true
             },
             actions: [
                 decrease("#体力", 2),
@@ -159,6 +161,7 @@ Final pages of this scenario are:
                     actions: [
                         flag("#直博")
                     ],
+                    explanation: "你已经获得了刘卫东的直播名额",
                     condition: not(flagged("#直博"))
                 },
                 {
@@ -212,6 +215,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("exam2")
                     ],
+                    explanation: "体力不支……",
                     condition: ge("#体力", 0)
                 },
                 {
@@ -235,6 +239,7 @@ Final pages of this scenario are:
                     actions: [
                         jump("exam2")
                     ],
+                    explanation: "体力不够……",
                     condition: ge("#体力", 2)
                 },
                 {

@@ -3,7 +3,6 @@
     type: "random",
     name: "竞选班长",
     stage: "大一",
-    condition: not(flagged("#班长")),
     pages: [
         {
             id: "start",
