@@ -14,7 +14,7 @@ from . import app
 def route_index():
     return render_template('index.html', static_version=GIT_COMMIT_HASH, debug=app.config['DEBUG'])
 
-@app.route('/favicon.ico')
+@app.route('/favicon')
 def route_favicon():
     directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/favicon')
     return send_from_directory(directory, 'favicon.png')

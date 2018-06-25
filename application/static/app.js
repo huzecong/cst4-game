@@ -916,31 +916,31 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
 
     // Load data
 
-    $http.get('/static/scripts/achievements.js?' + _jsVersion).then(function (response) {
-        let currentScript = response.data;
-        achievementsList = eval(currentScript);
-
-        for (let idx = 0; idx < achievementsList.length; ++idx)
-            achievementMap[achievementsList[idx].name] = idx;
-        if (storage.getItem("_achievements") === null)
-            storage.setItem("_achievements", "0".repeat(achievementsList.length));
-    });
-
-    $http.get('/static/scripts/ending.js?' + _jsVersion).then(function (response) {
-        let currentScript = response.data;
-        endingsList = eval(currentScript);
-
-        for (let ending of endingsList) {
-            endingMap[ending.name] = ending;
-            if (ending.image)
-                cacheImage(ending.image);
-        }
-    });
-
     initialize();
     loadScriptFromUrl('/static/scripts/merged_script.js?' + _jsVersion, function () {
         // let mainMenuEvent =
         // $scope.events.unshift(mainMenuEvent);
         $scope.loadMainMenu(false);
+
+        $http.get('/static/scripts/achievements.js?' + _jsVersion).then(function (response) {
+            let currentScript = response.data;
+            achievementsList = eval(currentScript);
+
+            for (let idx = 0; idx < achievementsList.length; ++idx)
+                achievementMap[achievementsList[idx].name] = idx;
+            if (storage.getItem("_achievements") === null)
+                storage.setItem("_achievements", "0".repeat(achievementsList.length));
+        });
+
+        $http.get('/static/scripts/ending.js?' + _jsVersion).then(function (response) {
+            let currentScript = response.data;
+            endingsList = eval(currentScript);
+
+            for (let ending of endingsList) {
+                endingMap[ending.name] = ending;
+                if (ending.image)
+                    cacheImage(ending.image);
+            }
+        });
     });
 }]);
