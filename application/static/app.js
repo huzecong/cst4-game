@@ -118,10 +118,11 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let getExam = function (info) {
             return $scope.events[info.eventIdx].exams[info.examIdx];
         };
-        let examsInfo = examEvent.exams.map((x, idx) => ({
+        let allExamsInfo = examEvent.exams.map((x, idx) => ({
             condition: x.condition,
             info: {eventIdx: eventIdx, examIdx: idx}
-        })).filter(x => x.condition === undefined || x.condition.value()).map(x => x.info);
+        }));
+        let examsInfo = allExamsInfo.filter(x => x.condition === undefined || x.condition.value()).map(x => x.info);
         let examNames = examsInfo.map(x => getExam(x).name);
         let failedExamNames = failedExamsInfo.map(x => getExam(x).name);
         let event = {
@@ -178,7 +179,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         };
         let pageNum = 0;
         let curExamsInfo = failedExamsInfo.concat(examsInfo);
-        failedExamsInfo = examEvent.exams.filter(x => x.condition !== undefined && !x.condition.value()); // take it next year
+        // take dropped classes next year
+        failedExamsInfo = allExamsInfo.filter(x => x.condition !== undefined && !x.condition.value()).map(x => x.info);
         for (let examInfo of curExamsInfo) {
             let exam = getExam(examInfo);
             let q = exam.questions.randomPick();
