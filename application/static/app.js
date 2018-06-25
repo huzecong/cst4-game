@@ -848,6 +848,16 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadLocalScript = function () {
+        let cheat = function() {
+            runActions([
+                set("#脱单", false),
+                set("#体力", 10),
+                set("#魅力", 10),
+                set("#成绩", 10),
+                set("#社工", 10),
+                set("#不及格课程", 0)
+            ]);
+        };
         let f = document.createElement("input");
         f.style.display = "none";
         f.type = "file";
@@ -856,6 +866,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             let reader = new FileReader();
             reader.onload = function (ev) {
                 loadScript(ev.target.result);
+                cheat();
                 showToast("已成功载入：" + f.files[0].name + "。");
             };
             reader.readAsText(f.files[0]);

@@ -63,7 +63,7 @@ Final pages of this scenario are:
         },
         {
             id: "prepare",
-            image: "实习/company.png",
+            image: "实习/company.jpg",
             text: [
                 "突然有一天，你接到了某AI独角兽公司Sense++的电话！",
                 "兴致勃勃的你，在约定的时间来到了高大上的公司办公室，",
@@ -216,7 +216,7 @@ Final pages of this scenario are:
             text: [
                 "四个工作日后，你等来了HR小姐姐的电话，",
                 "七个工作日后，你领到了工牌，成为了Sense++的一员~",
-                "在此之后，你努力参与了~~~此处商业机密~~~项目",
+                "在此之后，你努力参与了<del>此处商业机密</del>项目",
                 "终于拿到了你亲手挣到的第一笔工资 :)"
             ]
         }
