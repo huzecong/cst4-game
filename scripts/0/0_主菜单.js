@@ -42,30 +42,18 @@
                 }
             ]
         },
-        // {
-        //     id: "help",
-        //     text: [
-        //         (function () {
-        //             let days = Math.floor((new Date() - new Date("2018/07/08")) / (24 * 60 * 60 * 1000));
-        //             if (days < 0) return "距离大学毕业还有" + (-days) + "天。";
-        //             else if (days === 0) return "今天就是大学毕业的日子。";
-        //             else if (days > 0) return "大学毕业已经" + days + "天了。";
-        //         })(),
-        //         "大学期间，你曾否做出过让你后悔的决定？又或者，是否想体验另外的一条道路？",
-        //         "",
-        //         "如果重来大学四年，你会做出怎样的选择呢？"
-        //     ],
-        //     actions: [
-        //         jump("help_")
-        //     ]
-        // },
         {
             id: "help",
-            image: "帮助/爆肝界面.png",
             text: [
-                "有一种特殊的游戏模式如上图所示：<b>爆肝模式</b>。",
-                "没错，和熬夜爆肝赶DDL一样，你需要付出一些努力才可以通关。你需要做的就是在时间限制内快速点击“<i>肝！</i>”按钮，达到指定次数方可通关。",
-                "不过，事情并不会一直一帆风顺。在爆肝期间，你还需要排除干扰，集中注意力。加油吧！"
+                (function () {
+                    let days = Math.floor((new Date() - new Date("2018/07/08")) / (24 * 60 * 60 * 1000));
+                    if (days < 0) return "距离大学毕业还有" + (-days) + "天。";
+                    else if (days === 0) return "今天就是大学毕业的日子。";
+                    else if (days > 0) return "大学毕业已经" + days + "天了。";
+                })(),
+                "大学期间，你曾否做出过让你后悔的决定？又或者，是否想体验另外的一条道路？",
+                "",
+                "如果重来大学四年，你会做出怎样的选择呢？"
             ],
             actions: [
                 jump("help2")
@@ -90,28 +78,7 @@
             actions: [
                 jump("help4")
             ]
-        },/*
-        {
-            id: "help4",
-            image: "帮助/爆肝界面.png",
-            text: [
-                "有一种特殊的游戏模式如上图所示：<b>爆肝模式</b>。"
-            ],
-            actions: [
-                jump("help5")
-            ]
         },
-        // Merging the two pages would make the webpage unscrollable on iOS. Hell knows why.
-        {
-            id: "help5",
-            text: [
-                "没错，和熬夜爆肝赶DDL一样，你需要付出一些努力才可以通关。你需要做的就是在时间限制内快速点击“<i>肝！</i>”按钮，达到指定次数方可通关。",
-                "不过，事情并不会一直一帆风顺。在爆肝期间，你还需要排除干扰，集中注意力。加油吧！"
-            ],
-            actions: [
-                jump("help6")
-            ]
-        },*/
         {
             id: "help4",
             image: "帮助/爆肝界面.png",
