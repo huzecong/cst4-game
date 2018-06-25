@@ -1,4 +1,4 @@
-# cs-game
+# cst4-game: 天下大计
 
 - 剧本在`application/static/scripts`中，`ending.js`为结局列表，`stage1.js`为目前的剧本。
 - 图片放在`application/static/image`中。
