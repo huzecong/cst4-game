@@ -870,7 +870,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadMemory = function () {
-        if (["_global", "_local", "_eventIndex", "_pageId"].some(x => !storage.getItem(x))) {
+        if (["_global", "_local", "_failedExamsInfo", "_eventIndex", "_pageId"].some(x => !storage.getItem(x))) {
             showToast("不存在游戏存档");
             return;
         }
