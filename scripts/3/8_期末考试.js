@@ -19,7 +19,7 @@
                     ]
                 },
                 {
-                    text: "下面是中断处理过程中的若干步骤，哪一个步骤在执行是不需要关中断的？",
+                    text: "下面是中断处理过程中的若干步骤，哪一个步骤在执行时不是必须关闭中断的？",
                     answer: "执行中断服务程序",
                     choices: [
                         "保存断点",
@@ -27,13 +27,42 @@
                         "恢复断点"
 
                     ]
+                },
+                {
+                    text: "我们在做大作业时，使用下面哪一款软件进行电路的综合：",
+                    answer: "Xilinx ISE",
+                    choices: [
+                        "Quartus II",
+                        "Vivado Design Suite",
+                        "ModelSim"
+                    ]
                 }
             ]
         },
-        // {
-        //     name: "信号处理原理"
-        //     points: 3,
-        // },
+        {
+            name: "计算机系统结构",
+            points: 3,
+            questions: [
+                {
+                    text: "下列哪本不是汪东升老师的推荐读物：",
+                    answer: "《深入理解计算机系统》",
+                    choices: [
+                        "《秘密》",
+                        "《人生十论》",
+                        "《哈佛家书》",
+                        "《Computer Architecture: A Quantitative Approach》"
+                    ]
+                },
+                {
+                    text: "Tomasulo算法的寄存器重命名技术<b>无法</b>避免下列哪种数据冲突：",
+                    answer: "写后读（RAW）",
+                    choices: [
+                        "读后写（WAR）",
+                        "写后写（WAW）"
+                    ]
+                }
+            ]
+        },
         {
             name: "操作系统",
             points: 3,
@@ -46,6 +75,15 @@
                         "对"
                     ]
                 },
+                {
+                    text: "在uCore中，以下哪个过程不可能在时钟中断处理例程中被执行：",
+                    answer: "读取外设",
+                    choices: [
+                        "进程调度算法",
+                        "唤醒调用wait而睡眠的进程",
+                        "切换页表"
+                    ]
+                }
             ]
         },
     ],
@@ -73,6 +111,7 @@
             ],
             actions: [
                 decrease("#成绩", "#不及格课程"),
+                gt("#不及格课程", 0).then(flag("#挂科")),
                 ge("$不及格学分", 20).then(ending("被迫退学"))
             ]
         }

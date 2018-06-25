@@ -19,13 +19,17 @@
                     ]
                 },
                 {
-                    image: "期末考试/微积分2.jpg",
-                    text: "设函数 y(t) 满足方程 y'' + y' + y = 1 + cos t ，请计算上式中的极限：",
-                    answer: "0",
+                    text: "下列哪位数学家<b>没有</b>以自己名字命名的<b>判断级数是否收敛</b>的判别法或定理：",
+                    answer: "Euler",
                     choices: [
-                        "1",
-                        "-π",
-                        "π"
+                        "Leibniz",
+                        "D'Alembert",
+                        "Raabe",
+                        "Cauchy",
+                        "Dirichlet",
+                        "Abel",
+                        "Weierstrass",
+                        "Dini"
                     ]
                 }
             ]
@@ -35,12 +39,13 @@
             points: 4,
             questions: [
                 {
-                    text: "设 A 为 n 阶方阵， A-I 不可逆的充分条件是A满足：",
-                    answer: "A²+A-2I = 0 且不存在实数 k 满足 A = kI",
+                    image: "期末考试/线代老师.jpg",
+                    text: "上图中哪一位是我们大一时的线性代数老师：",
+                    answer: "右下",
                     choices: [
-                        "A²+A-2I = 0",
-                        "不存在实数 k 满足 A = kI",
-                        "A²+A-2I = 0 且 A+2I 不可逆"
+                        "左上",
+                        "左下",
+                        "右上"
                     ]
                 },
                 {
@@ -90,6 +95,7 @@
             ],
             actions: [
                 decrease("#成绩", "#不及格课程"),
+                gt("#不及格课程", 0).then(flag("#挂科")),
                 ge("$不及格学分", 20).then(ending("被迫退学"))
             ]
         }

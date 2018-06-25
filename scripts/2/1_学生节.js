@@ -29,7 +29,7 @@ Final pages of this scenario are:
                         jump("homework")
                     ],
                     condition: not(flagged("#班长")),
-                    explanation: "作为班长，还是得在学生节中出一份力的"
+                    explanation: "作为班长，得在学生节中出一份力"
                 },
                 {
                     text: "我就当个安静的吃瓜观众吧",
@@ -37,7 +37,7 @@ Final pages of this scenario are:
                         jump("audience")
                     ],
                     condition: not(flagged("#班长")),
-                    explanation: "作为班长，还是得在学生节中出一份力的"
+                    explanation: "作为班长，得在学生节中出一份力"
                 },
                 {
                     text: eq("#性别", "男").then(

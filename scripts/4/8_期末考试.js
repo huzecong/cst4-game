@@ -4,11 +4,15 @@
     stage: "大四",
     exams: [],
     actionsBefore: [
-        flagged("#毕设未通过").then(increase("$不及格学分", 15))
+        flagged("#毕设未通过").then(increase("$不及格学分", 15)),
+        not(flagged("#毕设未通过")).and(not(flagged("#挂科"))).and(not(flagged("#操统退课"))).and(not(flagged("#计原退课"))).then(achieve("满绩"))
     ],
     pages: [
         {
             id: "final",
+            actionsBefore: [
+                not(flagged("#毕设未通过")).and(not(flagged("#挂科"))).and(eq("#不及格课程", 0)).then(achieve("满绩"))
+            ],
             text: [
                 ge("$不及格学分", 20).then([
                     flagged("#毕设未通过").then(
@@ -28,7 +32,6 @@
             actions: [
                 decrease("#成绩", "#不及格课程"),
                 ge("$不及格学分", 20).then(ending("被迫退学"))
-                    .else(gt("#不及格课程", 0).then(ending("结业快乐")))
             ]
         }
     ]

@@ -68,7 +68,7 @@
         {
             id: "qte-team",
             deadline: {
-                targets: [40, 50],
+                targets: [60, 75],
                 title: "肝软工组会",
                 time: 12,
                 moving: false,

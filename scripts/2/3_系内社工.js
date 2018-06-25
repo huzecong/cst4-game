@@ -181,7 +181,7 @@ Final pages of this scenario are:
             id: "jurya",
             text: [
                 "评委对你{$对象}的歌声并不感冒，最后{$TA}的结果并不理想。",
-                "一位同学以【某个摇滚曲目】夺得了冠军。"
+                "一位同学以一首《你不要再问我》夺得了冠军。"
             ],
             actions: [
                 jump("comfort")
