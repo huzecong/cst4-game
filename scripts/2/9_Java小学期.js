@@ -20,7 +20,7 @@
                 {
                     text: "申请去台湾，可以顺便旅游",
                     actions: [
-                        ge("#成绩", 2).then(jump("taiwan")).else(jump("taiwan_fail"))
+                        ge("#成绩", 1).then(jump("taiwan")).else(jump("taiwan_fail"))
                     ]
                 }
             ]

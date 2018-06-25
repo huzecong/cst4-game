@@ -26,6 +26,7 @@
                 ])
             ],
             actions: [
+                decrease("#成绩", "#不及格课程"),
                 ge("$不及格学分", 20).then(ending("被迫退学"))
                     .else(gt("#不及格课程", 0).then(ending("结业快乐")))
             ]

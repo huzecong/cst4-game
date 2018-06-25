@@ -22,7 +22,7 @@
                 {
                     text: "当然是接受啦",
                     actions: [
-                        ge("#体育", 2).then(jump("jogging")).else(jump("fail"))
+                        ge("#体力", 2).then(jump("jogging")).else(jump("fail"))
                     ]
                 },
                 {

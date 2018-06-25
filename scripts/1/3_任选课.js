@@ -119,6 +119,9 @@
             id: "correct",
             text: [
                 "恭喜你通过任选课，离毕业又近了一步呢！"
+            ],
+            actions: [
+                increase("#成绩", 1)
             ]
         },
         {
