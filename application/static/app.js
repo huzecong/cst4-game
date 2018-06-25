@@ -547,7 +547,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             if (image === undefined) {
                 $scope.current.image = undefined;
             } else {
-                $scope.current.image = 'static/image/' + image;
+                $scope.current.image = 'static/image/' + image + '?' + _jsVersion;
             }
 
             if ($scope.current.page.actionsBefore)

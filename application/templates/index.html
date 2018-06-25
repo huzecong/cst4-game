@@ -104,6 +104,9 @@
         <div ng-if="!current.event" style="text-align: center;">
             <p>页面正在载入中。</p>
             <p>如果长时间没有加载，请尝试刷新页面</p>
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <md-progress-circular md-mode="indeterminate" class="md-hue-2"></md-progress-circular>
+            </div>
         </div>
         <md-card class="storyboard" ng-if="current.event">
             <md-card-header layout="row" layout-align="end center">
