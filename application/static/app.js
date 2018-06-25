@@ -68,7 +68,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     let achievementsList = [];
     let achievementMap = {};
 
-    let failedExams = [];
+    let failedExamsInfo = [];
 
     let cacheImage = (function () {
         let imageCache = [];
@@ -114,10 +114,16 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         return this[Math.floor(Math.random() * this.length)];
     };
 
-    function convertExamsToEvent(examEvent) {
-        let exams = examEvent.exams.filter(x => x.condition === undefined || x.condition.value());
-        let examNames = exams.map(x => x.name);
-        let failedExamNames = failedExams.map(x => x.name);
+    function convertExamsToEvent(examEvent, eventIdx) {
+        let getExam = function (info) {
+            return $scope.events[info.eventIdx].exams[info.examIdx];
+        };
+        let examsInfo = examEvent.exams.map((x, idx) => ({
+            condition: x.condition,
+            info: {eventIdx: eventIdx, examIdx: idx}
+        })).filter(x => x.condition === undefined || x.condition.value()).map(x => x.info);
+        let examNames = examsInfo.map(x => getExam(x).name);
+        let failedExamNames = failedExamsInfo.map(x => getExam(x).name);
         let event = {
             type: "normal",
             name: "期末考试",
@@ -157,23 +163,24 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                 })
             ];
         };
-        let wrongAction = function (idx, exam) {
+        let wrongAction = function (idx, examInfo) {
             return [
                 exec(async function () {
                     let button = document.querySelectorAll("#question-choices > .choice-button-wrapper > button")[idx];
                     button.innerText = "错误";
                     button.style.color = "red";
-                    failedExams.push(exam);
+                    failedExamsInfo.push(examInfo);
                     await sleep(1000);
                 }),
-                increase("$不及格学分", exam.points),
+                increase("$不及格学分", getExam(examInfo).points),
                 increase("#不及格课程", 1)
             ];
         };
         let pageNum = 0;
-        let curExams = failedExams.concat(exams);
-        failedExams = examEvent.exams.filter(x => x.condition !== undefined && !x.condition.value()); // take it next year
-        for (let exam of curExams) {
+        let curExamsInfo = failedExamsInfo.concat(examsInfo);
+        failedExamsInfo = examEvent.exams.filter(x => x.condition !== undefined && !x.condition.value()); // take it next year
+        for (let examInfo of curExamsInfo) {
+            let exam = getExam(examInfo);
             let q = exam.questions.randomPick();
             let page = {
                 id: "q" + pageNum,
@@ -189,7 +196,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                     actions: wrongAction
                 }))).shuffle().map((x, idx) => ({
                     text: x.text,
-                    actions: x.actions(idx, exam)
+                    actions: x.actions(idx, examInfo)
                 })),
                 actions: []
             };
@@ -198,7 +205,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
         for (let i = 0; i < pageNum; ++i)
             event.pages[i].actions.push(jump("q" + i));
-        if (failedExams.length > 0 || exams.length > 0)
+        if (pageNum > 0)
             event.pages[pageNum].actions.push(jump("final"));
         event.pages.push(...examEvent.pages);
         return event;
@@ -216,7 +223,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             set("#社工", 0),
             set("#不及格课程", 0)
         ];
-        failedExams = [];
+        failedExamsInfo = [];
         for (let action of initActions)
             valueOf(action);
     }
@@ -385,7 +392,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
                         actuallyInit();
                     }, 300);
                 } else {
-                    $countdownText.innerText = countdown;
+                    $countdownText.innerText = countdown.toString();
                     --countdown;
                 }
             };
@@ -460,10 +467,13 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             }
             if (!intact) {
                 // Something's wrong... The user might have modified local storage through the console!
-                grantAchievement("_你好像在作弊");
+                grantAchievement(_cheatAchievement);
             }
             // lastTime = curTime;
         }, 500);
+        window.stopDaemon = function () {
+            clearInterval(interval);
+        };
 
         return {
             setItem: setItem,
@@ -577,7 +587,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             $scope.current.progress = 100 * idx / $scope.events.length;
 
             if (event.type === "exam")
-                event = convertExamsToEvent(event);
+                event = convertExamsToEvent(event, idx);
             // console.log(event);
             $scope.current.event = event;
             // console.log($scope.current.event.name);
@@ -846,7 +856,6 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             let reader = new FileReader();
             reader.onload = function (ev) {
                 loadScript(ev.target.result);
-                cheat();
                 showToast("已成功载入：" + f.files[0].name + "。");
             };
             reader.readAsText(f.files[0]);
@@ -867,6 +876,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
         global.values = JSON.parse(storage.getItem("_global"));
         local.values = JSON.parse(storage.getItem("_local"));
+        failedExamsInfo = JSON.parse(storage.getItem("_failedExamsInfo"));
         let eventIndex = parseInt(storage.getItem("_eventIndex"));
         let pageId = storage.getItem("_pageId");
         loadEvent(eventIndex, true, pageId);
@@ -880,6 +890,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         }
         storage.setItem("_global", JSON.stringify(global.values));
         storage.setItem("_local", JSON.stringify(local.values));
+        storage.setItem("_failedExamsInfo", JSON.stringify(failedExamsInfo));
         storage.setItem("_eventIndex", $scope.current.eventIndex);
         storage.setItem("_pageId", $scope.current.page.id);
         showToast("保存完成");

@@ -59,8 +59,17 @@ md-progress-linear.progress-hint {
 }
 
 body > div > md-content {
-    height: calc(100vh - 56px) !important;
+    /*height: calc(100vh - 56px) !important;*/
     overflow: scroll;
+    padding-top: calc(56px + 2px + 8px) !important;
+}
+
+md-toolbar {
+    position: fixed !important;
+}
+
+md-toast {
+    position: fixed !important;
 }
 
 /* Deadline related */
