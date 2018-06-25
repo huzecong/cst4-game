@@ -322,7 +322,10 @@ function increase(key, delta) {
 }
 
 function decrease(key, delta) {
-    return increase(key, -delta);
+    let variable = lookup(key, "number");
+    return new Assignment(variable, function () {
+        return variable.value() - valueOf(delta);
+    });
 }
 
 function achieve(name) {

@@ -269,10 +269,10 @@ Final pages of this scenario are:
         {
             id: "exam2_qte",
             deadline: {
-                targets: [70],
+                targets: [65],
                 title: "操统复习",
                 time: 15,
-                moving: false,
+                moving: true,
                 badChoices: 1
             },
             actions: [

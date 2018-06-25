@@ -50,7 +50,7 @@
             id: "java_pass",
             text: "你凭借过硬的Java知识积累通过了考试，恭喜！",
             actions: [
-                increase("#成绩", 2)
+                increase("#成绩", 1)
             ]
         },
         {

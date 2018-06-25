@@ -455,7 +455,7 @@ Final pages of this scenario are:
                 "于是默默地把全组人的接下来的工作都交给了你。"
             ],
             actions: [
-                decrease("#体力", 5)
+                decrease("#体力", 3)
             ]
         },
         {
@@ -465,7 +465,7 @@ Final pages of this scenario are:
                 "于是你熬了三个通宵。"
             ],
             actions: [
-                decrease("#体力", 3)
+                decrease("#体力", 2)
             ]
         },
         {
@@ -476,7 +476,7 @@ Final pages of this scenario are:
                 "之后他们再也没有找过你来开会。"
             ],
             actions: [
-                decrease("#魅力", 5)
+                decrease("#魅力", 3)
             ]
         },
         {
@@ -490,8 +490,7 @@ Final pages of this scenario are:
             id: "nosocialwork",
             text: [
                 "“社工什么的，可能确实不太适合我。”你这么想。",
-                "“好好学习！",
-                " 天天向上！”"
+                "“好好学习！天天向上！”"
             ]
         }
     ]
