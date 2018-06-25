@@ -63,7 +63,7 @@ Final pages of this scenario are:
         },
         {
             id: "prepare",
-            //image:"TODO.jpg",
+            image: "实习/company.png",
             text: [
                 "突然有一天，你接到了某AI独角兽公司Sense++的电话！",
                 "兴致勃勃的你，在约定的时间来到了高大上的公司办公室，",
@@ -83,7 +83,7 @@ Final pages of this scenario are:
         },
         {
             id: "q1",
-            //image:"TODO.jpg",
+            image: "实习/interview.jpg",
             text: [
                 "“请你简单地介绍一下自己吧？”"
             ],
@@ -120,7 +120,7 @@ Final pages of this scenario are:
         },
         {
             id: "q2",
-            //image:"TODO.jpg",
+            image: "实习/tree.png",
             text: [
                 "“嗯……好的。请你在这张纸上写一下二叉树的后序遍历算法吧。”"
             ],
@@ -155,7 +155,7 @@ Final pages of this scenario are:
         },
         {
             id: "q3",
-            //image:"TODO.jpg",
+            image: "实习/clock.jpg",
             text: [
                 "“如果你被录用，你每周可以来公司多久？”"
             ],
@@ -212,7 +212,7 @@ Final pages of this scenario are:
         },
         {
             id: "success",
-            //image:"TODO.jpg",
+            image: "实习/landmark.jpg",
             text: [
                 "四个工作日后，你等来了HR小姐姐的电话，",
                 "七个工作日后，你领到了工牌，成为了Sense++的一员~",
