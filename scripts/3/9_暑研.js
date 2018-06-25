@@ -240,7 +240,7 @@ Final pages of this scenario are:
         },
         {
             id: "love",
-            image: "暑研/酒杯.jpeg",
+            image: "暑研/酒杯.jpg",
             text: [
                 "在灯红酒绿地曼哈顿，",
                 "几轮下来，大家在bar里都有点微醺，",

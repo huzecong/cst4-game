@@ -17,7 +17,7 @@ def route_index():
 @app.route('/favicon.ico')
 def route_favicon():
     directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'static/favicon')
-    return send_from_directory(directory, 'favicon.ico')
+    return send_from_directory(directory, 'favicon.png')
 
 @app.route('/<path:path>')
 def route_html(path):

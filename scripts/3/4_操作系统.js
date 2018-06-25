@@ -18,7 +18,7 @@ Final pages of this scenario are:
     pages: [
         {
             id: "start",
-            image: "操作系统/logo.jpg",
+            image: "操作系统/操统logo.jpg",
             text: [
                 "在大三下，你终于迎来了万众期待的重头戏——操作系统。",
                 "操统如此多娇，引无数大佬把课退掉。",
