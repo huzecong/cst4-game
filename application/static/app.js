@@ -889,6 +889,19 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             showToast("不存在游戏存档");
             return;
         }
+
+        if ($scope.current.pageType === "deadline") {
+            clearTimeout($scope.deadline.timer);
+            if ($scope.current.page.deadline.moving) {
+                clearInterval($scope.deadline.movingTimer);
+                // also reset button positions
+                document.querySelectorAll(".deadline-board .md-button").forEach($button => {
+                    $button.style.left = null;
+                    $button.style.top = null;
+                });
+            }
+        }
+
         global.values = JSON.parse(storage.getItem("_global"));
         local.values = JSON.parse(storage.getItem("_local"));
         failedExamsInfo = JSON.parse(storage.getItem("_failedExamsInfo"));
