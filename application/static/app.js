@@ -880,6 +880,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadMainMenu = function (animate = true) {
+        initialize();
         loadEvent(0, animate);
     };
 
