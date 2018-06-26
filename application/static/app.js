@@ -441,6 +441,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let setItem = (function () {
             let setItem = localStorage.setItem.bind(localStorage);
             return function (key, value) {
+                value = value.toString();
                 setItem(key, value);
                 memory[key] = value;
             };
@@ -850,7 +851,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.loadLocalScript = function () {
-        let cheat = function() {
+        let cheat = function () {
             runActions([
                 set("#脱单", false),
                 set("#体力", 10),
@@ -897,6 +898,10 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
     };
 
     $scope.saveMemory = function () {
+        if ($scope.events[$scope.current.eventIndex].type === "exam") {
+            showToast("考试期间不能存档");
+            return;
+        }
         if ($scope.current.pageType === "ending" || $scope.current.pageType === "achievements") {
             showToast("当前页面无法存档");
             return;
