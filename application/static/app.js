@@ -276,7 +276,7 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             if (typeof text === "string") {
                 currentText.push(replaceVariables(text));
             } else {
-                recursiveAddText(currentText, text.value());
+                recursiveAddText(currentText, valueOf(text));
             }
         }
     }
