@@ -5,7 +5,9 @@
     exams: [],
     actionsBefore: [
         flagged("#毕设未通过").then(increase("$不及格学分", 15)),
-        not(flagged("#毕设未通过")).and(not(flagged("#挂科"))).and(not(flagged("#操统退课"))).and(not(flagged("#计原退课"))).then(achieve("满绩"))
+        not(flagged("#毕设未通过")).and(not(flagged("#挂科")))
+            .and(not(flagged("#操统退课"))).and(not(flagged("#计原退课"))).and(not(flagged("#操统挂科")))
+            .then(achieve("满绩"))
     ],
     pages: [
         {

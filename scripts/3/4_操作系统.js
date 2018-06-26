@@ -110,7 +110,7 @@ Final pages of this scenario are:
         {
             id: "project2_qte",
             deadline: {
-                targets: [100],
+                targets: [90],
                 title: "刷板子",
                 time: 14,
                 badChoices: 2,
@@ -340,7 +340,8 @@ Final pages of this scenario are:
                 "等着大四重修吧哈哈哈。"
             ],
             actions: [
-                decrease("#成绩", 3)
+                decrease("#成绩", 3),
+                flag("#操统挂科")
             ]
         },
         {

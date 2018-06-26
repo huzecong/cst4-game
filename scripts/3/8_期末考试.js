@@ -66,7 +66,7 @@
         {
             name: "操作系统",
             points: 3,
-            condition: not(flagged("#操统退课")),
+            condition: not(flagged("#操统退课")).and(not(flagged("#操统挂科"))),
             questions: [
                 {
                     text: "判断正误：考虑写操作情况的改进时钟页面替换算法不会存在Belady现象。",
@@ -91,7 +91,9 @@
         {
             id: "final",
             actionsBefore: [
-                flagged("#操统退课").then(increase("#不及格课程", 1)),
+                decrease("#成绩", "#不及格课程"), // do not count dropped courses
+                flagged("#操统挂科").then(decrease("#成绩", 1)),
+                flagged("#操统退课").or(flagged("#操统挂科")).then(increase("#不及格课程", 1)),
                 flagged("#计原退课").then(increase("#不及格课程", 1)),
                 flagged("#操统退课").and(flagged("#计原退课")).then(
                     set("$msg", "，其中包括已退课的计算机组成原理与操作系统")
@@ -101,16 +103,22 @@
                     set("$msg", "，其中包括已退课的计算机组成原理")
                 ).else(
                     set("$msg", "")
-                )))
+                ))),
+                flagged("#操统挂科").then(eq("$msg", "").then(
+                    set("$msg2", "，其中包括总评不合格的操作系统")
+                ).else(
+                    set("$msg2", "，以及总评不合格的操作系统")
+                )).else(
+                    set("$msg2", "")
+                )
             ],
             text: [
                 ge("$不及格学分", 20).then("非常遗憾，你的不及格学分达到了20分，因此……").else([
                     "你熬过了魔鬼一般的大三考试周。",
-                    gt("#不及格课程", 0).then("注意，你仍有{#不及格课程}门课程未通过{$msg}。你需要在大四毕业前通过这些课程，否则无法正常毕业。")
+                    gt("#不及格课程", 0).then("注意，你仍有{#不及格课程}门课程未通过{$msg}{$msg2}。你需要在大四毕业前通过这些课程，否则无法正常毕业。")
                 ])
             ],
             actions: [
-                decrease("#成绩", "#不及格课程"),
                 gt("#不及格课程", 0).then(flag("#挂科")),
                 ge("$不及格学分", 20).then(ending("被迫退学"))
             ]
