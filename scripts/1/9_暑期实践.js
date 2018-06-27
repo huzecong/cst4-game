@@ -113,8 +113,7 @@ Final pages of this scenario are:
             ],
             actions: [
                 increase("#魅力", 2),
-                ge("#魅力", 6).and(not(flagged("#脱单"))).then(jump("chance")).else(jump("memberfinal")),
-                jump("chance")
+                ge("#魅力", 6).and(not(flagged("#脱单"))).then(jump("chance")).else(jump("memberfinal"))
             ]
         },
         {
