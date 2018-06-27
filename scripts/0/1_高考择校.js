@@ -12,18 +12,27 @@
             ],
             input: "#姓名",
             actions: [
-                eq("#姓名", "").then(jump("blank")).else(jump("name"))
+                eq("#姓名", "").then(jump("blank")).else(jump("name")),
+                set("$没写名字次数", 0)
             ]
         },
         {
             id: "blank",
+            actionsBefore: [
+                increase("$没写名字次数", 1)
+            ],
             text: [
                 "你太紧张了，甚至忘了写名字。可想而知，成绩惨不忍睹。于是你选择了复读。",
                 "又是一年高考。你抬起笔，在答题纸上写下了自己的名字："
             ],
             input: "#姓名",
             actions: [
-                eq("#姓名", "").then(jump("blank")).else(jump("name"))
+                eq("#姓名", "").then(
+                    ge("$没写名字次数", 2).then([
+                        set("#姓名", "码伟志"),
+                        jump("name")
+                    ]).else(jump("blank"))
+                ).else(jump("name"))
             ]
         },
         {
