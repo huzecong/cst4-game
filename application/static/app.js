@@ -74,7 +74,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
         let imageCache = [];
         return function (path) {
             let img = new Image();
-            img.src = '/static/image/' + path + '?' + _jsVersion;
+            // img.src = '/static/image/' + path + '?' + _jsVersion;
+            img.src = '/static/image/' + path;
             imageCache.push(img);
         };
     })();
@@ -550,7 +551,8 @@ App.controller('AppCtrl', ['$scope', '$http', '$mdToast', '$mdMenu', '$timeout',
             if (image === undefined) {
                 $scope.current.image = undefined;
             } else {
-                $scope.current.image = 'static/image/' + image + '?' + _jsVersion;
+                // $scope.current.image = 'static/image/' + image + '?' + _jsVersion;
+                $scope.current.image = 'static/image/' + image;
             }
 
             if ($scope.current.page.actionsBefore)
