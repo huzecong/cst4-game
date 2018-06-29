@@ -18,7 +18,7 @@ python run.py         # start the server
 
 ## 存在的问题
 
-- @xllend3 指出，iOS 10.3的WebKit不支持CSS grid layout，而页面中选项的display样式设为`inline-grid`，故无法显示。
+- [@xllend3](https://github.com/xllend3) 指出，iOS 10.3的WebKit不支持CSS grid layout，而页面中选项的display样式设为`inline-grid`，故无法显示。
 
 ## 语法说明
 
@@ -103,3 +103,14 @@ python run.py         # start the server
 - 单击了45次：`$__QTE__ = 1`；
 - 单击了56次：`$__QTE__ = 2`；
 - 单击了666次：`$__QTE__ = 3`。
+
+## 致谢
+感谢李林翼（[@llylly](https://github.com/llylly)）、李晓涵（[@lxhAtTHU](https://github.com/lxhAtTHU)）、潘星宇（[@pxxgogo](https://github.com/pxxgogo)）、高童（[@tonygaosh](https://github.com/tonygaosh)）提供剧本。
+
+感谢黄家晖（[heiwang1997](https://github.com/heiwang1997)）提供结局图片。
+
+游戏中的其它图片均从互联网上收集，成就图标来源于[Nova by Webalys](http://www.webalys.com/nova/)。仓库所有者并不拥有其版权。
+
+感谢唐玉涵编写[游戏宣传推送](https://mp.weixin.qq.com/s/qCZGCDGEsSIvSKvdfc2D2A)。感谢李晓涵编写[游戏攻略推送](https://mp.weixin.qq.com/s/lDRfz1xPTvD-L1fLu1oVWQ)。
+
+感谢所有参与测试和提供反馈的同学。
