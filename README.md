@@ -16,6 +16,10 @@ python run.py         # start the server
 
 之后，便可通过<http://127.0.0.1:8000/>访问网页。
 
+## 存在的问题
+
+- @xllend3 指出，iOS 10.3的WebKit不支持CSS grid layout，而页面中选项的display样式设为`inline-grid`，故无法显示。
+
 ## 语法说明
 
 剧本语法基于JavaScript，使用类似JSON的格式存储。
